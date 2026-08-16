@@ -1,0 +1,9 @@
+{
+  "name": "Cotton Record V5.3",
+  "short_name": "Cotton Record",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eef7f4",
+  "theme_color": "#087f5b",
+  "description": "Urdu handwritten cotton record reader and calculator"
+}
