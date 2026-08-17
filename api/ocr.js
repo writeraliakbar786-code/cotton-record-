@@ -1,26 +1,22 @@
 // api/ocr.js
-// Vercel Serverless Function
-// Gemini API key is kept on the server.
-// Technical Gemini/API errors are NEVER exposed to users.
 
 export default async function handler(req, res) {
 
-  // --------------------------------
-  // METHOD CHECK
-  // --------------------------------
+  /*
+    User ko kabhi Gemini/API technical error nahi milega.
+    Technical details sirf Vercel logs mein jayengi.
+  */
 
-  if (req.method !== 'POST') {
+  if (req.method !== "POST") {
+
     return res.status(405).json({
-      error: 'REQUEST_NOT_ALLOWED'
+      error: "PROCESSING_FAILED"
     });
+
   }
 
 
   try {
-
-    // --------------------------------
-    // READ REQUEST
-    // --------------------------------
 
     const {
       images,
@@ -29,25 +25,30 @@ export default async function handler(req, res) {
     } = req.body || {};
 
 
-    // --------------------------------
-    // API KEY CHECK
-    // --------------------------------
+    /* =========================
+       API KEY
+    ========================= */
 
-    if (!process.env.GEMINI_API_KEY) {
+    const apiKey =
+      process.env.GEMINI_API_KEY;
+
+
+    if (!apiKey) {
 
       console.error(
-        'GEMINI_API_KEY is missing.'
+        "GEMINI_API_KEY is missing."
       );
 
       return res.status(500).json({
-        error: 'PROCESSING_FAILED'
+        error: "PROCESSING_FAILED"
       });
+
     }
 
 
-    // --------------------------------
-    // IMAGE CHECK
-    // --------------------------------
+    /* =========================
+       IMAGES
+    ========================= */
 
     if (
       !Array.isArray(images) ||
@@ -55,53 +56,56 @@ export default async function handler(req, res) {
     ) {
 
       return res.status(400).json({
-        error: 'NO_IMAGES'
+        error: "PROCESSING_FAILED"
       });
+
     }
 
 
     if (images.length > 12) {
 
       return res.status(400).json({
-        error: 'TOO_MANY_IMAGES'
+        error: "PROCESSING_FAILED"
       });
+
     }
 
 
-    // --------------------------------
-    // CURRENT GEMINI MODEL
-    // --------------------------------
+    /* =========================
+       MODEL
+    ========================= */
 
     const model =
-      'gemini-3.6-flash';
+      "gemini-3.6-flash";
 
 
-    // --------------------------------
-    // NAME MASTER
-    // --------------------------------
+    /* =========================
+       NAME MASTER
+    ========================= */
 
     const master =
       Array.isArray(names)
         ? names
             .filter(
               name =>
-                typeof name === 'string' &&
+                typeof name === "string" &&
                 name.trim()
             )
             .map(
               name =>
                 name.trim()
             )
-            .slice(0, 500)
+            .slice(0,500)
         : [];
 
 
-    // --------------------------------
-    // OCR INSTRUCTIONS
-    // --------------------------------
+    /* =========================
+       PROMPT
+    ========================= */
 
     const prompt = `
-You are a highly accurate OCR and data extraction assistant for handwritten Pakistani cotton purchase records.
+
+You are a highly accurate OCR/data extraction assistant for handwritten Pakistani cotton purchase records.
 
 Read ALL supplied notebook images carefully.
 
@@ -113,53 +117,45 @@ The handwriting may contain:
 - English digits
 - Mixed Urdu and numbers
 
-Your task is to extract every visible cotton record.
+Extract every visible cotton record.
 
-Return ONLY valid JSON in exactly this format:
+Return ONLY valid JSON:
 
 {"records":[{"name":"...","weight":0}]}
 
-IMPORTANT RULES:
+Rules:
 
 1. Extract every visible record row.
 
-2. Do NOT invent records.
+2. Do not invent records.
 
-3. Do NOT skip a clearly readable record.
+3. Do not skip clearly readable records.
 
-4. Weight must be a numeric value representing kilograms.
+4. Weight must be numeric kilograms.
 
 5. Convert Urdu/Arabic digits into normal numbers.
 
-6. Example:
-   ۱۲.۵ = 12.5
-   ۲۵ = 25
-   ۳۶ = 36
+6. Examples:
 
-7. A row may contain a leading code such as:
-   0-36
-   1-25
-   03-40
+۱۲.۵ = 12.5
+۲۵ = 25
+۳۶ = 36
 
-   Ignore such codes unless the code is clearly part of the person's name.
+7. Ignore leading codes such as 0-36 or 1-25 unless clearly part of the person's name.
 
-8. The person's name must be separated from the weight.
+8. Separate person's name from weight.
 
-9. Use the supplied Name Master as a strong spelling/reference list.
+9. Use Name Master for spelling and matching.
 
-10. If a handwritten name appears to match a Name Master entry, use the Name Master spelling when reasonably supported.
+10. Only use a Name Master name when the actual image contains a matching record.
 
-11. If the handwriting is unclear and there is no reasonably supported Name Master match, preserve the best readable spelling.
+11. Do not create records merely because a name exists in Name Master.
 
-12. Do not create a name just because it exists in the Name Master. Only return a name when an actual record row is visible.
+12. Do not return explanations.
 
-13. Do not return explanations.
+13. Do not return markdown.
 
-14. Do not return markdown.
-
-15. Do not return code fences.
-
-16. Return JSON only.
+14. Return JSON only.
 
 Name Master:
 ${JSON.stringify(master)}
@@ -167,13 +163,14 @@ ${JSON.stringify(master)}
 Default rate:
 ${Number(defaultRate) || 0}
 
-Do not include rate in the returned JSON.
+Do not include rate in JSON.
+
 `;
 
 
-    // --------------------------------
-    // CREATE IMAGE PARTS
-    // --------------------------------
+    /* =========================
+       IMAGE PARTS
+    ========================= */
 
     const parts = [
       {
@@ -182,11 +179,11 @@ Do not include rate in the returned JSON.
     ];
 
 
-    for (const img of images) {
+    for (const image of images) {
 
       if (
-        !img ||
-        !img.data
+        !image ||
+        !image.data
       ) {
         continue;
       }
@@ -194,15 +191,15 @@ Do not include rate in the returned JSON.
 
       const mime =
         String(
-          img.mimeType ||
-          'image/jpeg'
+          image.mimeType ||
+          "image/jpeg"
         );
 
 
       const mimeType =
-        mime.startsWith('image/')
+        mime.startsWith("image/")
           ? mime
-          : 'image/jpeg';
+          : "image/jpeg";
 
 
       parts.push({
@@ -213,7 +210,7 @@ Do not include rate in the returned JSON.
             mimeType,
 
           data:
-            String(img.data)
+            String(image.data)
 
         }
 
@@ -222,21 +219,18 @@ Do not include rate in the returned JSON.
     }
 
 
-    // --------------------------------
-    // VALIDATE IMAGE PARTS
-    // --------------------------------
-
-    if (parts.length === 1) {
+    if (parts.length <= 1) {
 
       return res.status(400).json({
-        error: 'INVALID_IMAGES'
+        error: "PROCESSING_FAILED"
       });
+
     }
 
 
-    // --------------------------------
-    // GEMINI API
-    // --------------------------------
+    /* =========================
+       GEMINI REQUEST
+    ========================= */
 
     const endpoint =
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
@@ -247,43 +241,42 @@ Do not include rate in the returned JSON.
         endpoint,
         {
 
-          method: 'POST',
+          method: "POST",
 
           headers: {
 
-            'Content-Type':
-              'application/json',
+            "Content-Type":
+              "application/json",
 
-            'x-goog-api-key':
-              process.env.GEMINI_API_KEY
+            "x-goog-api-key":
+              apiKey
 
           },
 
-          body: JSON.stringify({
+          body:
+            JSON.stringify({
 
-            contents: [
-              {
-                role: 'user',
-                parts
+              contents: [
+                {
+                  role: "user",
+                  parts
+                }
+              ],
+
+              generationConfig: {
+
+                temperature: 0,
+
+                responseMimeType:
+                  "application/json"
+
               }
-            ],
 
-            generationConfig: {
-
-              responseMimeType:
-                'application/json'
-
-            }
-
-          })
+            })
 
         }
       );
 
-
-    // --------------------------------
-    // READ GEMINI RESPONSE
-    // --------------------------------
 
     const raw =
       await response.text();
@@ -303,33 +296,29 @@ Do not include rate in the returned JSON.
     }
 
 
-    // --------------------------------
-    // HIDE GEMINI ERROR
-    // --------------------------------
+    /* =========================
+       HIDE GEMINI ERROR
+    ========================= */
 
     if (!response.ok) {
 
-      // Full technical information goes
-      // ONLY to Vercel server logs.
-
       console.error(
-        'Gemini API failed:',
+        "Gemini API error:",
         response.status,
         data?.error?.message || raw
       );
 
 
-      // User sees ONLY generic message.
-
       return res.status(500).json({
-        error: 'PROCESSING_FAILED'
+        error: "PROCESSING_FAILED"
       });
+
     }
 
 
-    // --------------------------------
-    // GET MODEL TEXT
-    // --------------------------------
+    /* =========================
+       GET RESPONSE
+    ========================= */
 
     const text =
       data
@@ -337,27 +326,29 @@ Do not include rate in the returned JSON.
         ?.content?.parts
         ?.map(
           part =>
-            part?.text || ''
+            part?.text || ""
         )
-        .join('')
-        .trim() || '';
+        .join("")
+        .trim() || "";
 
 
     if (!text) {
 
       console.error(
-        'Gemini returned empty OCR result.'
+        "Gemini returned empty response."
       );
 
+
       return res.status(500).json({
-        error: 'PROCESSING_FAILED'
+        error: "PROCESSING_FAILED"
       });
+
     }
 
 
-    // --------------------------------
-    // PARSE JSON
-    // --------------------------------
+    /* =========================
+       PARSE JSON
+    ========================= */
 
     let parsed;
 
@@ -369,9 +360,6 @@ Do not include rate in the returned JSON.
 
     } catch {
 
-      // Sometimes models may still return
-      // extra characters around JSON.
-
       const match =
         text.match(
           /\{[\s\S]*\}/
@@ -381,12 +369,14 @@ Do not include rate in the returned JSON.
       if (!match) {
 
         console.error(
-          'Gemini returned invalid JSON.'
+          "Invalid Gemini JSON."
         );
 
+
         return res.status(500).json({
-          error: 'PROCESSING_FAILED'
+          error: "PROCESSING_FAILED"
         });
+
       }
 
 
@@ -400,65 +390,66 @@ Do not include rate in the returned JSON.
       } catch {
 
         console.error(
-          'OCR JSON parsing failed.'
+          "Could not parse Gemini JSON."
         );
 
+
         return res.status(500).json({
-          error: 'PROCESSING_FAILED'
+          error: "PROCESSING_FAILED"
         });
+
       }
 
     }
 
 
-    // --------------------------------
-    // CLEAN RECORDS
-    // --------------------------------
+    /* =========================
+       CLEAN RECORDS
+    ========================= */
 
     const records =
       Array.isArray(
         parsed?.records
       )
 
-        ? parsed.records
-            .map(
-              item => {
+      ? parsed.records
+          .map(
+            item => {
 
-                const name =
-                  String(
-                    item?.name || ''
-                  ).trim();
-
-
-                const weight =
-                  Number(
-                    item?.weight
-                  );
+              const name =
+                String(
+                  item?.name || ""
+                ).trim();
 
 
-                return {
-                  name,
-                  weight
-                };
-
-              }
-            )
-
-            .filter(
-              item =>
-                item.name &&
-                Number.isFinite(
-                  item.weight
-                ) &&
-                item.weight >= 0
-            )
-
-        : [];
+              const weight =
+                Number(
+                  item?.weight
+                );
 
 
-    // --------------------------------
-    // SUCCESS
-    // --------------------------------
+              return {
+                name,
+                weight
+              };
+
+            }
+          )
+          .filter(
+            item =>
+              item.name &&
+              Number.isFinite(
+                item.weight
+              ) &&
+              item.weight >= 0
+          )
+
+      : [];
+
+
+    /* =========================
+       SUCCESS
+    ========================= */
 
     return res.status(200).json({
       records
@@ -467,28 +458,21 @@ Do not include rate in the returned JSON.
 
   } catch (error) {
 
-    // --------------------------------
-    // SERVER LOG ONLY
-    // --------------------------------
+    /*
+      FULL ERROR ONLY IN VERCEL LOGS.
+      NEVER SEND error.message TO USER.
+    */
 
     console.error(
-      'OCR SERVER ERROR:',
+      "OCR SERVER ERROR:",
       error
     );
 
 
-    // NEVER expose:
-    // error.message
-    // Gemini model name
-    // API URL
-    // API response
-    // API key
-    // internal server details
-
     return res.status(500).json({
-      error: 'PROCESSING_FAILED'
+      error: "PROCESSING_FAILED"
     });
 
   }
 
-}
+        }
