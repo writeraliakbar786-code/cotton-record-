@@ -340,7 +340,7 @@
 
     <textarea
       id="names"
-      placeholder="مثلاً&#10;اصغر&#10;محمد&#10;سائیں بخش&#10;شیر محمد"
+      placeholder="مثلاً&#10;اصغر&#10;علی محمد&#10;سائیں بخش&#10;شیر محمد"
     ></textarea>
 
     <div class="row" style="margin-top:10px">
@@ -938,10 +938,8 @@ function renderRecords(){
               step="0.01"
               min="0"
               value="${Number(
-                r.rate ??
-                $('rate').value ||
-                0
-              )}"
+  r.rate ?? ($('rate').value || 0)
+)}"
               placeholder="Rate"
             >
 
