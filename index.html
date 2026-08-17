@@ -1,694 +1,1482 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <meta name="theme-color" content="#087f5b">
-  <meta name="description" content="Cotton Record - Easy record management, weight and payment calculator">
+<meta name="theme-color" content="#087f5b">
+<meta name="description" content="Cotton Record - Cotton weight and payment record management">
 
-  <title>Cotton Record</title>
+<title>Cotton Record</title>
 
-  <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="icon" href="/icon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
 
-    body {
-      margin: 0;
-      font-family: system-ui, "Noto Nastaliq Urdu", "Noto Sans Arabic", sans-serif;
-      background: #eef7f4;
-      color: #18332b;
-    }
+*{
+  box-sizing:border-box;
+}
 
-    .top {
-      background: linear-gradient(135deg, #087f5b, #0b9b70);
-      color: white;
-      padding: 22px 18px;
-    }
+body{
+  margin:0;
+  font-family:system-ui,"Noto Nastaliq Urdu","Noto Sans Arabic",sans-serif;
+  background:#eef7f4;
+  color:#18332b;
+}
 
-    .top h1 {
-      margin: 0 0 5px;
-      font-size: 25px;
-    }
+.hidden{
+  display:none!important;
+}
 
-    .top p {
-      margin: 0;
-      opacity: .9;
-    }
+/* =========================
+   LOGIN
+========================= */
 
-    main {
-      max-width: 900px;
-      margin: auto;
-      padding: 16px;
-    }
+.auth-screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:linear-gradient(135deg,#087f5b,#0b9b70);
+}
 
-    .card {
-      background: white;
-      border-radius: 22px;
-      padding: 18px;
-      margin: 14px 0;
-      box-shadow: 0 5px 24px #0b5b4214;
-    }
+.auth-box{
+  width:100%;
+  max-width:430px;
+  background:white;
+  border-radius:28px;
+  padding:26px;
+  box-shadow:0 20px 60px #003c2a40;
+}
 
-    h2 {
-      margin: 0 0 10px;
-      font-size: 21px;
-    }
+.auth-logo{
+  text-align:center;
+  font-size:48px;
+  margin-bottom:8px;
+}
 
-    .muted {
-      color: #61746e;
-      font-size: 14px;
-    }
+.auth-box h1{
+  text-align:center;
+  margin:0 0 6px;
+}
 
-    label {
-      display: block;
-      font-weight: 700;
-      margin: 12px 0 6px;
-    }
+.auth-subtitle{
+  text-align:center;
+  color:#71837e;
+  margin-bottom:22px;
+}
 
-    .input,
-    textarea {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #d7e5e0;
-      border-radius: 14px;
-      font-size: 16px;
-      background: #fbfefd;
-      outline: none;
-    }
+.auth-tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:18px;
+}
 
-    .input:focus,
-    textarea:focus {
-      border-color: #0b9b70;
-      box-shadow: 0 0 0 3px #0b9b7018;
-    }
+.auth-tab{
+  flex:1;
+  padding:12px;
+  border:0;
+  border-radius:12px;
+  font-weight:800;
+  background:#e8f3ef;
+  color:#087052;
+}
 
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
+.auth-tab.active{
+  background:#087f5b;
+  color:white;
+}
 
-    .btn {
-      border: 0;
-      border-radius: 14px;
-      padding: 14px 18px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
+/* =========================
+   APP
+========================= */
 
-    .primary {
-      background: linear-gradient(135deg, #087f5b, #0b9b70);
-      color: white;
-    }
+.top{
+  background:linear-gradient(135deg,#087f5b,#0b9b70);
+  color:white;
+  padding:22px 18px;
+}
 
-    .secondary {
-      background: #e8f3ef;
-      color: #087052;
-    }
+.top-inner{
+  max-width:900px;
+  margin:auto;
+}
 
-    .danger {
-      background: #ffe7e5;
-      color: #a92b22;
-    }
+.top h1{
+  margin:0 0 5px;
+  font-size:25px;
+}
 
-    .btn:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
+.top p{
+  margin:0;
+  opacity:.9;
+}
 
-    .row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+.user-bar{
+  max-width:900px;
+  margin:12px auto 0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
 
-    .row > * {
-      flex: 1 1 180px;
-    }
+.user-name{
+  font-size:13px;
+  opacity:.9;
+}
 
-    .image-picker {
-      margin: 14px 0 8px;
-    }
+.logout{
+  border:0;
+  border-radius:10px;
+  padding:8px 12px;
+  background:#ffffff22;
+  color:white;
+  font-weight:700;
+}
 
-    .image-picker-button {
-      width: 100%;
-      min-height: 62px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+main{
+  max-width:900px;
+  margin:auto;
+  padding:16px;
+}
 
-      background: #e8f3ef;
-      color: #087052;
+.card{
+  background:white;
+  border-radius:22px;
+  padding:18px;
+  margin:14px 0;
+  box-shadow:0 5px 24px #0b5b4214;
+}
 
-      border: 2px dashed #0b9b70;
-      border-radius: 16px;
+h2{
+  margin:0 0 10px;
+  font-size:21px;
+}
 
-      padding: 15px;
-      font-size: 16px;
-      font-weight: 800;
+.muted{
+  color:#61746e;
+  font-size:14px;
+}
 
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
+label{
+  display:block;
+  font-weight:700;
+  margin:12px 0 6px;
+}
 
-    .image-picker-button:active {
-      transform: scale(.99);
-      background: #dceee8;
-    }
+.input,
+textarea{
+  width:100%;
+  padding:14px;
+  border:1px solid #d7e5e0;
+  border-radius:14px;
+  font-size:16px;
+  background:#fbfefd;
+  outline:none;
+}
 
-    /*
-      Input ko completely display:none nahi kiya gaya,
-      taake Android/mobile browser mein file picker reliable rahe.
-    */
-    #images {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-      overflow: hidden;
-    }
+.input:focus,
+textarea:focus{
+  border-color:#0b9b70;
+  box-shadow:0 0 0 3px #0b9b7018;
+}
 
-    .selection-info {
-      margin-top: 8px;
-      padding: 9px 12px;
-      border-radius: 10px;
-      background: #f1f7f5;
-      color: #61746e;
-      font-size: 13px;
-      text-align: center;
-    }
+textarea{
+  min-height:120px;
+  resize:vertical;
+}
 
-    .thumbs {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 10px;
-      margin-top: 12px;
-    }
+.btn{
+  border:0;
+  border-radius:14px;
+  padding:14px 18px;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+  touch-action:manipulation;
+}
 
-    .thumb {
-      border: 1px solid #dbe9e4;
-      border-radius: 14px;
-      overflow: hidden;
-      background: #fafdfc;
-    }
+.primary{
+  background:linear-gradient(135deg,#087f5b,#0b9b70);
+  color:white;
+}
 
-    .thumb img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      display: block;
-    }
+.secondary{
+  background:#e8f3ef;
+  color:#087052;
+}
 
-    .thumb div {
-      padding: 7px;
-      font-size: 12px;
-      direction: ltr;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+.danger{
+  background:#ffe7e5;
+  color:#a92b22;
+}
 
-    .record {
-      border: 1px solid #dceae5;
-      border-radius: 16px;
-      padding: 12px;
-      margin: 10px 0;
-    }
+.btn:disabled{
+  opacity:.6;
+}
 
-    .recordgrid {
-      display: grid;
-      grid-template-columns: 1fr 130px 130px 90px;
-      gap: 8px;
-      align-items: center;
-    }
+.row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
-    .recordgrid input {
-      width: 100%;
-      padding: 11px;
-      border: 1px solid #d5e4df;
-      border-radius: 10px;
-      font-size: 15px;
-    }
+.row>*{
+  flex:1 1 180px;
+}
 
-    .money {
-      font-weight: 800;
-      text-align: center;
-    }
+/* =========================
+   IMAGE PICKER
+========================= */
 
-    .pill {
-      display: inline-block;
-      background: #e9f5f1;
-      color: #087052;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 13px;
-    }
+.image-picker{
+  margin:14px 0 8px;
+}
 
-    .status {
-      padding: 12px;
-      border-radius: 12px;
-      margin-top: 10px;
-      display: none;
-    }
+.image-picker-button{
+  width:100%;
+  min-height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#e8f3ef;
+  color:#087052;
+  border:2px dashed #0b9b70;
+  border-radius:16px;
+  padding:15px;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+  touch-action:manipulation;
+}
 
-    .ok {
-      background: #e8f7ee;
-      color: #12643d;
-    }
+#images{
+  position:absolute;
+  width:1px;
+  height:1px;
+  opacity:0;
+}
 
-    .err {
-      background: #ffe8e6;
-      color: #9f2b23;
-    }
+.selection-info{
+  margin-top:8px;
+  padding:9px 12px;
+  border-radius:10px;
+  background:#f1f7f5;
+  color:#61746e;
+  font-size:13px;
+  text-align:center;
+}
 
-    .loading {
-      background: #eef3ff;
-      color: #294b91;
-    }
+.thumbs{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:10px;
+  margin-top:12px;
+}
 
-    .empty {
-      text-align: center;
-      padding: 24px;
-      color: #71837e;
-    }
+.thumb{
+  border:1px solid #dbe9e4;
+  border-radius:14px;
+  overflow:hidden;
+}
 
-    @media (max-width: 650px) {
+.thumb img{
+  width:100%;
+  height:120px;
+  object-fit:cover;
+  display:block;
+}
 
-      .top h1 {
-        font-size: 22px;
-      }
+.thumb div{
+  padding:7px;
+  font-size:12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 
-      .recordgrid {
-        grid-template-columns: 1fr 105px;
-      }
+/* =========================
+   STATUS
+========================= */
 
-      .recordgrid .money {
-        grid-column: 1 / -1;
-        text-align: right;
-      }
+.status{
+  padding:12px;
+  border-radius:12px;
+  margin-top:10px;
+  display:none;
+}
 
-      .row > * {
-        flex: 1 1 100%;
-      }
-    }
+.ok{
+  display:block;
+  background:#e8f7ee;
+  color:#12643d;
+}
 
-    @media print {
+.err{
+  display:block;
+  background:#ffe8e6;
+  color:#9f2b23;
+}
 
-      .top {
-        background: none;
-        color: black;
-      }
+.loading{
+  display:block;
+  background:#eef3ff;
+  color:#294b91;
+}
 
-      .btn,
-      .image-picker,
-      #thumbs,
-      #status {
-        display: none !important;
-      }
+/* =========================
+   RECORDS
+========================= */
 
-      body {
-        background: white;
-      }
+.record{
+  border:1px solid #dceae5;
+  border-radius:16px;
+  padding:12px;
+  margin:10px 0;
+}
 
-      .card {
-        box-shadow: none;
-        border: 1px solid #ddd;
-      }
-    }
-  </style>
+.recordgrid{
+  display:grid;
+  grid-template-columns:1fr 120px 120px 110px;
+  gap:8px;
+  align-items:center;
+}
+
+.recordgrid input{
+  width:100%;
+  padding:11px;
+  border:1px solid #d5e4df;
+  border-radius:10px;
+  font-size:15px;
+}
+
+.money{
+  font-weight:800;
+  text-align:center;
+}
+
+.pill{
+  display:inline-block;
+  background:#e9f5f1;
+  color:#087052;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:13px;
+}
+
+.empty{
+  text-align:center;
+  padding:24px;
+  color:#71837e;
+}
+
+/* =========================
+   TOTAL BOX
+========================= */
+
+.total-box{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:14px;
+}
+
+.total-item{
+  background:linear-gradient(135deg,#e8f7f1,#f5fbf9);
+  border:1px solid #d5ebe3;
+  border-radius:18px;
+  padding:16px;
+}
+
+.total-label{
+  font-size:13px;
+  color:#61746e;
+}
+
+.total-value{
+  font-size:24px;
+  font-weight:900;
+  color:#087052;
+  margin-top:4px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:650px){
+
+  .top h1{
+    font-size:22px;
+  }
+
+  .recordgrid{
+    grid-template-columns:1fr 105px;
+  }
+
+  .recordgrid .money{
+    grid-column:1/-1;
+    text-align:right;
+  }
+
+  .row>*{
+    flex:1 1 100%;
+  }
+
+  .total-box{
+    grid-template-columns:1fr;
+  }
+
+}
+
+/* =========================
+   PRINT
+========================= */
+
+@media print{
+
+  .btn,
+  .image-picker,
+  #thumbs,
+  #status,
+  .user-bar{
+    display:none!important;
+  }
+
+  body{
+    background:white;
+  }
+
+  .top{
+    background:none;
+    color:black;
+  }
+
+  .card{
+    box-shadow:none;
+    border:1px solid #ddd;
+  }
+
+}
+
+</style>
 </head>
 
 <body>
 
+<!-- =====================================================
+     LOGIN / SIGNUP
+===================================================== -->
+
+<section id="authScreen" class="auth-screen">
+
+  <div class="auth-box">
+
+    <div class="auth-logo">🌿</div>
+
+    <h1>Cotton Record</h1>
+
+    <div class="auth-subtitle">
+      Record Management System
+    </div>
+
+    <div class="auth-tabs">
+
+      <button
+        id="loginTab"
+        class="auth-tab active"
+        type="button"
+      >
+        Login
+      </button>
+
+      <button
+        id="signupTab"
+        class="auth-tab"
+        type="button"
+      >
+        Sign Up
+      </button>
+
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <form id="loginForm">
+
+      <label>Email / Username</label>
+
+      <input
+        id="loginUser"
+        class="input"
+        type="text"
+        required
+        autocomplete="username"
+        placeholder="Enter username"
+      >
+
+      <label>Password</label>
+
+      <input
+        id="loginPass"
+        class="input"
+        type="password"
+        required
+        autocomplete="current-password"
+        placeholder="Enter password"
+      >
+
+      <button
+        class="btn primary"
+        style="width:100%;margin-top:16px"
+        type="submit"
+      >
+        Login
+      </button>
+
+    </form>
+
+
+    <!-- SIGNUP -->
+
+    <form
+      id="signupForm"
+      class="hidden"
+    >
+
+      <label>Name</label>
+
+      <input
+        id="signupName"
+        class="input"
+        type="text"
+        required
+        placeholder="Your name"
+      >
+
+      <label>Username</label>
+
+      <input
+        id="signupUser"
+        class="input"
+        type="text"
+        required
+        placeholder="Create username"
+      >
+
+      <label>Password</label>
+
+      <input
+        id="signupPass"
+        class="input"
+        type="password"
+        required
+        minlength="6"
+        placeholder="Minimum 6 characters"
+      >
+
+      <button
+        class="btn primary"
+        style="width:100%;margin-top:16px"
+        type="submit"
+      >
+        Create Account
+      </button>
+
+    </form>
+
+
+    <div
+      id="authMessage"
+      class="status"
+    ></div>
+
+    <div
+      class="muted"
+      style="margin-top:15px;text-align:center"
+    >
+      Your account is stored on this device.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     APPLICATION
+===================================================== -->
+
+<div id="app" class="hidden">
+
 <header class="top">
-  <h1>🌿 Cotton Record</h1>
-  <p>Easy Record Management • Multiple Pictures • Verification • Payment</p>
+
+  <div class="top-inner">
+
+    <h1>🌿 Cotton Record</h1>
+
+    <p>
+      Easy Record Management • Multiple Pictures • Verification • Payment
+    </p>
+
+    <div class="user-bar">
+
+      <span
+        id="currentUser"
+        class="user-name"
+      ></span>
+
+      <button
+        id="logout"
+        class="logout"
+        type="button"
+      >
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+
 </header>
+
 
 <main>
 
-  <!-- NAME LIST -->
+<!-- =====================================================
+     NAME LIST
+===================================================== -->
 
-  <section class="card">
+<section class="card">
 
-    <h2>1. Naam List</h2>
+  <h2>1. Naam List</h2>
 
-    <div class="muted">
-      Record mein maujood tamam naam yahan add karein.
-      Har naam alag line mein likhein.
-    </div>
+  <div class="muted">
+    Record mein maujood tamam naam yahan add karein.
+    Har naam alag line mein likhein.
+  </div>
 
-    <label for="names">Names</label>
+  <label for="names">
+    Names
+  </label>
 
-    <textarea
-      id="names"
-      placeholder="مثلاً
+  <textarea
+    id="names"
+    placeholder="مثلاً
 اصغر
 محمد
 سائیں بخش
 شیر محمد"
-    ></textarea>
+  ></textarea>
 
-    <div class="row" style="margin-top:10px">
+  <div
+    class="row"
+    style="margin-top:10px"
+  >
 
-      <button
-        class="btn secondary"
-        id="saveNames"
-        type="button"
-      >
-        Save Names
-      </button>
-
-      <span
-        class="pill"
-        id="nameCount"
-        style="align-self:center"
-      >
-        0 names
-      </span>
-
-    </div>
-
-  </section>
-
-
-  <!-- PICTURES -->
-
-  <section class="card">
-
-    <h2>2. Record Pictures</h2>
-
-    <div class="muted">
-      Multiple notebook photos ek hi baar select kar sakte hain.
-    </div>
-
-    <div class="image-picker">
-
-      <button
-        type="button"
-        class="image-picker-button"
-        id="selectImagesButton"
-      >
-        📷 Pictures Select Karein
-      </button>
-
-      <input
-        id="images"
-        type="file"
-        accept="image/*"
-        multiple
-      >
-
-    </div>
-
-    <div
-      class="selection-info"
-      id="selectionInfo"
+    <button
+      class="btn secondary"
+      id="saveNames"
+      type="button"
     >
-      Abhi koi picture select nahi ki gayi.
-    </div>
+      Save Names
+    </button>
 
-    <div
-      id="thumbs"
-      class="thumbs"
-    ></div>
+    <span
+      class="pill"
+      id="nameCount"
+    >
+      0 names
+    </span>
 
-    <div
-      class="row"
-      style="margin-top:12px"
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     PICTURES
+===================================================== -->
+
+<section class="card">
+
+  <h2>2. Record Pictures</h2>
+
+  <div class="muted">
+    Multiple notebook photos ek hi baar select kar sakte hain.
+  </div>
+
+
+  <div class="image-picker">
+
+    <button
+      id="selectImagesButton"
+      class="image-picker-button"
+      type="button"
+    >
+      📷 Pictures Select Karein
+    </button>
+
+    <input
+      id="images"
+      type="file"
+      accept="image/*"
+      multiple
     >
 
-      <input
-        class="input"
-        id="rate"
-        type="number"
-        min="0"
-        step="0.01"
-        value="25"
-        placeholder="Rate per KG"
-      >
-
-      <button
-        class="btn primary"
-        id="read"
-        type="button"
-      >
-        Records Process Karein
-      </button>
-
-      <button
-        class="btn danger"
-        id="clearPics"
-        type="button"
-      >
-        Clear Pictures
-      </button>
-
-    </div>
-
-    <div
-      id="status"
-      class="status"
-    ></div>
-
-  </section>
+  </div>
 
 
-  <!-- RECORDS -->
+  <div
+    id="selectionInfo"
+    class="selection-info"
+  >
+    Abhi koi picture select nahi ki gayi.
+  </div>
 
-  <section class="card">
 
-    <div
-      class="row"
-      style="align-items:center"
+  <div
+    id="thumbs"
+    class="thumbs"
+  ></div>
+
+
+  <div
+    class="row"
+    style="margin-top:12px"
+  >
+
+    <input
+      id="rate"
+      class="input"
+      type="number"
+      min="0"
+      step="0.01"
+      value="25"
+      placeholder="Rate per KG"
     >
 
-      <div>
+    <button
+      id="read"
+      class="btn primary"
+      type="button"
+    >
+      Records Process Karein
+    </button>
 
-        <h2>3. Detected Records</h2>
+    <button
+      id="clearPics"
+      class="btn danger"
+      type="button"
+    >
+      Clear Pictures
+    </button>
 
-        <div class="muted">
-          Save karne se pehle har naam aur weight ko verify/edit karein.
-        </div>
+  </div>
 
+
+  <div
+    id="status"
+    class="status"
+  ></div>
+
+
+  <!-- ALL PICTURES TOTAL -->
+
+  <div
+    id="processingTotal"
+    class="total-box hidden"
+  >
+
+    <div class="total-item">
+
+      <div class="total-label">
+        All Pictures — Total Weight
       </div>
 
-      <div style="text-align:left">
-
-        <span
-          class="pill"
-          id="count"
-        >
-          0 records
-        </span>
-
+      <div
+        id="processingWeight"
+        class="total-value"
+      >
+        0.00 kg
       </div>
 
     </div>
 
-    <div id="records">
 
-      <div class="empty">
-        Abhi koi record nahi.
+    <div class="total-item">
+
+      <div class="total-label">
+        All Pictures — Total Payment
+      </div>
+
+      <div
+        id="processingMoney"
+        class="total-value"
+      >
+        Rs. 0.00
       </div>
 
     </div>
 
-    <div
-      class="row"
-      style="margin-top:12px"
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     DETECTED RECORDS
+===================================================== -->
+
+<section class="card">
+
+  <div
+    class="row"
+    style="align-items:center"
+  >
+
+    <div>
+
+      <h2>
+        3. Detected Records
+      </h2>
+
+      <div class="muted">
+        Save karne se pehle har naam aur weight verify/edit karein.
+      </div>
+
+    </div>
+
+    <span
+      id="count"
+      class="pill"
     >
+      0 records
+    </span>
 
-      <button
-        class="btn secondary"
-        id="add"
-        type="button"
-      >
-        + Add Row
-      </button>
+  </div>
 
-      <button
-        class="btn primary"
-        id="save"
-        type="button"
-      >
-        Record Save Karein
-      </button>
 
+  <div id="records">
+
+    <div class="empty">
+      Abhi koi record nahi.
     </div>
 
-  </section>
+  </div>
 
 
-  <!-- SUMMARY -->
+  <div
+    class="row"
+    style="margin-top:12px"
+  >
 
-  <section class="card">
-
-    <div
-      class="row"
-      style="align-items:center"
+    <button
+      id="add"
+      class="btn secondary"
+      type="button"
     >
+      + Add Row
+    </button>
 
-      <div>
-
-        <h2>4. Final Summary</h2>
-
-        <div class="muted">
-          Same naam ki entries automatically combine hoti hain.
-        </div>
-
-      </div>
-
-      <div>
-
-        <button
-          class="btn danger"
-          id="clearAll"
-          type="button"
-        >
-          Clear Results
-        </button>
-
-      </div>
-
-    </div>
-
-    <div id="summary">
-
-      <div class="empty">
-        Record Save Karein ke baad result yahan aayega.
-      </div>
-
-    </div>
-
-    <div
-      class="row"
-      style="margin-top:12px"
+    <button
+      id="save"
+      class="btn primary"
+      type="button"
     >
+      Record Save Karein
+    </button>
 
-      <button
-        class="btn secondary"
-        id="csv"
-        type="button"
-      >
-        Export CSV
-      </button>
+  </div>
 
-      <button
-        class="btn secondary"
-        id="print"
-        type="button"
-      >
-        Print
-      </button>
+</section>
+
+
+<!-- =====================================================
+     FINAL SUMMARY
+===================================================== -->
+
+<section class="card">
+
+  <div
+    class="row"
+    style="align-items:center"
+  >
+
+    <div>
+
+      <h2>
+        4. Final Summary
+      </h2>
+
+      <div class="muted">
+        Same naam ki entries automatically combine hoti hain.
+      </div>
 
     </div>
 
-  </section>
+    <button
+      id="clearAll"
+      class="btn danger"
+      type="button"
+    >
+      Clear Results
+    </button>
+
+  </div>
 
 
-  <section class="card">
+  <div id="summary">
 
-    <div class="muted">
-      Aapka record data protected processing ke zariye handle hota hai.
+    <div class="empty">
+      Record Save Karein ke baad result yahan aayega.
     </div>
 
-  </section>
+  </div>
+
+
+  <!-- FINAL GRAND TOTAL -->
+
+  <div
+    id="grandTotal"
+    class="total-box hidden"
+  >
+
+    <div class="total-item">
+
+      <div class="total-label">
+        Grand Total Weight
+      </div>
+
+      <div
+        id="grandWeight"
+        class="total-value"
+      >
+        0.00 kg
+      </div>
+
+    </div>
+
+
+    <div class="total-item">
+
+      <div class="total-label">
+        Grand Total Payment
+      </div>
+
+      <div
+        id="grandMoney"
+        class="total-value"
+      >
+        Rs. 0.00
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="row"
+    style="margin-top:12px"
+  >
+
+    <button
+      id="csv"
+      class="btn secondary"
+      type="button"
+    >
+      Export CSV
+    </button>
+
+    <button
+      id="png"
+      class="btn primary"
+      type="button"
+    >
+      Export PNG
+    </button>
+
+    <button
+      id="print"
+      class="btn secondary"
+      type="button"
+    >
+      Print
+    </button>
+
+  </div>
+
+</section>
+
+
+<section class="card">
+
+  <div class="muted">
+    Record data protected processing ke zariye handle hota hai.
+  </div>
+
+</section>
 
 </main>
+
+</div>
 
 
 <script>
 
 "use strict";
 
-/* =========================================
-   BASIC VARIABLES
-========================================= */
+/* =====================================================
+   HELPERS
+===================================================== */
 
-const $ = (selector) => document.querySelector(selector);
+const $ = (selector) =>
+  document.querySelector(selector);
+
+
+function money(value){
+
+  return Number(value || 0)
+    .toLocaleString(
+      "en-PK",
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
+    );
+
+}
+
+
+function safeStorageGet(key){
+
+  try{
+    return localStorage.getItem(key);
+  }catch{
+    return null;
+  }
+
+}
+
+
+function safeStorageSet(key,value){
+
+  try{
+    localStorage.setItem(key,value);
+    return true;
+  }catch{
+    return false;
+  }
+
+}
+
+
+function safeStorageRemove(key){
+
+  try{
+    localStorage.removeItem(key);
+  }catch{}
+
+}
+
+
+/* =====================================================
+   AUTH
+   NOTE:
+   This is device-local login.
+===================================================== */
+
+const authScreen =
+  $("#authScreen");
+
+const app =
+  $("#app");
+
+const loginForm =
+  $("#loginForm");
+
+const signupForm =
+  $("#signupForm");
+
+const loginTab =
+  $("#loginTab");
+
+const signupTab =
+  $("#signupTab");
+
+const authMessage =
+  $("#authMessage");
+
+
+function authShow(message,type){
+
+  authMessage.className =
+    "status " + type;
+
+  authMessage.textContent =
+    message;
+
+}
+
+
+function showLogin(){
+
+  loginForm.classList.remove("hidden");
+
+  signupForm.classList.add("hidden");
+
+  loginTab.classList.add("active");
+
+  signupTab.classList.remove("active");
+
+}
+
+
+function showSignup(){
+
+  loginForm.classList.add("hidden");
+
+  signupForm.classList.remove("hidden");
+
+  loginTab.classList.remove("active");
+
+  signupTab.classList.add("active");
+
+}
+
+
+loginTab.addEventListener(
+  "click",
+  showLogin
+);
+
+
+signupTab.addEventListener(
+  "click",
+  showSignup
+);
+
+
+function getUser(){
+
+  try{
+
+    return JSON.parse(
+      safeStorageGet("cotton_user") || "null"
+    );
+
+  }catch{
+
+    return null;
+
+  }
+
+}
+
+
+function setLoggedIn(user){
+
+  safeStorageSet(
+    "cotton_logged_in",
+    "true"
+  );
+
+  safeStorageSet(
+    "cotton_current_user",
+    JSON.stringify(user)
+  );
+
+}
+
+
+function getCurrentUser(){
+
+  try{
+
+    return JSON.parse(
+      safeStorageGet(
+        "cotton_current_user"
+      ) || "null"
+    );
+
+  }catch{
+
+    return null;
+
+  }
+
+}
+
+
+function openApp(){
+
+  const user =
+    getCurrentUser();
+
+  if(!user){
+
+    authScreen.classList.remove("hidden");
+
+    app.classList.add("hidden");
+
+    return;
+
+  }
+
+  authScreen.classList.add("hidden");
+
+  app.classList.remove("hidden");
+
+  $("#currentUser").textContent =
+    "Logged in: " +
+    (user.name || user.username);
+
+  loadUserData();
+
+}
+
+
+function logout(){
+
+  safeStorageRemove(
+    "cotton_logged_in"
+  );
+
+  safeStorageRemove(
+    "cotton_current_user"
+  );
+
+  app.classList.add("hidden");
+
+  authScreen.classList.remove("hidden");
+
+  showLogin();
+
+}
+
+
+$("#logout").addEventListener(
+  "click",
+  logout
+);
+
+
+/* SIGN UP */
+
+signupForm.addEventListener(
+  "submit",
+  function(event){
+
+    event.preventDefault();
+
+    const name =
+      $("#signupName").value.trim();
+
+    const username =
+      $("#signupUser").value.trim();
+
+    const password =
+      $("#signupPass").value;
+
+
+    if(
+      !name ||
+      !username ||
+      password.length < 6
+    ){
+
+      authShow(
+        "Please complete all fields correctly.",
+        "err"
+      );
+
+      return;
+
+    }
+
+
+    const existing =
+      getUser();
+
+    if(existing){
+
+      authShow(
+        "Account already exists on this device. Login karein.",
+        "err"
+      );
+
+      return;
+
+    }
+
+
+    const user = {
+
+      name,
+      username,
+      password
+
+    };
+
+
+    safeStorageSet(
+      "cotton_user",
+      JSON.stringify(user)
+    );
+
+
+    setLoggedIn(user);
+
+
+    authShow(
+      "Account successfully created.",
+      "ok"
+    );
+
+
+    setTimeout(
+      openApp,
+      500
+    );
+
+  }
+);
+
+
+/* LOGIN */
+
+loginForm.addEventListener(
+  "submit",
+  function(event){
+
+    event.preventDefault();
+
+    const username =
+      $("#loginUser").value.trim();
+
+    const password =
+      $("#loginPass").value;
+
+
+    const user =
+      getUser();
+
+
+    if(
+      !user ||
+      user.username !== username ||
+      user.password !== password
+    ){
+
+      authShow(
+        "Username ya password incorrect hai.",
+        "err"
+      );
+
+      return;
+
+    }
+
+
+    setLoggedIn(user);
+
+    openApp();
+
+  }
+);
+
+
+/* =====================================================
+   USER DATA
+===================================================== */
+
+function userKey(base){
+
+  const user =
+    getCurrentUser();
+
+  const username =
+    user?.username || "guest";
+
+  return (
+    base +
+    "_" +
+    username
+  );
+
+}
+
 
 let selected = [];
 let records = [];
 let saved = [];
 
-const namesKey = "cotton_names";
-const resultKey = "cotton_results";
+
+function loadUserData(){
+
+  const names =
+    safeStorageGet(
+      userKey("cotton_names")
+    ) || "";
 
 
-/* =========================================
-   SAFE STORAGE
-========================================= */
+  $("#names").value =
+    names;
 
-function getStorage(key, fallback = "") {
 
-  try {
+  try{
 
-    return localStorage.getItem(key) ?? fallback;
+    saved =
+      JSON.parse(
+        safeStorageGet(
+          userKey("cotton_results")
+        ) || "[]"
+      );
 
-  } catch (error) {
+    if(!Array.isArray(saved)){
+      saved=[];
+    }
 
-    return fallback;
+  }catch{
+
+    saved=[];
 
   }
+
+
+  refreshNameCount();
+
+  renderSummary();
 
 }
 
 
-function setStorage(key, value) {
+/* =====================================================
+   NAMES
+===================================================== */
 
-  try {
+function getNames(){
 
-    localStorage.setItem(key, value);
-
-  } catch (error) {
-
-    console.error("Storage error:", error);
-
-  }
-
-}
-
-
-/* =========================================
-   NAME LIST
-========================================= */
-
-function getNames() {
-
-  const value = $("#names").value || "";
-
-  return value
+  return ($("#names").value || "")
     .split(/\n|,/)
-    .map((x) => x.trim())
+    .map(x=>x.trim())
     .filter(Boolean);
 
 }
 
 
-function refreshNameCount() {
+function refreshNameCount(){
 
   $("#nameCount").textContent =
-    getNames().length + " names";
+    getNames().length +
+    " names";
 
 }
-
-
-$("#names").value =
-  getStorage(namesKey, "");
-
-refreshNameCount();
 
 
 $("#names").addEventListener(
@@ -699,10 +1487,10 @@ $("#names").addEventListener(
 
 $("#saveNames").addEventListener(
   "click",
-  function () {
+  function(){
 
-    setStorage(
-      namesKey,
+    safeStorageSet(
+      userKey("cotton_names"),
       $("#names").value
     );
 
@@ -717,42 +1505,19 @@ $("#saveNames").addEventListener(
 );
 
 
-/* =========================================
+/* =====================================================
    IMAGE PICKER
-========================================= */
+===================================================== */
 
 const imageInput =
   $("#images");
 
-const imageButton =
-  $("#selectImagesButton");
 
-
-function openImagePicker() {
-
-  if (!imageInput) {
-
-    show(
-      "Image input nahi mila.",
-      "err"
-    );
-
-    return;
-
-  }
-
-  imageInput.click();
-
-}
-
-
-imageButton.addEventListener(
+$("#selectImagesButton").addEventListener(
   "click",
-  function (event) {
+  function(){
 
-    event.preventDefault();
-
-    openImagePicker();
+    imageInput.click();
 
   }
 );
@@ -760,7 +1525,7 @@ imageButton.addEventListener(
 
 imageInput.addEventListener(
   "change",
-  function () {
+  function(){
 
     selected =
       Array.from(
@@ -773,18 +1538,16 @@ imageInput.addEventListener(
 );
 
 
-/* =========================================
-   IMAGE PREVIEW
-========================================= */
-
-function renderThumbs() {
+function renderThumbs(){
 
   const thumbs =
     $("#thumbs");
 
-  if (!selected.length) {
 
-    thumbs.innerHTML = "";
+  thumbs.innerHTML = "";
+
+
+  if(!selected.length){
 
     $("#selectionInfo").textContent =
       "Abhi koi picture select nahi ki gayi.";
@@ -798,16 +1561,13 @@ function renderThumbs() {
     selected.length +
     (
       selected.length === 1
-        ? " picture selected."
-        : " pictures selected."
+      ? " picture selected."
+      : " pictures selected."
     );
 
 
-  thumbs.innerHTML = "";
-
-
   selected.forEach(
-    function (file, index) {
+    function(file,index){
 
       const wrapper =
         document.createElement("div");
@@ -816,39 +1576,33 @@ function renderThumbs() {
         "thumb";
 
 
-      const img =
+      const image =
         document.createElement("img");
 
       const url =
         URL.createObjectURL(file);
 
-      img.src = url;
+      image.src =
+        url;
 
-      img.alt =
-        "Selected picture " +
-        (index + 1);
-
-
-      img.onload =
-        function () {
-
+      image.onload =
+        function(){
           URL.revokeObjectURL(url);
-
         };
 
 
-      const name =
+      const label =
         document.createElement("div");
 
-      name.textContent =
-        (index + 1) +
+      label.textContent =
+        (index+1) +
         ". " +
         file.name;
 
 
-      wrapper.appendChild(img);
+      wrapper.appendChild(image);
 
-      wrapper.appendChild(name);
+      wrapper.appendChild(label);
 
       thumbs.appendChild(wrapper);
 
@@ -858,19 +1612,48 @@ function renderThumbs() {
 }
 
 
-/* =========================================
+/* =====================================================
+   STATUS
+===================================================== */
+
+function show(message,type){
+
+  const status =
+    $("#status");
+
+
+  status.className =
+    "status " + type;
+
+
+  status.textContent =
+    message;
+
+
+  status.style.display =
+    "block";
+
+}
+
+
+/* =====================================================
    CLEAR PICTURES
-========================================= */
+===================================================== */
 
 $("#clearPics").addEventListener(
   "click",
-  function () {
+  function(){
 
-    selected = [];
+    selected=[];
 
-    imageInput.value = "";
+    imageInput.value="";
 
     renderThumbs();
+
+    $("#processingTotal")
+      .classList
+      .add("hidden");
+
 
     show(
       "Pictures clear kar di gayi hain.",
@@ -881,342 +1664,37 @@ $("#clearPics").addEventListener(
 );
 
 
-/* =========================================
-   STATUS
-========================================= */
-
-function show(message, type) {
-
-  const status =
-    $("#status");
-
-  status.className =
-    "status " + type;
-
-  status.textContent =
-    message;
-
-  status.style.display =
-    "block";
-
-}
-
-
-/* =========================================
-   HTML ESCAPE
-========================================= */
-
-function esc(value) {
-
-  return String(value).replace(
-    /[&<>"']/g,
-    function (character) {
-
-      const map = {
-
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-
-      };
-
-      return map[character];
-
-    }
-  );
-
-}
-
-
-/* =========================================
-   MONEY
-========================================= */
-
-function money(value) {
-
-  return Number(value || 0)
-    .toLocaleString(
-      "en-PK",
-      {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }
-    );
-
-}
-
-
-/* =========================================
-   RECORDS
-========================================= */
-
-function renderRecords() {
-
-  $("#count").textContent =
-    records.length + " records";
-
-
-  const container =
-    $("#records");
-
-
-  if (!records.length) {
-
-    container.innerHTML =
-      '<div class="empty">Abhi koi record nahi.</div>';
-
-    return;
-
-  }
-
-
-  container.innerHTML = "";
-
-
-  records.forEach(
-    function (record, index) {
-
-      const box =
-        document.createElement("div");
-
-      box.className =
-        "record";
-
-
-      const grid =
-        document.createElement("div");
-
-      grid.className =
-        "recordgrid";
-
-
-      /* NAME */
-
-      const nameInput =
-        document.createElement("input");
-
-      nameInput.type =
-        "text";
-
-      nameInput.placeholder =
-        "Name";
-
-      nameInput.value =
-        record.name || "";
-
-
-      /* WEIGHT */
-
-      const weightInput =
-        document.createElement("input");
-
-      weightInput.type =
-        "number";
-
-      weightInput.step =
-        "0.01";
-
-      weightInput.min =
-        "0";
-
-      weightInput.placeholder =
-        "Weight";
-
-      weightInput.value =
-        Number(record.weight || 0);
-
-
-      /* RATE */
-
-      const rateInput =
-        document.createElement("input");
-
-      rateInput.type =
-        "number";
-
-      rateInput.step =
-        "0.01";
-
-      rateInput.min =
-        "0";
-
-      rateInput.placeholder =
-        "Rate";
-
-      rateInput.value =
-        Number(
-          record.rate ??
-          (Number($("#rate").value) || 0)
-        );
-
-
-      /* MONEY */
-
-      const moneyBox =
-        document.createElement("div");
-
-      moneyBox.className =
-        "money";
-
-
-      function updateRecord() {
-
-        record.name =
-          nameInput.value;
-
-        record.weight =
-          Number(weightInput.value) || 0;
-
-        record.rate =
-          Number(rateInput.value) || 0;
-
-
-        const total =
-          record.weight *
-          record.rate;
-
-
-        moneyBox.textContent =
-          "Rs. " + money(total);
-
-      }
-
-
-      updateRecord();
-
-
-      nameInput.addEventListener(
-        "input",
-        updateRecord
-      );
-
-      weightInput.addEventListener(
-        "input",
-        updateRecord
-      );
-
-      rateInput.addEventListener(
-        "input",
-        updateRecord
-      );
-
-
-      grid.appendChild(nameInput);
-
-      grid.appendChild(weightInput);
-
-      grid.appendChild(rateInput);
-
-      grid.appendChild(moneyBox);
-
-
-      /* DELETE BUTTON */
-
-      const deleteButton =
-        document.createElement("button");
-
-      deleteButton.type =
-        "button";
-
-      deleteButton.className =
-        "btn danger";
-
-      deleteButton.style.marginTop =
-        "8px";
-
-      deleteButton.textContent =
-        "Delete";
-
-
-      deleteButton.addEventListener(
-        "click",
-        function () {
-
-          records.splice(index, 1);
-
-          renderRecords();
-
-        }
-      );
-
-
-      box.appendChild(grid);
-
-      box.appendChild(deleteButton);
-
-      container.appendChild(box);
-
-    }
-  );
-
-}
-
-
-/* =========================================
-   ADD ROW
-========================================= */
-
-$("#add").addEventListener(
-  "click",
-  function () {
-
-    records.push({
-
-      name: "",
-
-      weight: 0,
-
-      rate:
-        Number($("#rate").value) || 0
-
-    });
-
-    renderRecords();
-
-  }
-);
-
-
-/* =========================================
-   FILE TO BASE64
-========================================= */
-
-function toBase64(file) {
+/* =====================================================
+   BASE64
+===================================================== */
+
+function toBase64(file){
 
   return new Promise(
-    function (resolve, reject) {
+    function(resolve,reject){
 
       const reader =
         new FileReader();
 
 
       reader.onload =
-        function () {
+        function(){
 
           const result =
             String(reader.result);
 
-
-          const parts =
-            result.split(",");
-
-
           resolve(
-            parts[1] || ""
+            result.split(",")[1] || ""
           );
 
         };
 
 
       reader.onerror =
-        function () {
+        function(){
 
           reject(
-            new Error(
-              "File read nahi ho saki."
-            )
+            new Error("FILE_READ_FAILED")
           );
 
         };
@@ -1230,15 +1708,15 @@ function toBase64(file) {
 }
 
 
-/* =========================================
-   PROCESS RECORDS / OCR
-========================================= */
+/* =====================================================
+   PROCESS RECORDS
+===================================================== */
 
 $("#read").addEventListener(
   "click",
-  async function () {
+  async function(){
 
-    if (!selected.length) {
+    if(!selected.length){
 
       show(
         "Pehle pictures select karein.",
@@ -1254,31 +1732,31 @@ $("#read").addEventListener(
       $("#read");
 
 
-    button.disabled =
-      true;
+    button.disabled=true;
 
 
     show(
-      "Records prepare ho rahe hain…",
+      "Records process ho rahe hain…",
       "loading"
     );
 
 
-    try {
+    try{
 
-      const images = [];
+      const images=[];
 
 
-      for (const file of selected) {
+      for(
+        const file of selected
+      ){
 
-        if (
+        if(
           file.size >
-          8 * 1024 * 1024
-        ) {
+          8*1024*1024
+        ){
 
           throw new Error(
-            file.name +
-            " 8MB se bari hai."
+            "FILE_TOO_LARGE"
           );
 
         }
@@ -1286,8 +1764,7 @@ $("#read").addEventListener(
 
         images.push({
 
-          name:
-            file.name,
+          name:file.name,
 
           mimeType:
             file.type ||
@@ -1305,84 +1782,103 @@ $("#read").addEventListener(
         await fetch(
           "/api/ocr",
           {
-            method: "POST",
+            method:"POST",
 
-            headers: {
+            headers:{
               "Content-Type":
                 "application/json"
             },
 
-            body: JSON.stringify({
+            body:
+              JSON.stringify({
 
-              images: images,
+                images,
 
-              names:
-                getNames(),
+                names:
+                  getNames(),
 
-              defaultRate:
-                Number(
-                  $("#rate").value
-                ) || 0
+                defaultRate:
+                  Number(
+                    $("#rate").value
+                  ) || 0
 
-            })
+              })
 
           }
         );
 
 
-      const data =
-        await response
-          .json()
-          .catch(
-            function () {
-
-              return {
-                error:
-                  "Invalid server response"
-              };
-
-            }
-          );
+      let data={};
 
 
-      if (!response.ok) {
+      try{
+
+        data =
+          await response.json();
+
+      }catch{
+
+        data={};
+
+      }
+
+
+      if(!response.ok){
 
         throw new Error(
-          data.error ||
-          "Server error " +
-          response.status
+          "PROCESSING_FAILED"
+        );
+
+      }
+
+
+      if(
+        !Array.isArray(
+          data.records
+        )
+      ){
+
+        throw new Error(
+          "PROCESSING_FAILED"
         );
 
       }
 
 
       records =
-        Array.isArray(data.records)
-          ? data.records.map(
-              function (record) {
+        data.records.map(
+          function(item){
 
-                return {
+            return {
 
-                  name:
-                    record.name || "",
+              name:
+                String(
+                  item.name || ""
+                ).trim(),
 
-                  weight:
-                    Number(record.weight) || 0,
+              weight:
+                Number(
+                  item.weight
+                ) || 0,
 
-                  rate:
-                    Number(
-                      record.rate ??
-                      (Number($("#rate").value) || 0)
-                    ) || 0
+              rate:
+                Number(
+                  $("#rate").value
+                ) || 0
 
-                };
+            };
 
-              }
-            )
-          : [];
+          }
+        ).filter(
+          item =>
+            item.name &&
+            item.weight >= 0
+        );
 
 
       renderRecords();
+
+      updateProcessingTotal();
 
 
       show(
@@ -1391,22 +1887,29 @@ $("#read").addEventListener(
       );
 
 
-    } catch (error) {
+    }catch(error){
 
-      console.error(error);
+      /*
+        IMPORTANT:
+        User ko technical Gemini/API
+        error kabhi nahi dikhaya jayega.
+      */
+
+      console.error(
+        "Processing failed:",
+        error
+      );
 
 
       show(
-        "Processing Error: " +
-        error.message,
+        "Record process nahi ho saka. Please dobara try karein.",
         "err"
       );
 
 
-    } finally {
+    }finally{
 
-      button.disabled =
-        false;
+      button.disabled=false;
 
     }
 
@@ -1414,102 +1917,360 @@ $("#read").addEventListener(
 );
 
 
-/* =========================================
+/* =====================================================
+   RECORD TOTAL
+===================================================== */
+
+function calculateRecordsTotal(list){
+
+  let weight=0;
+  let payment=0;
+
+
+  list.forEach(
+    function(item){
+
+      const w =
+        Number(item.weight) || 0;
+
+      const r =
+        Number(item.rate) || 0;
+
+
+      weight += w;
+
+      payment +=
+        w*r;
+
+    }
+  );
+
+
+  return {
+    weight,
+    payment
+  };
+
+}
+
+
+function updateProcessingTotal(){
+
+  const total =
+    calculateRecordsTotal(records);
+
+
+  $("#processingWeight").textContent =
+    total.weight.toFixed(2) +
+    " kg";
+
+
+  $("#processingMoney").textContent =
+    "Rs. " +
+    money(total.payment);
+
+
+  $("#processingTotal")
+    .classList
+    .remove("hidden");
+
+}
+
+
+/* =====================================================
+   RECORDS
+===================================================== */
+
+function renderRecords(){
+
+  const container =
+    $("#records");
+
+
+  $("#count").textContent =
+    records.length +
+    " records";
+
+
+  if(!records.length){
+
+    container.innerHTML =
+      '<div class="empty">Abhi koi record nahi.</div>';
+
+    return;
+
+  }
+
+
+  container.innerHTML="";
+
+
+  records.forEach(
+    function(record,index){
+
+      const box =
+        document.createElement("div");
+
+      box.className =
+        "record";
+
+
+      const grid =
+        document.createElement("div");
+
+      grid.className =
+        "recordgrid";
+
+
+      const name =
+        document.createElement("input");
+
+      name.type="text";
+
+      name.placeholder="Name";
+
+      name.value =
+        record.name;
+
+
+      const weight =
+        document.createElement("input");
+
+      weight.type="number";
+
+      weight.step="0.01";
+
+      weight.min="0";
+
+      weight.placeholder="Weight";
+
+      weight.value =
+        record.weight;
+
+
+      const rate =
+        document.createElement("input");
+
+      rate.type="number";
+
+      rate.step="0.01";
+
+      rate.min="0";
+
+      rate.placeholder="Rate";
+
+      rate.value =
+        record.rate;
+
+
+      const moneyBox =
+        document.createElement("div");
+
+      moneyBox.className="money";
+
+
+      function update(){
+
+        record.name =
+          name.value;
+
+        record.weight =
+          Number(weight.value)||0;
+
+        record.rate =
+          Number(rate.value)||0;
+
+
+        moneyBox.textContent =
+          "Rs. " +
+          money(
+            record.weight *
+            record.rate
+          );
+
+
+        updateProcessingTotal();
+
+      }
+
+
+      update();
+
+
+      name.addEventListener(
+        "input",
+        update
+      );
+
+      weight.addEventListener(
+        "input",
+        update
+      );
+
+      rate.addEventListener(
+        "input",
+        update
+      );
+
+
+      grid.appendChild(name);
+
+      grid.appendChild(weight);
+
+      grid.appendChild(rate);
+
+      grid.appendChild(moneyBox);
+
+
+      const del =
+        document.createElement("button");
+
+      del.type="button";
+
+      del.className =
+        "btn danger";
+
+      del.style.marginTop="8px";
+
+      del.textContent="Delete";
+
+
+      del.addEventListener(
+        "click",
+        function(){
+
+          records.splice(index,1);
+
+          renderRecords();
+
+          updateProcessingTotal();
+
+        }
+      );
+
+
+      box.appendChild(grid);
+
+      box.appendChild(del);
+
+      container.appendChild(box);
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   ADD ROW
+===================================================== */
+
+$("#add").addEventListener(
+  "click",
+  function(){
+
+    records.push({
+
+      name:"",
+
+      weight:0,
+
+      rate:
+        Number(
+          $("#rate").value
+        ) || 0
+
+    });
+
+
+    renderRecords();
+
+    updateProcessingTotal();
+
+  }
+);
+
+
+/* =====================================================
    SAVE RECORDS
-========================================= */
+===================================================== */
 
 $("#save").addEventListener(
   "click",
-  function () {
+  function(){
 
     const defaultRate =
-      Number($("#rate").value) || 0;
+      Number(
+        $("#rate").value
+      ) || 0;
 
 
     records =
       records
-        .filter(
-          function (record) {
+      .filter(
+        item =>
+          String(
+            item.name || ""
+          ).trim() !== "" &&
+          Number(item.weight) >= 0
+      )
+      .map(
+        item => ({
 
-            return (
-              String(
-                record.name || ""
-              ).trim() !== "" &&
-              Number(record.weight) >= 0
-            );
+          name:
+            String(
+              item.name
+            ).trim(),
 
-          }
-        )
-        .map(
-          function (record) {
+          weight:
+            Number(item.weight)||0,
 
-            return {
+          rate:
+            Number(
+              item.rate
+            ) || defaultRate
 
-              name:
-                String(
-                  record.name
-                ).trim(),
-
-              weight:
-                Number(record.weight) || 0,
-
-              rate:
-                Number(
-                  record.rate ??
-                  defaultRate
-                ) || defaultRate
-
-            };
-
-          }
-        );
+        })
+      );
 
 
-    const map = {};
+    const map={};
 
 
     records.forEach(
-      function (record) {
+      function(item){
 
         const key =
-          record.name
-            .trim()
-            .toLocaleLowerCase();
+          item.name
+          .trim()
+          .toLocaleLowerCase();
 
 
-        if (!map[key]) {
+        if(!map[key]){
 
-          map[key] = {
+          map[key]={
 
-            name:
-              record.name,
+            name:item.name,
 
-            entries:
-              0,
+            entries:0,
 
-            weight:
-              0,
+            weight:0,
 
-            money:
-              0
+            money:0
 
           };
 
         }
 
 
-        map[key].entries += 1;
+        map[key].entries++;
 
         map[key].weight +=
-          Number(record.weight) || 0;
+          item.weight;
 
         map[key].money +=
-          (
-            Number(record.weight) || 0
-          ) *
-          (
-            Number(record.rate) || 0
-          );
+          item.weight *
+          item.rate;
 
       }
     );
@@ -1519,15 +2280,15 @@ $("#save").addEventListener(
       Object.values(map);
 
 
-    setStorage(
-      resultKey,
+    safeStorageSet(
+      userKey("cotton_results"),
       JSON.stringify(saved)
     );
 
 
     renderSummary();
 
-    renderRecords();
+    updateProcessingTotal();
 
 
     show(
@@ -1539,104 +2300,121 @@ $("#save").addEventListener(
 );
 
 
-/* =========================================
+/* =====================================================
    SUMMARY
-========================================= */
+===================================================== */
 
-function renderSummary() {
+function renderSummary(){
 
   const summary =
     $("#summary");
 
 
-  if (!saved.length) {
+  if(!saved.length){
 
     summary.innerHTML =
       '<div class="empty">Koi saved result nahi.</div>';
+
+    $("#grandTotal")
+      .classList
+      .add("hidden");
 
     return;
 
   }
 
 
-  summary.innerHTML = "";
+  summary.innerHTML="";
+
+
+  let totalWeight=0;
+  let totalMoney=0;
 
 
   saved.forEach(
-    function (item) {
+    function(item){
 
-      const record =
+      totalWeight +=
+        Number(item.weight)||0;
+
+      totalMoney +=
+        Number(item.money)||0;
+
+
+      const box =
         document.createElement("div");
 
-      record.className =
+      box.className =
         "record";
 
 
-      const name =
-        document.createElement("div");
+      box.innerHTML = `
 
-      name.style.fontSize =
-        "20px";
+        <div style="font-size:20px;font-weight:900">
+          ${escapeHTML(item.name)}
+        </div>
 
-      name.style.fontWeight =
-        "900";
+        <div class="muted">
+          ${item.entries} entries
+        </div>
 
-      name.textContent =
-        item.name;
+        <div class="row" style="margin-top:8px">
 
+          <div>
+            <b>Total Weight</b>
+            <br>
+            ${Number(item.weight).toFixed(2)} kg
+          </div>
 
-      const entries =
-        document.createElement("div");
+          <div>
+            <b>Total Payment</b>
+            <br>
+            Rs. ${money(item.money)}
+          </div>
 
-      entries.className =
-        "muted";
+        </div>
 
-      entries.textContent =
-        item.entries +
-        " entries";
-
-
-      const row =
-        document.createElement("div");
-
-      row.className =
-        "row";
-
-      row.style.marginTop =
-        "8px";
+      `;
 
 
-      const weight =
-        document.createElement("div");
+      summary.appendChild(box);
 
-      weight.innerHTML =
-        "<b>Total Weight</b><br>" +
-        Number(item.weight || 0)
-          .toFixed(2) +
-        " kg";
+    }
+  );
 
 
-      const payment =
-        document.createElement("div");
-
-      payment.innerHTML =
-        "<b>Total Payment</b><br>" +
-        "Rs. " +
-        money(item.money);
+  $("#grandWeight").textContent =
+    totalWeight.toFixed(2) +
+    " kg";
 
 
-      row.appendChild(weight);
+  $("#grandMoney").textContent =
+    "Rs. " +
+    money(totalMoney);
 
-      row.appendChild(payment);
+
+  $("#grandTotal")
+    .classList
+    .remove("hidden");
+
+}
 
 
-      record.appendChild(name);
+function escapeHTML(value){
 
-      record.appendChild(entries);
+  return String(value).replace(
+    /[&<>"']/g,
+    function(ch){
 
-      record.appendChild(row);
+      return {
 
-      summary.appendChild(record);
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+
+      }[ch];
 
     }
   );
@@ -1644,89 +2422,54 @@ function renderSummary() {
 }
 
 
-/* =========================================
-   LOAD SAVED RESULTS
-========================================= */
-
-try {
-
-  saved =
-    JSON.parse(
-      getStorage(
-        resultKey,
-        "[]"
-      )
-    );
-
-
-  if (!Array.isArray(saved)) {
-
-    saved = [];
-
-  }
-
-} catch (error) {
-
-  saved = [];
-
-}
-
-
-renderSummary();
-
-
-/* =========================================
+/* =====================================================
    CLEAR RESULTS
-========================================= */
+===================================================== */
 
 $("#clearAll").addEventListener(
   "click",
-  function () {
+  function(){
 
-    if (
-      confirm(
+    if(
+      !confirm(
         "Saved results clear kar dein?"
       )
-    ) {
+    ){
 
-      saved = [];
-
-      try {
-
-        localStorage.removeItem(
-          resultKey
-        );
-
-      } catch (error) {
-
-        console.error(error);
-
-      }
-
-
-      renderSummary();
-
-
-      show(
-        "Saved results clear kar diye gaye hain.",
-        "ok"
-      );
+      return;
 
     }
+
+
+    saved=[];
+
+
+    safeStorageRemove(
+      userKey("cotton_results")
+    );
+
+
+    renderSummary();
+
+
+    show(
+      "Saved results clear kar diye gaye hain.",
+      "ok"
+    );
 
   }
 );
 
 
-/* =========================================
+/* =====================================================
    CSV EXPORT
-========================================= */
+===================================================== */
 
 $("#csv").addEventListener(
   "click",
-  function () {
+  function(){
 
-    if (!saved.length) {
+    if(!saved.length){
 
       show(
         "Export karne ke liye koi saved result nahi.",
@@ -1744,40 +2487,33 @@ $("#csv").addEventListener(
 
     csv +=
       saved
-        .map(
-          function (item) {
+      .map(
+        item => {
 
-            const safeName =
-              String(item.name)
-                .replaceAll(
-                  '"',
-                  '""'
-                );
+          const name =
+            String(item.name)
+            .replaceAll('"','""');
 
 
-            return (
-              '"' +
-              safeName +
-              '",' +
-              item.entries +
-              "," +
-              Number(item.weight || 0)
-                .toFixed(2) +
-              "," +
-              Number(item.money || 0)
-                .toFixed(2)
-            );
+          return (
+            '"' +
+            name +
+            '",' +
+            item.entries +
+            "," +
+            Number(item.weight).toFixed(2) +
+            "," +
+            Number(item.money).toFixed(2)
+          );
 
-          }
-        )
-        .join("\n");
+        }
+      )
+      .join("\n");
 
 
     const blob =
       new Blob(
-        [
-          "\ufeff" + csv
-        ],
+        ["\ufeff"+csv],
         {
           type:
             "text/csv;charset=utf-8"
@@ -1793,8 +2529,7 @@ $("#csv").addEventListener(
       document.createElement("a");
 
 
-    link.href =
-      url;
+    link.href=url;
 
     link.download =
       "cotton-record.csv";
@@ -1808,11 +2543,8 @@ $("#csv").addEventListener(
 
 
     setTimeout(
-      function () {
-
-        URL.revokeObjectURL(url);
-
-      },
+      () =>
+        URL.revokeObjectURL(url),
       1000
     );
 
@@ -1820,13 +2552,319 @@ $("#csv").addEventListener(
 );
 
 
-/* =========================================
+/* =====================================================
+   PNG EXPORT
+===================================================== */
+
+$("#png").addEventListener(
+  "click",
+  function(){
+
+    if(!saved.length){
+
+      show(
+        "PNG banane ke liye pehle result save karein.",
+        "err"
+      );
+
+      return;
+
+    }
+
+
+    createPNG();
+
+  }
+);
+
+
+function createPNG(){
+
+  const canvas =
+    document.createElement("canvas");
+
+
+  const width=1080;
+
+  const rowHeight=92;
+
+  const height =
+    210 +
+    saved.length*rowHeight +
+    170;
+
+
+  canvas.width=width;
+
+  canvas.height=height;
+
+
+  const ctx =
+    canvas.getContext("2d");
+
+
+  /* Background */
+
+  ctx.fillStyle="#ffffff";
+
+  ctx.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  /* Header */
+
+  ctx.fillStyle="#087f5b";
+
+  ctx.fillRect(
+    0,
+    0,
+    width,
+    150
+  );
+
+
+  ctx.fillStyle="#ffffff";
+
+  ctx.font=
+    "bold 42px Arial";
+
+  ctx.fillText(
+    "Cotton Record",
+    50,
+    65
+  );
+
+
+  ctx.font=
+    "24px Arial";
+
+  ctx.fillText(
+    "Final Record Summary",
+    50,
+    105
+  );
+
+
+  let y=195;
+
+
+  ctx.fillStyle="#18332b";
+
+  ctx.font=
+    "bold 24px Arial";
+
+
+  ctx.fillText(
+    "Name",
+    50,
+    y
+  );
+
+
+  ctx.fillText(
+    "Entries",
+    560,
+    y
+  );
+
+
+  ctx.fillText(
+    "Weight",
+    700,
+    y
+  );
+
+
+  ctx.fillText(
+    "Payment",
+    850,
+    y
+  );
+
+
+  y += 35;
+
+
+  let totalWeight=0;
+
+  let totalMoney=0;
+
+
+  saved.forEach(
+    function(item){
+
+      totalWeight +=
+        Number(item.weight)||0;
+
+      totalMoney +=
+        Number(item.money)||0;
+
+
+      ctx.strokeStyle="#dceae5";
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        40,
+        y
+      );
+
+      ctx.lineTo(
+        width-40,
+        y
+      );
+
+      ctx.stroke();
+
+
+      y += 55;
+
+
+      ctx.fillStyle="#18332b";
+
+      ctx.font=
+        "22px Arial";
+
+
+      ctx.fillText(
+        String(item.name).slice(0,25),
+        50,
+        y
+      );
+
+
+      ctx.fillText(
+        String(item.entries),
+        575,
+        y
+      );
+
+
+      ctx.fillText(
+        Number(item.weight).toFixed(2)+" kg",
+        700,
+        y
+      );
+
+
+      ctx.fillText(
+        "Rs. "+money(item.money),
+        850,
+        y
+      );
+
+
+      y += 37;
+
+    }
+  );
+
+
+  /* Grand total */
+
+  ctx.fillStyle="#e8f7f1";
+
+  ctx.fillRect(
+    40,
+    y,
+    width-80,
+    105
+  );
+
+
+  y += 42;
+
+
+  ctx.fillStyle="#087052";
+
+  ctx.font=
+    "bold 25px Arial";
+
+
+  ctx.fillText(
+    "Grand Total Weight: "+
+    totalWeight.toFixed(2)+" kg",
+    65,
+    y
+  );
+
+
+  ctx.fillText(
+    "Grand Total Payment: Rs. "+
+    money(totalMoney),
+    65,
+    y+40
+  );
+
+
+  /* Download */
+
+  canvas.toBlob(
+    function(blob){
+
+      if(!blob){
+
+        show(
+          "PNG export nahi ho saka. Please dobara try karein.",
+          "err"
+        );
+
+        return;
+
+      }
+
+
+      const url =
+        URL.createObjectURL(blob);
+
+
+      const link =
+        document.createElement("a");
+
+
+      link.href=url;
+
+      link.download =
+        "cotton-record-summary.png";
+
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      link.remove();
+
+
+      setTimeout(
+        () =>
+          URL.revokeObjectURL(url),
+        1500
+      );
+
+
+      show(
+        "Final result PNG mein export ho gaya.",
+        "ok"
+      );
+
+    },
+    "image/png"
+  );
+
+}
+
+
+/* =====================================================
    PRINT
-========================================= */
+===================================================== */
 
 $("#print").addEventListener(
   "click",
-  function () {
+  function(){
 
     window.print();
 
@@ -1834,13 +2872,26 @@ $("#print").addEventListener(
 );
 
 
-/* =========================================
-   STARTUP TEST
-========================================= */
+/* =====================================================
+   START
+===================================================== */
 
-console.log(
-  "Cotton Record loaded successfully."
-);
+if(
+  safeStorageGet(
+    "cotton_logged_in"
+  ) === "true" &&
+  getCurrentUser()
+){
+
+  openApp();
+
+}else{
+
+  authScreen.classList.remove("hidden");
+
+  app.classList.add("hidden");
+
+}
 
 </script>
 
