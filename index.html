@@ -13,304 +13,317 @@
   <link rel="icon" href="/icon.svg">
 
   <style>
-    *{
-      box-sizing:border-box;
+    * {
+      box-sizing: border-box;
     }
 
-    body{
-      margin:0;
-      font-family:system-ui,"Noto Nastaliq Urdu","Noto Sans Arabic",sans-serif;
-      background:#eef7f4;
-      color:#18332b;
+    body {
+      margin: 0;
+      font-family: system-ui, "Noto Nastaliq Urdu", "Noto Sans Arabic", sans-serif;
+      background: #eef7f4;
+      color: #18332b;
     }
 
-    .top{
-      background:linear-gradient(135deg,#087f5b,#0b9b70);
-      color:white;
-      padding:22px 18px;
+    .top {
+      background: linear-gradient(135deg, #087f5b, #0b9b70);
+      color: white;
+      padding: 22px 18px;
     }
 
-    .top h1{
-      margin:0 0 5px;
-      font-size:25px;
+    .top h1 {
+      margin: 0 0 5px;
+      font-size: 25px;
     }
 
-    .top p{
-      margin:0;
-      opacity:.9;
+    .top p {
+      margin: 0;
+      opacity: .9;
     }
 
-    main{
-      max-width:900px;
-      margin:auto;
-      padding:16px;
+    main {
+      max-width: 900px;
+      margin: auto;
+      padding: 16px;
     }
 
-    .card{
-      background:white;
-      border-radius:22px;
-      padding:18px;
-      margin:14px 0;
-      box-shadow:0 5px 24px #0b5b4214;
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 18px;
+      margin: 14px 0;
+      box-shadow: 0 5px 24px #0b5b4214;
     }
 
-    h2{
-      margin:0 0 10px;
-      font-size:21px;
+    h2 {
+      margin: 0 0 10px;
+      font-size: 21px;
     }
 
-    .muted{
-      color:#61746e;
-      font-size:14px;
+    .muted {
+      color: #61746e;
+      font-size: 14px;
     }
 
-    label{
-      display:block;
-      font-weight:700;
-      margin:12px 0 6px;
+    label {
+      display: block;
+      font-weight: 700;
+      margin: 12px 0 6px;
     }
 
     .input,
-    textarea{
-      width:100%;
-      padding:14px;
-      border:1px solid #d7e5e0;
-      border-radius:14px;
-      font-size:16px;
-      background:#fbfefd;
-      outline:none;
+    textarea {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d7e5e0;
+      border-radius: 14px;
+      font-size: 16px;
+      background: #fbfefd;
+      outline: none;
     }
 
     .input:focus,
-    textarea:focus{
-      border-color:#0b9b70;
-      box-shadow:0 0 0 3px #0b9b7018;
+    textarea:focus {
+      border-color: #0b9b70;
+      box-shadow: 0 0 0 3px #0b9b7018;
     }
 
-    textarea{
-      min-height:120px;
-      resize:vertical;
+    textarea {
+      min-height: 120px;
+      resize: vertical;
     }
 
-    .btn{
-      border:0;
-      border-radius:14px;
-      padding:14px 18px;
-      font-size:16px;
-      font-weight:800;
-      cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
+    .btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
-    .primary{
-      background:linear-gradient(135deg,#087f5b,#0b9b70);
-      color:#fff;
+    .primary {
+      background: linear-gradient(135deg, #087f5b, #0b9b70);
+      color: white;
     }
 
-    .secondary{
-      background:#e8f3ef;
-      color:#087052;
+    .secondary {
+      background: #e8f3ef;
+      color: #087052;
     }
 
-    .danger{
-      background:#ffe7e5;
-      color:#a92b22;
+    .danger {
+      background: #ffe7e5;
+      color: #a92b22;
     }
 
-    .btn:disabled{
-      opacity:.6;
-      cursor:not-allowed;
+    .btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
     }
 
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
-    .row>*{
-      flex:1 1 180px;
+    .row > * {
+      flex: 1 1 180px;
     }
 
-    /*
-      IMAGE PICKER
-    */
-
-    .image-picker{
-      margin:14px 0 8px;
+    .image-picker {
+      margin: 14px 0 8px;
     }
 
-    .image-picker-button{
-      width:100%;
-      min-height:58px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
+    .image-picker-button {
+      width: 100%;
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
 
-      background:#e8f3ef;
-      color:#087052;
+      background: #e8f3ef;
+      color: #087052;
 
-      border:2px dashed #0b9b70;
-      border-radius:16px;
+      border: 2px dashed #0b9b70;
+      border-radius: 16px;
 
-      padding:15px;
-      font-size:16px;
-      font-weight:800;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 800;
 
-      cursor:pointer;
-      user-select:none;
-      -webkit-user-select:none;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
-    .image-picker-button:active{
-      transform:scale(.99);
-      background:#dceee8;
+    .image-picker-button:active {
+      transform: scale(.99);
+      background: #dceee8;
     }
 
     /*
-      IMPORTANT:
-      Input is visually hidden but remains available to the
-      browser picker through the button handler.
+      Input ko completely display:none nahi kiya gaya,
+      taake Android/mobile browser mein file picker reliable rahe.
     */
-
-    #images{
-      position:absolute;
-      width:1px;
-      height:1px;
-      opacity:0;
-      pointer-events:none;
-      overflow:hidden;
+    #images {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      overflow: hidden;
     }
 
-    .selection-info{
-      margin-top:8px;
-      padding:9px 12px;
-      border-radius:10px;
-      background:#f1f7f5;
-      color:#61746e;
-      font-size:13px;
-      text-align:center;
+    .selection-info {
+      margin-top: 8px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: #f1f7f5;
+      color: #61746e;
+      font-size: 13px;
+      text-align: center;
     }
 
-    .thumbs{
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-      gap:10px;
-      margin-top:12px;
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
     }
 
-    .thumb{
-      border:1px solid #dbe9e4;
-      border-radius:14px;
-      overflow:hidden;
-      background:#fafdfc;
+    .thumb {
+      border: 1px solid #dbe9e4;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fafdfc;
     }
 
-    .thumb img{
-      width:100%;
-      height:120px;
-      object-fit:cover;
-      display:block;
+    .thumb img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      display: block;
     }
 
-    .thumb div{
-      padding:7px;
-      font-size:12px;
-      direction:ltr;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+    .thumb div {
+      padding: 7px;
+      font-size: 12px;
+      direction: ltr;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .record{
-      border:1px solid #dceae5;
-      border-radius:16px;
-      padding:12px;
-      margin:10px 0;
+    .record {
+      border: 1px solid #dceae5;
+      border-radius: 16px;
+      padding: 12px;
+      margin: 10px 0;
     }
 
-    .recordgrid{
-      display:grid;
-      grid-template-columns:1fr 130px 130px 90px;
-      gap:8px;
-      align-items:center;
+    .recordgrid {
+      display: grid;
+      grid-template-columns: 1fr 130px 130px 90px;
+      gap: 8px;
+      align-items: center;
     }
 
-    .recordgrid input{
-      width:100%;
-      padding:11px;
-      border:1px solid #d5e4df;
-      border-radius:10px;
-      font-size:15px;
+    .recordgrid input {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #d5e4df;
+      border-radius: 10px;
+      font-size: 15px;
     }
 
-    .money{
-      font-weight:800;
-      text-align:center;
+    .money {
+      font-weight: 800;
+      text-align: center;
     }
 
-    .pill{
-      display:inline-block;
-      background:#e9f5f1;
-      color:#087052;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:13px;
+    .pill {
+      display: inline-block;
+      background: #e9f5f1;
+      color: #087052;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
     }
 
-    .status{
-      padding:12px;
-      border-radius:12px;
-      margin-top:10px;
-      display:none;
+    .status {
+      padding: 12px;
+      border-radius: 12px;
+      margin-top: 10px;
+      display: none;
     }
 
-    .ok{
-      background:#e8f7ee;
-      color:#12643d;
+    .ok {
+      background: #e8f7ee;
+      color: #12643d;
     }
 
-    .err{
-      background:#ffe8e6;
-      color:#9f2b23;
+    .err {
+      background: #ffe8e6;
+      color: #9f2b23;
     }
 
-    .loading{
-      background:#eef3ff;
-      color:#294b91;
+    .loading {
+      background: #eef3ff;
+      color: #294b91;
     }
 
-    .empty{
-      text-align:center;
-      padding:24px;
-      color:#71837e;
+    .empty {
+      text-align: center;
+      padding: 24px;
+      color: #71837e;
     }
 
-    @media(max-width:650px){
+    @media (max-width: 650px) {
 
-      .top h1{
-        font-size:22px;
+      .top h1 {
+        font-size: 22px;
       }
 
-      .recordgrid{
-        grid-template-columns:1fr 105px;
+      .recordgrid {
+        grid-template-columns: 1fr 105px;
       }
 
-      .recordgrid .money{
-        grid-column:1/-1;
-        text-align:right;
+      .recordgrid .money {
+        grid-column: 1 / -1;
+        text-align: right;
       }
 
-      .row>*{
-        flex:1 1 100%;
+      .row > * {
+        flex: 1 1 100%;
+      }
+    }
+
+    @media print {
+
+      .top {
+        background: none;
+        color: black;
       }
 
-      .image-picker-button{
-        min-height:62px;
+      .btn,
+      .image-picker,
+      #thumbs,
+      #status {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+      }
+
+      .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
       }
     }
   </style>
@@ -340,7 +353,11 @@
 
     <textarea
       id="names"
-      placeholder="مثلاً&#10;اصغر&#10;علی محمد&#10;سائیں بخش&#10;شیر محمد"
+      placeholder="مثلاً
+اصغر
+محمد
+سائیں بخش
+شیر محمد"
     ></textarea>
 
     <div class="row" style="margin-top:10px">
@@ -375,8 +392,6 @@
     <div class="muted">
       Multiple notebook photos ek hi baar select kar sakte hain.
     </div>
-
-    <!-- Corrected image picker -->
 
     <div class="image-picker">
 
@@ -596,140 +611,156 @@
 
 <script>
 
-const $ = s => document.querySelector(s);
+"use strict";
+
+/* =========================================
+   BASIC VARIABLES
+========================================= */
+
+const $ = (selector) => document.querySelector(selector);
 
 let selected = [];
 let records = [];
 let saved = [];
 
-const namesKey = 'cotton_names';
-const resultKey = 'cotton_results';
+const namesKey = "cotton_names";
+const resultKey = "cotton_results";
 
 
-/* --------------------------------
+/* =========================================
+   SAFE STORAGE
+========================================= */
+
+function getStorage(key, fallback = "") {
+
+  try {
+
+    return localStorage.getItem(key) ?? fallback;
+
+  } catch (error) {
+
+    return fallback;
+
+  }
+
+}
+
+
+function setStorage(key, value) {
+
+  try {
+
+    localStorage.setItem(key, value);
+
+  } catch (error) {
+
+    console.error("Storage error:", error);
+
+  }
+
+}
+
+
+/* =========================================
    NAME LIST
--------------------------------- */
+========================================= */
 
-function getNames(){
+function getNames() {
 
-  return $('names')
-    .value
+  const value = $("#names").value || "";
+
+  return value
     .split(/\n|,/)
-    .map(x => x.trim())
+    .map((x) => x.trim())
     .filter(Boolean);
 
 }
 
 
-function refreshNameCount(){
+function refreshNameCount() {
 
-  $('#nameCount').textContent =
-    getNames().length + ' names';
+  $("#nameCount").textContent =
+    getNames().length + " names";
 
 }
 
 
-$('names').value =
-  localStorage.getItem(namesKey) || '';
+$("#names").value =
+  getStorage(namesKey, "");
 
 refreshNameCount();
 
 
-$('names').addEventListener(
-  'input',
+$("#names").addEventListener(
+  "input",
   refreshNameCount
 );
 
 
-$('saveNames').addEventListener(
-  'click',
-  function(){
+$("#saveNames").addEventListener(
+  "click",
+  function () {
 
-    localStorage.setItem(
+    setStorage(
       namesKey,
-      $('names').value
+      $("#names").value
     );
 
     refreshNameCount();
 
     show(
-      'Names saved successfully.',
-      'ok'
+      "Names saved successfully.",
+      "ok"
     );
 
   }
 );
 
 
-/* --------------------------------
-   IMAGE SELECTION
--------------------------------- */
+/* =========================================
+   IMAGE PICKER
+========================================= */
 
 const imageInput =
-  $('#images');
+  $("#images");
 
 const imageButton =
-  $('#selectImagesButton');
+  $("#selectImagesButton");
 
 
-function openImagePicker(){
+function openImagePicker() {
 
-  try{
-
-    imageInput.click();
-
-  }catch(error){
+  if (!imageInput) {
 
     show(
-      'Picture selection open nahi ho saki.',
-      'err'
+      "Image input nahi mila.",
+      "err"
     );
 
+    return;
+
   }
+
+  imageInput.click();
 
 }
 
 
-/*
-  Normal click
-*/
-
 imageButton.addEventListener(
-  'click',
-  function(){
-
-    openImagePicker();
-
-  }
-);
-
-
-/*
-  Android touch support
-*/
-
-imageButton.addEventListener(
-  'touchend',
-  function(event){
+  "click",
+  function (event) {
 
     event.preventDefault();
 
     openImagePicker();
 
-  },
-  {
-    passive:false
   }
 );
 
 
-/*
-  File selected
-*/
-
 imageInput.addEventListener(
-  'change',
-  function(){
+  "change",
+  function () {
 
     selected =
       Array.from(
@@ -742,125 +773,84 @@ imageInput.addEventListener(
 );
 
 
-/* --------------------------------
+/* =========================================
    IMAGE PREVIEW
--------------------------------- */
+========================================= */
 
-function renderThumbs(){
+function renderThumbs() {
 
   const thumbs =
-    $('#thumbs');
+    $("#thumbs");
 
-  if(!selected.length){
+  if (!selected.length) {
 
-    thumbs.innerHTML = '';
+    thumbs.innerHTML = "";
 
-    $('#selectionInfo').textContent =
-      'Abhi koi picture select nahi ki gayi.';
+    $("#selectionInfo").textContent =
+      "Abhi koi picture select nahi ki gayi.";
 
     return;
 
   }
 
 
-  $('#selectionInfo').textContent =
+  $("#selectionInfo").textContent =
     selected.length +
-    (selected.length === 1
-      ? ' picture selected.'
-      : ' pictures selected.'
+    (
+      selected.length === 1
+        ? " picture selected."
+        : " pictures selected."
     );
 
 
-  thumbs.innerHTML =
-    selected.map(
-      (file,index) => {
-
-        const url =
-          URL.createObjectURL(file);
-
-        return `
-          <div class="thumb">
-
-            <img
-              src="${url}"
-              alt="Selected picture ${index + 1}"
-            >
-
-            <div>
-              ${index + 1}. ${esc(file.name)}
-            </div>
-
-          </div>
-        `;
-
-      }
-    ).join('');
-
-}
+  thumbs.innerHTML = "";
 
 
-/* --------------------------------
-   CLEAR PICTURES
--------------------------------- */
+  selected.forEach(
+    function (file, index) {
 
-$('#clearPics').addEventListener(
-  'click',
-  function(){
+      const wrapper =
+        document.createElement("div");
 
-    selected = [];
-
-    imageInput.value = '';
-
-    renderThumbs();
-
-    show(
-      'Pictures clear kar di gayi hain.',
-      'ok'
-    );
-
-  }
-);
+      wrapper.className =
+        "thumb";
 
 
-/* --------------------------------
-   STATUS
--------------------------------- */
+      const img =
+        document.createElement("img");
 
-function show(msg,type){
+      const url =
+        URL.createObjectURL(file);
 
-  const status =
-    $('#status');
+      img.src = url;
 
-  status.className =
-    'status ' + type;
-
-  status.textContent =
-    msg;
-
-  status.style.display =
-    'block';
-
-}
+      img.alt =
+        "Selected picture " +
+        (index + 1);
 
 
-/* --------------------------------
-   SECURITY / HTML ESCAPE
--------------------------------- */
+      img.onload =
+        function () {
 
-function esc(x){
+          URL.revokeObjectURL(url);
 
-  return String(x).replace(
-    /[&<>"']/g,
-    function(m){
+        };
 
-      return {
-        '&':'&amp;',
-        '<':'&lt;',
-        '>':'&gt;',
-        '"':'&quot;',
-        "'":'&#39;'
 
-      }[m];
+      const name =
+        document.createElement("div");
+
+      name.textContent =
+        (index + 1) +
+        ". " +
+        file.name;
+
+
+      wrapper.appendChild(img);
+
+      wrapper.appendChild(name);
+
+      thumbs.appendChild(wrapper);
 
     }
   );
@@ -868,37 +858,113 @@ function esc(x){
 }
 
 
-/* --------------------------------
+/* =========================================
+   CLEAR PICTURES
+========================================= */
+
+$("#clearPics").addEventListener(
+  "click",
+  function () {
+
+    selected = [];
+
+    imageInput.value = "";
+
+    renderThumbs();
+
+    show(
+      "Pictures clear kar di gayi hain.",
+      "ok"
+    );
+
+  }
+);
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+function show(message, type) {
+
+  const status =
+    $("#status");
+
+  status.className =
+    "status " + type;
+
+  status.textContent =
+    message;
+
+  status.style.display =
+    "block";
+
+}
+
+
+/* =========================================
+   HTML ESCAPE
+========================================= */
+
+function esc(value) {
+
+  return String(value).replace(
+    /[&<>"']/g,
+    function (character) {
+
+      const map = {
+
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+
+      };
+
+      return map[character];
+
+    }
+  );
+
+}
+
+
+/* =========================================
    MONEY
--------------------------------- */
+========================================= */
 
-function money(n){
+function money(value) {
 
-  return Number(n || 0)
+  return Number(value || 0)
     .toLocaleString(
-      'en-PK',
+      "en-PK",
       {
-        minimumFractionDigits:2,
-        maximumFractionDigits:2
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
       }
     );
 
 }
 
 
-/* --------------------------------
+/* =========================================
    RECORDS
--------------------------------- */
+========================================= */
 
-function renderRecords(){
+function renderRecords() {
 
-  $('#count').textContent =
-    records.length + ' records';
+  $("#count").textContent =
+    records.length + " records";
 
 
-  if(!records.length){
+  const container =
+    $("#records");
 
-    $('#records').innerHTML =
+
+  if (!records.length) {
+
+    container.innerHTML =
       '<div class="empty">Abhi koi record nahi.</div>';
 
     return;
@@ -906,123 +972,204 @@ function renderRecords(){
   }
 
 
-  $('#records').innerHTML =
-    records.map(
-      (r,i) => `
-
-        <div class="record">
-
-          <div class="recordgrid">
-
-            <input
-              data-i="${i}"
-              data-k="name"
-              value="${esc(r.name || '')}"
-              placeholder="Name"
-            >
-
-            <input
-              data-i="${i}"
-              data-k="weight"
-              type="number"
-              step="0.01"
-              min="0"
-              value="${Number(r.weight || 0)}"
-              placeholder="Weight"
-            >
-
-            <input
-              data-i="${i}"
-              data-k="rate"
-              type="number"
-              step="0.01"
-              min="0"
-              value="${Number(
-  r.rate ?? ($('rate').value || 0)
-)}"
-              placeholder="Rate"
-            >
-
-            <div class="money">
-              Rs.
-              ${money(
-                (Number(r.weight) || 0) *
-                (Number(
-                  r.rate ??
-                  $('rate').value
-                ) || 0)
-              )}
-            </div>
-
-          </div>
-
-          <button
-            class="btn danger"
-            style="margin-top:8px"
-            type="button"
-            onclick="removeRecord(${i})"
-          >
-            Delete
-          </button>
-
-        </div>
-
-      `
-    ).join('');
+  container.innerHTML = "";
 
 
-  document
-    .querySelectorAll('#records input')
-    .forEach(
-      input => {
+  records.forEach(
+    function (record, index) {
 
-        input.addEventListener(
-          'input',
-          function(){
+      const box =
+        document.createElement("div");
 
-            const index =
-              Number(this.dataset.i);
-
-            const key =
-              this.dataset.k;
+      box.className =
+        "record";
 
 
-            records[index][key] =
-              key === 'name'
-                ? this.value
-                : Number(this.value);
+      const grid =
+        document.createElement("div");
+
+      grid.className =
+        "recordgrid";
 
 
-            renderRecords();
+      /* NAME */
 
-          }
+      const nameInput =
+        document.createElement("input");
+
+      nameInput.type =
+        "text";
+
+      nameInput.placeholder =
+        "Name";
+
+      nameInput.value =
+        record.name || "";
+
+
+      /* WEIGHT */
+
+      const weightInput =
+        document.createElement("input");
+
+      weightInput.type =
+        "number";
+
+      weightInput.step =
+        "0.01";
+
+      weightInput.min =
+        "0";
+
+      weightInput.placeholder =
+        "Weight";
+
+      weightInput.value =
+        Number(record.weight || 0);
+
+
+      /* RATE */
+
+      const rateInput =
+        document.createElement("input");
+
+      rateInput.type =
+        "number";
+
+      rateInput.step =
+        "0.01";
+
+      rateInput.min =
+        "0";
+
+      rateInput.placeholder =
+        "Rate";
+
+      rateInput.value =
+        Number(
+          record.rate ??
+          (Number($("#rate").value) || 0)
         );
 
+
+      /* MONEY */
+
+      const moneyBox =
+        document.createElement("div");
+
+      moneyBox.className =
+        "money";
+
+
+      function updateRecord() {
+
+        record.name =
+          nameInput.value;
+
+        record.weight =
+          Number(weightInput.value) || 0;
+
+        record.rate =
+          Number(rateInput.value) || 0;
+
+
+        const total =
+          record.weight *
+          record.rate;
+
+
+        moneyBox.textContent =
+          "Rs. " + money(total);
+
       }
-    );
+
+
+      updateRecord();
+
+
+      nameInput.addEventListener(
+        "input",
+        updateRecord
+      );
+
+      weightInput.addEventListener(
+        "input",
+        updateRecord
+      );
+
+      rateInput.addEventListener(
+        "input",
+        updateRecord
+      );
+
+
+      grid.appendChild(nameInput);
+
+      grid.appendChild(weightInput);
+
+      grid.appendChild(rateInput);
+
+      grid.appendChild(moneyBox);
+
+
+      /* DELETE BUTTON */
+
+      const deleteButton =
+        document.createElement("button");
+
+      deleteButton.type =
+        "button";
+
+      deleteButton.className =
+        "btn danger";
+
+      deleteButton.style.marginTop =
+        "8px";
+
+      deleteButton.textContent =
+        "Delete";
+
+
+      deleteButton.addEventListener(
+        "click",
+        function () {
+
+          records.splice(index, 1);
+
+          renderRecords();
+
+        }
+      );
+
+
+      box.appendChild(grid);
+
+      box.appendChild(deleteButton);
+
+      container.appendChild(box);
+
+    }
+  );
 
 }
 
 
-function removeRecord(i){
+/* =========================================
+   ADD ROW
+========================================= */
 
-  records.splice(i,1);
-
-  renderRecords();
-
-}
-
-
-$('#add').addEventListener(
-  'click',
-  function(){
+$("#add").addEventListener(
+  "click",
+  function () {
 
     records.push({
 
-      name:'',
-      weight:0,
+      name: "",
+
+      weight: 0,
+
       rate:
-        Number($('rate').value) || 0
+        Number($("#rate").value) || 0
 
     });
 
@@ -1032,34 +1179,47 @@ $('#add').addEventListener(
 );
 
 
-/* --------------------------------
+/* =========================================
    FILE TO BASE64
--------------------------------- */
+========================================= */
 
-function toBase64(file){
+function toBase64(file) {
 
   return new Promise(
-    (resolve,reject) => {
+    function (resolve, reject) {
 
       const reader =
         new FileReader();
 
 
       reader.onload =
-        () => {
+        function () {
 
           const result =
             String(reader.result);
 
+
+          const parts =
+            result.split(",");
+
+
           resolve(
-            result.split(',')[1]
+            parts[1] || ""
           );
 
         };
 
 
       reader.onerror =
-        reject;
+        function () {
+
+          reject(
+            new Error(
+              "File read nahi ho saki."
+            )
+          );
+
+        };
 
 
       reader.readAsDataURL(file);
@@ -1070,19 +1230,19 @@ function toBase64(file){
 }
 
 
-/* --------------------------------
-   PROCESS RECORDS
--------------------------------- */
+/* =========================================
+   PROCESS RECORDS / OCR
+========================================= */
 
-$('#read').addEventListener(
-  'click',
-  async function(){
+$("#read").addEventListener(
+  "click",
+  async function () {
 
-    if(!selected.length){
+    if (!selected.length) {
 
       show(
-        'Pehle pictures select karein.',
-        'err'
+        "Pehle pictures select karein.",
+        "err"
       );
 
       return;
@@ -1090,43 +1250,48 @@ $('#read').addEventListener(
     }
 
 
-    show(
-      'Records prepare ho rahe hain…',
-      'loading'
-    );
+    const button =
+      $("#read");
 
 
-    $('#read').disabled =
+    button.disabled =
       true;
 
 
-    try{
+    show(
+      "Records prepare ho rahe hain…",
+      "loading"
+    );
 
-      const imgs = [];
+
+    try {
+
+      const images = [];
 
 
-      for(const file of selected){
+      for (const file of selected) {
 
-        if(
+        if (
           file.size >
           8 * 1024 * 1024
-        ){
+        ) {
 
           throw new Error(
             file.name +
-            ' 8MB se bari hai.'
+            " 8MB se bari hai."
           );
 
         }
 
 
-        imgs.push({
+        images.push({
 
-          name:file.name,
+          name:
+            file.name,
 
           mimeType:
             file.type ||
-            'image/jpeg',
+            "image/jpeg",
 
           data:
             await toBase64(file)
@@ -1138,24 +1303,25 @@ $('#read').addEventListener(
 
       const response =
         await fetch(
-          '/api/ocr',
+          "/api/ocr",
           {
-            method:'POST',
+            method: "POST",
 
-            headers:{
-              'Content-Type':
-                'application/json'
+            headers: {
+              "Content-Type":
+                "application/json"
             },
 
-            body:JSON.stringify({
+            body: JSON.stringify({
 
-              images:imgs,
+              images: images,
 
-              names:getNames(),
+              names:
+                getNames(),
 
               defaultRate:
                 Number(
-                  $('rate').value
+                  $("#rate").value
                 ) || 0
 
             })
@@ -1168,18 +1334,22 @@ $('#read').addEventListener(
         await response
           .json()
           .catch(
-            () => ({
-              error:
-                'Invalid server response'
-            })
+            function () {
+
+              return {
+                error:
+                  "Invalid server response"
+              };
+
+            }
           );
 
 
-      if(!response.ok){
+      if (!response.ok) {
 
         throw new Error(
           data.error ||
-          'Server error ' +
+          "Server error " +
           response.status
         );
 
@@ -1187,47 +1357,55 @@ $('#read').addEventListener(
 
 
       records =
-        (data.records || [])
-        .map(
-          r => ({
+        Array.isArray(data.records)
+          ? data.records.map(
+              function (record) {
 
-            name:
-              r.name || '',
+                return {
 
-            weight:
-              Number(r.weight) || 0,
+                  name:
+                    record.name || "",
 
-            rate:
-              Number(
-                r.rate ??
-                $('rate').value
-              ) || 0
+                  weight:
+                    Number(record.weight) || 0,
 
-          })
-        );
+                  rate:
+                    Number(
+                      record.rate ??
+                      (Number($("#rate").value) || 0)
+                    ) || 0
+
+                };
+
+              }
+            )
+          : [];
 
 
       renderRecords();
 
 
       show(
-        'Records successfully processed. Har row verify karke save karein.',
-        'ok'
+        "Records successfully processed. Har row verify karke save karein.",
+        "ok"
       );
 
 
-    }catch(error){
+    } catch (error) {
+
+      console.error(error);
+
 
       show(
-        'Processing Error: ' +
+        "Processing Error: " +
         error.message,
-        'err'
+        "err"
       );
 
 
-    }finally{
+    } finally {
 
-      $('#read').disabled =
+      button.disabled =
         false;
 
     }
@@ -1236,86 +1414,112 @@ $('#read').addEventListener(
 );
 
 
-/* --------------------------------
+/* =========================================
    SAVE RECORDS
--------------------------------- */
+========================================= */
 
-$('#save').addEventListener(
-  'click',
-  function(){
+$("#save").addEventListener(
+  "click",
+  function () {
 
-    const rate =
-      Number($('rate').value) || 0;
+    const defaultRate =
+      Number($("#rate").value) || 0;
 
 
     records =
       records
-      .filter(
-        r =>
-          String(r.name || '').trim() !== '' &&
-          Number(r.weight) >= 0
-      )
-      .map(
-        r => ({
+        .filter(
+          function (record) {
 
-          ...r,
+            return (
+              String(
+                record.name || ""
+              ).trim() !== "" &&
+              Number(record.weight) >= 0
+            );
 
-          rate:
-            Number(r.rate ?? rate) ||
-            rate,
+          }
+        )
+        .map(
+          function (record) {
 
-          name:
-            String(r.name).trim()
+            return {
 
-        })
-      );
+              name:
+                String(
+                  record.name
+                ).trim(),
+
+              weight:
+                Number(record.weight) || 0,
+
+              rate:
+                Number(
+                  record.rate ??
+                  defaultRate
+                ) || defaultRate
+
+            };
+
+          }
+        );
 
 
     const map = {};
 
 
-    for(const r of records){
+    records.forEach(
+      function (record) {
 
-      const key =
-        r.name
-          .trim()
-          .toLocaleLowerCase();
+        const key =
+          record.name
+            .trim()
+            .toLocaleLowerCase();
 
 
-      if(!map[key]){
+        if (!map[key]) {
 
-        map[key] = {
+          map[key] = {
 
-          name:r.name,
+            name:
+              record.name,
 
-          entries:0,
+            entries:
+              0,
 
-          weight:0,
+            weight:
+              0,
 
-          money:0
+            money:
+              0
 
-        };
+          };
+
+        }
+
+
+        map[key].entries += 1;
+
+        map[key].weight +=
+          Number(record.weight) || 0;
+
+        map[key].money +=
+          (
+            Number(record.weight) || 0
+          ) *
+          (
+            Number(record.rate) || 0
+          );
 
       }
-
-
-      map[key].entries++;
-
-      map[key].weight +=
-        Number(r.weight) || 0;
-
-      map[key].money +=
-        (Number(r.weight) || 0) *
-        (Number(r.rate) || 0);
-
-    }
+    );
 
 
     saved =
       Object.values(map);
 
 
-    localStorage.setItem(
+    setStorage(
       resultKey,
       JSON.stringify(saved)
     );
@@ -1327,23 +1531,27 @@ $('#save').addEventListener(
 
 
     show(
-      'Calculation saved successfully.',
-      'ok'
+      "Calculation saved successfully.",
+      "ok"
     );
 
   }
 );
 
 
-/* --------------------------------
+/* =========================================
    SUMMARY
--------------------------------- */
+========================================= */
 
-function renderSummary(){
+function renderSummary() {
 
-  if(!saved.length){
+  const summary =
+    $("#summary");
 
-    $('#summary').innerHTML =
+
+  if (!saved.length) {
+
+    summary.innerHTML =
       '<div class="empty">Koi saved result nahi.</div>';
 
     return;
@@ -1351,79 +1559,113 @@ function renderSummary(){
   }
 
 
-  $('#summary').innerHTML =
-    saved.map(
-      item => `
-
-        <div class="record">
-
-          <div
-            style="
-              font-size:20px;
-              font-weight:900
-            "
-          >
-            ${esc(item.name)}
-          </div>
-
-          <div class="muted">
-            ${item.entries} entries
-          </div>
-
-          <div
-            class="row"
-            style="margin-top:8px"
-          >
-
-            <div>
-
-              <b>Total Weight</b>
-
-              <br>
-
-              ${item.weight.toFixed(2)} kg
-
-            </div>
+  summary.innerHTML = "";
 
 
-            <div>
+  saved.forEach(
+    function (item) {
 
-              <b>Total Payment</b>
+      const record =
+        document.createElement("div");
 
-              <br>
+      record.className =
+        "record";
 
-              Rs.
-              ${money(item.money)}
 
-            </div>
+      const name =
+        document.createElement("div");
 
-          </div>
+      name.style.fontSize =
+        "20px";
 
-        </div>
+      name.style.fontWeight =
+        "900";
 
-      `
-    ).join('');
+      name.textContent =
+        item.name;
+
+
+      const entries =
+        document.createElement("div");
+
+      entries.className =
+        "muted";
+
+      entries.textContent =
+        item.entries +
+        " entries";
+
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "row";
+
+      row.style.marginTop =
+        "8px";
+
+
+      const weight =
+        document.createElement("div");
+
+      weight.innerHTML =
+        "<b>Total Weight</b><br>" +
+        Number(item.weight || 0)
+          .toFixed(2) +
+        " kg";
+
+
+      const payment =
+        document.createElement("div");
+
+      payment.innerHTML =
+        "<b>Total Payment</b><br>" +
+        "Rs. " +
+        money(item.money);
+
+
+      row.appendChild(weight);
+
+      row.appendChild(payment);
+
+
+      record.appendChild(name);
+
+      record.appendChild(entries);
+
+      record.appendChild(row);
+
+      summary.appendChild(record);
+
+    }
+  );
 
 }
 
 
-/* --------------------------------
+/* =========================================
    LOAD SAVED RESULTS
--------------------------------- */
+========================================= */
 
-try{
+try {
 
   saved =
     JSON.parse(
-      localStorage.getItem(resultKey) ||
-      '[]'
+      getStorage(
+        resultKey,
+        "[]"
+      )
     );
 
-  if(!Array.isArray(saved)){
+
+  if (!Array.isArray(saved)) {
+
     saved = [];
+
   }
 
-}catch{
+} catch (error) {
 
   saved = [];
 
@@ -1433,27 +1675,42 @@ try{
 renderSummary();
 
 
-/* --------------------------------
+/* =========================================
    CLEAR RESULTS
--------------------------------- */
+========================================= */
 
-$('#clearAll').addEventListener(
-  'click',
-  function(){
+$("#clearAll").addEventListener(
+  "click",
+  function () {
 
-    if(
+    if (
       confirm(
-        'Saved results clear kar dein?'
+        "Saved results clear kar dein?"
       )
-    ){
+    ) {
 
       saved = [];
 
-      localStorage.removeItem(
-        resultKey
-      );
+      try {
+
+        localStorage.removeItem(
+          resultKey
+        );
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
 
       renderSummary();
+
+
+      show(
+        "Saved results clear kar diye gaye hain.",
+        "ok"
+      );
 
     }
 
@@ -1461,19 +1718,19 @@ $('#clearAll').addEventListener(
 );
 
 
-/* --------------------------------
-   CSV
--------------------------------- */
+/* =========================================
+   CSV EXPORT
+========================================= */
 
-$('#csv').addEventListener(
-  'click',
-  function(){
+$("#csv").addEventListener(
+  "click",
+  function () {
 
-    if(!saved.length){
+    if (!saved.length) {
 
       show(
-        'Export karne ke liye koi saved result nahi.',
-        'err'
+        "Export karne ke liye koi saved result nahi.",
+        "err"
       );
 
       return;
@@ -1482,56 +1739,110 @@ $('#csv').addEventListener(
 
 
     let csv =
-      'Person Name,Entries,Total Weight KG,Total Payment PKR\n' +
+      "Person Name,Entries,Total Weight KG,Total Payment PKR\n";
+
+
+    csv +=
       saved
         .map(
-          x =>
-            `"${String(x.name)
-              .replaceAll('"','""')}",${x.entries},${x.weight.toFixed(2)},${x.money.toFixed(2)}`
-        )
-        .join('\n');
+          function (item) {
+
+            const safeName =
+              String(item.name)
+                .replaceAll(
+                  '"',
+                  '""'
+                );
 
 
-    const link =
-      document.createElement('a');
+            return (
+              '"' +
+              safeName +
+              '",' +
+              item.entries +
+              "," +
+              Number(item.weight || 0)
+                .toFixed(2) +
+              "," +
+              Number(item.money || 0)
+                .toFixed(2)
+            );
 
-
-    link.href =
-      URL.createObjectURL(
-        new Blob(
-          ['\ufeff' + csv],
-          {
-            type:
-              'text/csv;charset=utf-8'
           }
         )
+        .join("\n");
+
+
+    const blob =
+      new Blob(
+        [
+          "\ufeff" + csv
+        ],
+        {
+          type:
+            "text/csv;charset=utf-8"
+        }
       );
 
 
-    link.download =
-      'cotton-record.csv';
+    const url =
+      URL.createObjectURL(blob);
 
+
+    const link =
+      document.createElement("a");
+
+
+    link.href =
+      url;
+
+    link.download =
+      "cotton-record.csv";
+
+
+    document.body.appendChild(link);
 
     link.click();
+
+    link.remove();
+
+
+    setTimeout(
+      function () {
+
+        URL.revokeObjectURL(url);
+
+      },
+      1000
+    );
 
   }
 );
 
 
-/* --------------------------------
+/* =========================================
    PRINT
--------------------------------- */
+========================================= */
 
-$('#print').addEventListener(
-  'click',
-  function(){
+$("#print").addEventListener(
+  "click",
+  function () {
 
     window.print();
 
   }
 );
 
+
+/* =========================================
+   STARTUP TEST
+========================================= */
+
+console.log(
+  "Cotton Record loaded successfully."
+);
+
 </script>
 
 </body>
-</html>    
+</html>
