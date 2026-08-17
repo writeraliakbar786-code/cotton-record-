@@ -1,63 +1,494 @@
+// api/ocr.js
 // Vercel Serverless Function
-// Keeps GEMINI_API_KEY on the server. Never put it in index.html.
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({error:'Method not allowed'});
-  try {
-    const {images, names=[], defaultRate=0} = req.body || {};
-    if (!process.env.GEMINI_API_KEY) return res.status(500).json({error:'GEMINI_API_KEY is not configured on the server.'});
-    if (!Array.isArray(images) || images.length === 0) return res.status(400).json({error:'No images received.'});
-    if (images.length > 12) return res.status(400).json({error:'Maximum 12 images per request.'});
+// Gemini API key is kept on the server.
+// Technical Gemini/API errors are NEVER exposed to users.
 
-    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
-    const master = Array.isArray(names) ? names.filter(Boolean).slice(0,500) : [];
+export default async function handler(req, res) {
+
+  // --------------------------------
+  // METHOD CHECK
+  // --------------------------------
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({
+      error: 'REQUEST_NOT_ALLOWED'
+    });
+  }
+
+
+  try {
+
+    // --------------------------------
+    // READ REQUEST
+    // --------------------------------
+
+    const {
+      images,
+      names = [],
+      defaultRate = 0
+    } = req.body || {};
+
+
+    // --------------------------------
+    // API KEY CHECK
+    // --------------------------------
+
+    if (!process.env.GEMINI_API_KEY) {
+
+      console.error(
+        'GEMINI_API_KEY is missing.'
+      );
+
+      return res.status(500).json({
+        error: 'PROCESSING_FAILED'
+      });
+    }
+
+
+    // --------------------------------
+    // IMAGE CHECK
+    // --------------------------------
+
+    if (
+      !Array.isArray(images) ||
+      images.length === 0
+    ) {
+
+      return res.status(400).json({
+        error: 'NO_IMAGES'
+      });
+    }
+
+
+    if (images.length > 12) {
+
+      return res.status(400).json({
+        error: 'TOO_MANY_IMAGES'
+      });
+    }
+
+
+    // --------------------------------
+    // CURRENT GEMINI MODEL
+    // --------------------------------
+
+    const model =
+      'gemini-3.6-flash';
+
+
+    // --------------------------------
+    // NAME MASTER
+    // --------------------------------
+
+    const master =
+      Array.isArray(names)
+        ? names
+            .filter(
+              name =>
+                typeof name === 'string' &&
+                name.trim()
+            )
+            .map(
+              name =>
+                name.trim()
+            )
+            .slice(0, 500)
+        : [];
+
+
+    // --------------------------------
+    // OCR INSTRUCTIONS
+    // --------------------------------
+
     const prompt = `
-You are a careful OCR/data extraction assistant for handwritten Pakistani cotton purchase records.
-Read ALL supplied notebook images. The handwriting may be Urdu, Roman Urdu, or mixed.
-Return ONLY valid JSON in this exact shape:
+You are a highly accurate OCR and data extraction assistant for handwritten Pakistani cotton purchase records.
+
+Read ALL supplied notebook images carefully.
+
+The handwriting may contain:
+
+- Urdu
+- Roman Urdu
+- Arabic/Urdu digits
+- English digits
+- Mixed Urdu and numbers
+
+Your task is to extract every visible cotton record.
+
+Return ONLY valid JSON in exactly this format:
+
 {"records":[{"name":"...","weight":0}]}
 
-Rules:
-1. Extract every visible record row. Do not invent rows.
-2. Weight must be numeric kilograms. Convert Urdu/Arabic digits to normal numbers.
-3. A row may have a leading code such as 0-36; ignore the code unless it is clearly part of the person's name.
-4. Names are the handwritten Urdu names, not the numbers.
-5. Use this Name Master as a strong reference for spelling and matching:
+IMPORTANT RULES:
+
+1. Extract every visible record row.
+
+2. Do NOT invent records.
+
+3. Do NOT skip a clearly readable record.
+
+4. Weight must be a numeric value representing kilograms.
+
+5. Convert Urdu/Arabic digits into normal numbers.
+
+6. Example:
+   ۱۲.۵ = 12.5
+   ۲۵ = 25
+   ۳۶ = 36
+
+7. A row may contain a leading code such as:
+   0-36
+   1-25
+   03-40
+
+   Ignore such codes unless the code is clearly part of the person's name.
+
+8. The person's name must be separated from the weight.
+
+9. Use the supplied Name Master as a strong spelling/reference list.
+
+10. If a handwritten name appears to match a Name Master entry, use the Name Master spelling when reasonably supported.
+
+11. If the handwriting is unclear and there is no reasonably supported Name Master match, preserve the best readable spelling.
+
+12. Do not create a name just because it exists in the Name Master. Only return a name when an actual record row is visible.
+
+13. Do not return explanations.
+
+14. Do not return markdown.
+
+15. Do not return code fences.
+
+16. Return JSON only.
+
+Name Master:
 ${JSON.stringify(master)}
-6. If handwriting is unclear, choose the closest Name Master entry ONLY when reasonably supported; otherwise preserve the best readable spelling.
-7. Do not return explanations, markdown, or code fences.
-8. The default rate is ${Number(defaultRate)||0}; do not include rate in output.
+
+Default rate:
+${Number(defaultRate) || 0}
+
+Do not include rate in the returned JSON.
 `;
 
-    const parts = [{text:prompt}];
+
+    // --------------------------------
+    // CREATE IMAGE PARTS
+    // --------------------------------
+
+    const parts = [
+      {
+        text: prompt
+      }
+    ];
+
+
     for (const img of images) {
-      if (!img || !img.data) continue;
-      const mimeType = String(img.mimeType||'image/jpeg').startsWith('image/') ? img.mimeType : 'image/jpeg';
-      parts.push({inline_data:{mime_type:mimeType,data:img.data}});
+
+      if (
+        !img ||
+        !img.data
+      ) {
+        continue;
+      }
+
+
+      const mime =
+        String(
+          img.mimeType ||
+          'image/jpeg'
+        );
+
+
+      const mimeType =
+        mime.startsWith('image/')
+          ? mime
+          : 'image/jpeg';
+
+
+      parts.push({
+
+        inline_data: {
+
+          mime_type:
+            mimeType,
+
+          data:
+            String(img.data)
+
+        }
+
+      });
+
     }
 
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(process.env.GEMINI_API_KEY)}`;
-    const r = await fetch(endpoint, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        contents:[{parts}],
-        generationConfig:{temperature:0,responseMimeType:'application/json'}
-      })
+
+    // --------------------------------
+    // VALIDATE IMAGE PARTS
+    // --------------------------------
+
+    if (parts.length === 1) {
+
+      return res.status(400).json({
+        error: 'INVALID_IMAGES'
+      });
+    }
+
+
+    // --------------------------------
+    // GEMINI API
+    // --------------------------------
+
+    const endpoint =
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+
+
+    const response =
+      await fetch(
+        endpoint,
+        {
+
+          method: 'POST',
+
+          headers: {
+
+            'Content-Type':
+              'application/json',
+
+            'x-goog-api-key':
+              process.env.GEMINI_API_KEY
+
+          },
+
+          body: JSON.stringify({
+
+            contents: [
+              {
+                role: 'user',
+                parts
+              }
+            ],
+
+            generationConfig: {
+
+              responseMimeType:
+                'application/json'
+
+            }
+
+          })
+
+        }
+      );
+
+
+    // --------------------------------
+    // READ GEMINI RESPONSE
+    // --------------------------------
+
+    const raw =
+      await response.text();
+
+
+    let data = {};
+
+    try {
+
+      data =
+        JSON.parse(raw);
+
+    } catch {
+
+      data = {};
+
+    }
+
+
+    // --------------------------------
+    // HIDE GEMINI ERROR
+    // --------------------------------
+
+    if (!response.ok) {
+
+      // Full technical information goes
+      // ONLY to Vercel server logs.
+
+      console.error(
+        'Gemini API failed:',
+        response.status,
+        data?.error?.message || raw
+      );
+
+
+      // User sees ONLY generic message.
+
+      return res.status(500).json({
+        error: 'PROCESSING_FAILED'
+      });
+    }
+
+
+    // --------------------------------
+    // GET MODEL TEXT
+    // --------------------------------
+
+    const text =
+      data
+        ?.candidates?.[0]
+        ?.content?.parts
+        ?.map(
+          part =>
+            part?.text || ''
+        )
+        .join('')
+        .trim() || '';
+
+
+    if (!text) {
+
+      console.error(
+        'Gemini returned empty OCR result.'
+      );
+
+      return res.status(500).json({
+        error: 'PROCESSING_FAILED'
+      });
+    }
+
+
+    // --------------------------------
+    // PARSE JSON
+    // --------------------------------
+
+    let parsed;
+
+
+    try {
+
+      parsed =
+        JSON.parse(text);
+
+    } catch {
+
+      // Sometimes models may still return
+      // extra characters around JSON.
+
+      const match =
+        text.match(
+          /\{[\s\S]*\}/
+        );
+
+
+      if (!match) {
+
+        console.error(
+          'Gemini returned invalid JSON.'
+        );
+
+        return res.status(500).json({
+          error: 'PROCESSING_FAILED'
+        });
+      }
+
+
+      try {
+
+        parsed =
+          JSON.parse(
+            match[0]
+          );
+
+      } catch {
+
+        console.error(
+          'OCR JSON parsing failed.'
+        );
+
+        return res.status(500).json({
+          error: 'PROCESSING_FAILED'
+        });
+      }
+
+    }
+
+
+    // --------------------------------
+    // CLEAN RECORDS
+    // --------------------------------
+
+    const records =
+      Array.isArray(
+        parsed?.records
+      )
+
+        ? parsed.records
+            .map(
+              item => {
+
+                const name =
+                  String(
+                    item?.name || ''
+                  ).trim();
+
+
+                const weight =
+                  Number(
+                    item?.weight
+                  );
+
+
+                return {
+                  name,
+                  weight
+                };
+
+              }
+            )
+
+            .filter(
+              item =>
+                item.name &&
+                Number.isFinite(
+                  item.weight
+                ) &&
+                item.weight >= 0
+            )
+
+        : [];
+
+
+    // --------------------------------
+    // SUCCESS
+    // --------------------------------
+
+    return res.status(200).json({
+      records
     });
-    const raw = await r.text();
-    let data; try { data=JSON.parse(raw); } catch { data={}; }
-    if (!r.ok) return res.status(r.status).json({error:data?.error?.message || `Gemini request failed (${r.status})`});
 
-    const text = data?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('') || '';
-    let parsed; try { parsed=JSON.parse(text); } catch {
-      const m=text.match(/\{[\s\S]*\}/); if(!m) throw new Error('AI returned invalid JSON.'); parsed=JSON.parse(m[0]);
-    }
-    const records=Array.isArray(parsed.records)?parsed.records.map(x=>({
-      name:String(x.name||'').trim(),
-      weight:Number(x.weight)
-    })).filter(x=>x.name && Number.isFinite(x.weight) && x.weight>=0):[];
-    return res.status(200).json({records});
-  } catch(e) {
-    return res.status(500).json({error:e.message || 'Server error'});
+
+  } catch (error) {
+
+    // --------------------------------
+    // SERVER LOG ONLY
+    // --------------------------------
+
+    console.error(
+      'OCR SERVER ERROR:',
+      error
+    );
+
+
+    // NEVER expose:
+    // error.message
+    // Gemini model name
+    // API URL
+    // API response
+    // API key
+    // internal server details
+
+    return res.status(500).json({
+      error: 'PROCESSING_FAILED'
+    });
+
   }
+
 }
