@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#087f5b">
+
+<meta name="description" content="Cotton Record is a simple cotton weight, record and payment management application.">
+
+<title>Home - Cotton Record</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,"Noto Nastaliq Urdu","Noto Sans Arabic",sans-serif;
+  background:#eef7f4;
+  color:#18332b;
+  line-height:1.7
+}
+
+header{
+  background:linear-gradient(135deg,#087f5b,#0b9b70);
+  color:#fff;
+  padding:18px
+}
+
+.header-inner{
+  max-width:1000px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px
+}
+
+.logo{
+  font-size:22px;
+  font-weight:900
+}
+
+.header-btn{
+  display:inline-block;
+  text-decoration:none;
+  background:#fff;
+  color:#087052;
+  padding:9px 16px;
+  border-radius:11px;
+  font-weight:800
+}
+
+.hero{
+  background:linear-gradient(135deg,#087f5b,#0b9b70);
+  color:#fff;
+  padding:65px 18px 75px
+}
+
+.hero-inner{
+  max-width:1000px;
+  margin:auto;
+  text-align:center
+}
+
+.hero-icon{
+  font-size:60px;
+  margin-bottom:8px
+}
+
+.hero h1{
+  font-size:42px;
+  line-height:1.2;
+  margin:0 0 15px
+}
+
+.hero p{
+  max-width:700px;
+  margin:0 auto 25px;
+  font-size:18px;
+  opacity:.94
+}
+
+.hero-btn{
+  display:inline-block;
+  background:#fff;
+  color:#087052;
+  text-decoration:none;
+  padding:14px 25px;
+  border-radius:14px;
+  font-weight:900;
+  font-size:16px;
+  box-shadow:0 8px 25px #003c2a35
+}
+
+nav{
+  background:#fff;
+  padding:12px 18px;
+  box-shadow:0 2px 10px #0b5b4214
+}
+
+.nav-inner{
+  max-width:1000px;
+  margin:auto;
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap
+}
+
+nav a{
+  text-decoration:none;
+  color:#087052;
+  font-weight:700;
+  padding:7px 11px;
+  border-radius:8px
+}
+
+nav a:hover{
+  background:#e8f3ef
+}
+
+main{
+  max-width:1000px;
+  margin:auto;
+  padding:22px 18px
+}
+
+.section-title{
+  text-align:center;
+  margin:15px 0 22px
+}
+
+.section-title h2{
+  color:#087052;
+  margin:0 0 5px
+}
+
+.section-title p{
+  color:#61746e;
+  margin:0
+}
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px
+}
+
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:22px;
+  box-shadow:0 5px 24px #0b5b4214
+}
+
+.feature-icon{
+  font-size:34px
+}
+
+.card h3{
+  margin:8px 0;
+  color:#087052
+}
+
+.card p{
+  margin:0;
+  color:#61746e
+}
+
+.steps{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-top:25px
+}
+
+.step{
+  background:#eff9f5;
+  border:1px solid #d5ebe3;
+  border-radius:17px;
+  padding:20px
+}
+
+.step-number{
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:#087f5b;
+  color:#fff;
+  font-weight:900;
+  margin-bottom:10px
+}
+
+.cta{
+  margin-top:25px;
+  background:#fff;
+  border-radius:22px;
+  padding:30px 20px;
+  text-align:center;
+  box-shadow:0 5px 24px #0b5b4214
+}
+
+.cta h2{
+  margin:0 0 8px;
+  color:#087052
+}
+
+.cta p{
+  color:#61746e;
+  max-width:650px;
+  margin:0 auto 18px
+}
+
+.cta-btn{
+  display:inline-block;
+  background:#087f5b;
+  color:#fff;
+  text-decoration:none;
+  padding:13px 22px;
+  border-radius:13px;
+  font-weight:900
+}
+
+footer{
+  margin-top:25px;
+  background:#fff;
+  padding:25px 18px;
+  text-align:center;
+  color:#61746e;
+  font-size:14px
+}
+
+.footer-links{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-bottom:12px
+}
+
+.footer-links a{
+  color:#087052;
+  text-decoration:none;
+  font-weight:700
+}
+
+@media(max-width:700px){
+  .header-inner{
+    flex-direction:column;
+    text-align:center
+  }
+
+  .hero{
+    padding:45px 16px 55px
+  }
+
+  .hero h1{
+    font-size:32px
+  }
+
+  .hero p{
+    font-size:16px
+  }
+
+  .features,
+  .steps{
+    grid-template-columns:1fr
+  }
+}
+
+@media(max-width:450px){
+  .nav-inner{
+    justify-content:flex-start
+  }
+
+  nav a{
+    font-size:14px
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="header-inner">
+
+<div class="logo">
+🌿 Cotton Record
+</div>
+
+<a class="header-btn" href="/index.html">
+Login / Open App
+</a>
+
+</div>
+</header>
+
+
+<nav>
+<div class="nav-inner">
+
+<a href="/home.html">Home</a>
+<a href="/about.html">About</a>
+<a href="/privacy.html">Privacy Policy</a>
+<a href="/terms.html">Terms</a>
+<a href="/contact.html">Contact</a>
+
+</div>
+</nav>
+
+
+<section class="hero">
+
+<div class="hero-inner">
+
+<div class="hero-icon">🌿</div>
+
+<h1>Cotton Record</h1>
+
+<p>
+Simple and organized cotton weight, record and payment management.
+Manage your records, process notebook pictures, verify weights and
+calculate payments from your mobile phone or computer.
+</p>
+
+<a class="hero-btn" href="/index.html">
+Get Started →
+</a>
+
+</div>
+
+</section>
+
+
+<main>
+
+
+<section>
+
+<div class="section-title">
+<h2>Everything You Need for Cotton Records</h2>
+
+<p>
+Manage your daily cotton records in one simple application.
+</p>
+</div>
+
+
+<div class="features">
+
+<div class="card">
+<div class="feature-icon">📝</div>
+
+<h3>Manage Names</h3>
+
+<p>
+Create and maintain a list of names that appear in your cotton purchase
+records.
+</p>
+</div>
+
+
+<div class="card">
+<div class="feature-icon">📷</div>
+
+<h3>Record Pictures</h3>
+
+<p>
+Select multiple notebook pictures and process your handwritten cotton
+records.
+</p>
+</div>
+
+
+<div class="card">
+<div class="feature-icon">⚖️</div>
+
+<h3>Weight Records</h3>
+
+<p>
+Review extracted weights and correct any information before saving your
+records.
+</p>
+</div>
+
+
+<div class="card">
+<div class="feature-icon">💰</div>
+
+<h3>Payment Calculation</h3>
+
+<p>
+Enter the cotton rate and calculate payments based on recorded weights.
+</p>
+</div>
+
+
+<div class="card">
+<div class="feature-icon">📊</div>
+
+<h3>Final Summary</h3>
+
+<p>
+Combine records with the same name and view total weight and payment.
+</p>
+</div>
+
+
+<div class="card">
+<div class="feature-icon">📤</div>
+
+<h3>Export & Print</h3>
+
+<p>
+Export your final records and print summaries when needed.
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<section style="margin-top:35px">
+
+<div class="section-title">
+
+<h2>How It Works</h2>
+
+<p>
+Three simple steps to organize your records.
+</p>
+
+</div>
+
+
+<div class="steps">
+
+<div class="step">
+
+<div class="step-number">1</div>
+
+<h3>Add Names</h3>
+
+<p>
+Enter the names that appear in your cotton records.
+</p>
+
+</div>
+
+
+<div class="step">
+
+<div class="step-number">2</div>
+
+<h3>Select Pictures</h3>
+
+<p>
+Upload your notebook record pictures for processing.
+</p>
+
+</div>
+
+
+<div class="step">
+
+<div class="step-number">3</div>
+
+<h3>Verify & Calculate</h3>
+
+<p>
+Check the detected records, enter the rate and save your final
+calculation.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section class="cta">
+
+<h2>Ready to Manage Your Cotton Records?</h2>
+
+<p>
+Start using Cotton Record to organize your records and simplify weight
+and payment calculations.
+</p>
+
+<a class="cta-btn" href="/index.html">
+Open Cotton Record
+</a>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<div class="footer-links">
+
+<a href="/home.html">Home</a>
+<a href="/about.html">About</a>
+<a href="/privacy.html">Privacy Policy</a>
+<a href="/terms.html">Terms</a>
+<a href="/contact.html">Contact</a>
+
+</div>
+
+© 2026 Cotton Record. All rights reserved.
+
+</footer>
+
+</body>
+  </html>
