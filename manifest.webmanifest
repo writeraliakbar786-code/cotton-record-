@@ -1,9 +1,34 @@
 {
-  "name": "Cotton Record V5.3",
+  "name": "Cotton Record",
   "short_name": "Cotton Record",
+  "description": "Cotton weight, records and payment management system",
+  "lang": "en",
+  "dir": "ltr",
+
   "start_url": "/",
+  "scope": "/",
+
   "display": "standalone",
+
   "background_color": "#eef7f4",
   "theme_color": "#087f5b",
-  "description": "Urdu handwritten cotton record reader and calculator"
+
+  "orientation": "portrait",
+
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+
+  "categories": [
+    "business",
+    "productivity",
+    "utilities"
+  ],
+
+  "prefer_related_applications": false
 }
