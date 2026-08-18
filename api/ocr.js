@@ -2,9 +2,13 @@
 
 export default async function handler(req, res) {
   /*
-    User ko Gemini/API technical error details nahi dikhani.
-    Technical details sirf Vercel logs mein jayengi.
+    Technical Gemini/API errors are NEVER exposed to the user.
+    Full technical details are logged in Vercel.
   */
+
+  // =========================================================
+  // METHOD
+  // =========================================================
 
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -47,12 +51,20 @@ export default async function handler(req, res) {
       !Array.isArray(images) ||
       images.length === 0
     ) {
+      console.error(
+        "No images received."
+      );
+
       return res.status(400).json({
         error: "PROCESSING_FAILED"
       });
     }
 
     if (images.length > 12) {
+      console.error(
+        `Too many images: ${images.length}`
+      );
+
       return res.status(400).json({
         error: "PROCESSING_FAILED"
       });
@@ -97,61 +109,75 @@ The handwriting may contain:
 - English digits
 - Mixed Urdu and numbers
 
-Extract every clearly visible cotton purchase record.
+Your job is to extract every clearly visible cotton purchase
+record from ALL supplied images.
 
-Return ONLY valid JSON in exactly this format:
+Return ONLY valid JSON:
 
-{"records":[{"name":"...","weight":0}]}
+{
+  "records": [
+    {
+      "name": "...",
+      "weight": 0
+    }
+  ]
+}
 
-Rules:
+IMPORTANT RULES:
 
 1. Extract every clearly visible record row.
 
 2. Do not invent records.
 
-3. Do not skip clearly readable records.
+3. Do not create records from the Name Master alone.
 
-4. Weight must be numeric kilograms.
+4. If a record is unclear, do not guess.
 
-5. Convert Urdu/Arabic digits into normal English numbers.
+5. Weight must be numeric kilograms.
 
-6. Examples:
+6. Convert Urdu and Arabic digits into normal English numbers.
+
+Examples:
 
 ۱۲.۵ = 12.5
 ۲۵ = 25
 ۳۶ = 36
 
-7. Convert Arabic decimal separator "٫" to "." when necessary.
+7. Convert Arabic decimal separator "٫" to ".".
 
-8. Ignore leading record codes such as 0-36 or 1-25
-   unless they are clearly part of the person's name.
+8. Separate person's name from weight.
 
-9. Separate the person's name from the weight.
+9. Ignore leading record codes such as:
+   0-36
+   1-25
+   2-40
 
-10. Use the Name Master to improve spelling and matching.
+   unless the code is clearly part of the person's name.
 
-11. Only use a Name Master name when the actual image
-    contains a matching record.
+10. Use the Name Master only to improve spelling
+    and match a name that is actually visible in the image.
 
-12. Never create a record merely because a name exists
-    in the Name Master.
+11. Do not return a Name Master person unless
+    that person's record is actually visible.
 
-13. If a record is unclear, do not invent its value.
+12. Do not merge separate rows during OCR.
+
+13. Keep every visible row as a separate record.
 
 14. Weight must be zero or greater.
 
-15. Do not include rate in the JSON.
+15. Do not include money or rate in the JSON.
 
-16. Do not return explanations.
+16. Do not include explanations.
 
-17. Do not return markdown.
+17. Do not include markdown.
 
 18. Return JSON only.
 
-Name Master:
+NAME MASTER:
 ${JSON.stringify(master)}
 
-Default rate:
+DEFAULT RATE:
 ${Number(defaultRate) || 0}
 `;
 
@@ -167,27 +193,104 @@ ${Number(defaultRate) || 0}
 
     let validImageCount = 0;
 
+    // =========================================================
+    // PROCESS IMAGES
+    // =========================================================
+
     for (const image of images) {
       if (
         !image ||
         typeof image.data !== "string" ||
         !image.data.trim()
       ) {
+        console.error(
+          "Invalid image object."
+        );
+
         continue;
       }
 
-      const mime = String(
-        image.mimeType || "image/jpeg"
-      );
+      let imageData =
+        image.data.trim();
 
-      const mimeType = mime.startsWith("image/")
-        ? mime
-        : "image/jpeg";
+      let mimeType =
+        String(
+          image.mimeType ||
+          "image/jpeg"
+        );
+
+      /*
+        IMPORTANT:
+
+        If frontend sends:
+
+        data:image/jpeg;base64,AAAA....
+
+        remove the data URL prefix.
+
+        Gemini needs only:
+
+        AAAA....
+      */
+
+      if (
+        imageData.startsWith(
+          "data:"
+        )
+      ) {
+        const match =
+          imageData.match(
+            /^data:(image\/[^;]+);base64,(.+)$/s
+          );
+
+        if (!match) {
+          console.error(
+            "Invalid data URL image."
+          );
+
+          continue;
+        }
+
+        mimeType =
+          match[1];
+
+        imageData =
+          match[2];
+      }
+
+      // -------------------------------------------------------
+      // MIME TYPE VALIDATION
+      // -------------------------------------------------------
+
+      if (
+        !mimeType.startsWith(
+          "image/"
+        )
+      ) {
+        mimeType =
+          "image/jpeg";
+      }
+
+      // -------------------------------------------------------
+      // BASE64 VALIDATION
+      // -------------------------------------------------------
+
+      if (!imageData) {
+        console.error(
+          "Empty image data."
+        );
+
+        continue;
+      }
+
+      // -------------------------------------------------------
+      // GEMINI IMAGE PART
+      // -------------------------------------------------------
 
       parts.push({
         inline_data: {
           mime_type: mimeType,
-          data: image.data
+          data: imageData
         }
       });
 
@@ -200,7 +303,7 @@ ${Number(defaultRate) || 0}
 
     if (validImageCount === 0) {
       console.error(
-        "No valid images were supplied."
+        "No valid images remained after validation."
       );
 
       return res.status(400).json({
@@ -219,55 +322,74 @@ ${Number(defaultRate) || 0}
     // GEMINI REQUEST
     // =========================================================
 
-    const response = await fetch(
-      endpoint,
-      {
-        method: "POST",
+    const response =
+      await fetch(
+        endpoint,
+        {
+          method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey
-        },
+          headers: {
+            "Content-Type":
+              "application/json",
 
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts
-            }
-          ],
+            "x-goog-api-key":
+              apiKey
+          },
 
-          generationConfig: {
-            temperature: 0,
-            responseMimeType: "application/json"
-          }
-        })
-      }
-    );
+          body:
+            JSON.stringify({
+              contents: [
+                {
+                  role: "user",
+                  parts
+                }
+              ],
+
+              generationConfig: {
+                /*
+                  DO NOT use temperature here.
+                  Gemini 3.6 Flash has deprecated
+                  temperature/top_p/top_k.
+                */
+
+                responseMimeType:
+                  "application/json"
+              }
+            })
+        }
+      );
 
     // =========================================================
-    // READ RESPONSE
+    // READ GEMINI RESPONSE
     // =========================================================
 
-    const raw = await response.text();
+    const raw =
+      await response.text();
 
     let data = {};
 
     try {
-      data = JSON.parse(raw);
+      data =
+        JSON.parse(raw);
     } catch {
+      console.error(
+        "Gemini returned non-JSON HTTP response:",
+        raw
+      );
+
       data = {};
     }
 
     // =========================================================
-    // HIDE GEMINI ERROR
+    // GEMINI ERROR
     // =========================================================
 
     if (!response.ok) {
       console.error(
         "Gemini API error:",
         response.status,
-        data?.error?.message || raw
+        data?.error?.message ||
+          raw
       );
 
       return res.status(500).json({
@@ -280,14 +402,20 @@ ${Number(defaultRate) || 0}
     // =========================================================
 
     const text =
-      data?.candidates?.[0]?.content?.parts
-        ?.map(part => part?.text || "")
+      data
+        ?.candidates?.[0]
+        ?.content?.parts
+        ?.map(
+          part =>
+            part?.text || ""
+        )
         .join("")
         .trim() || "";
 
     if (!text) {
       console.error(
-        "Gemini returned empty OCR response."
+        "Gemini returned empty OCR response.",
+        JSON.stringify(data)
       );
 
       return res.status(500).json({
@@ -302,17 +430,19 @@ ${Number(defaultRate) || 0}
     let parsed = null;
 
     try {
-      parsed = JSON.parse(text);
+      parsed =
+        JSON.parse(text);
+
     } catch {
       /*
-        Fallback:
-        Agar model ne JSON ke around extra characters
-        return kiye hon.
+        Fallback in case Gemini adds
+        unexpected characters around JSON.
       */
 
-      const match = text.match(
-        /\{[\s\S]*\}/
-      );
+      const match =
+        text.match(
+          /\{[\s\S]*\}/
+        );
 
       if (!match) {
         console.error(
@@ -326,7 +456,11 @@ ${Number(defaultRate) || 0}
       }
 
       try {
-        parsed = JSON.parse(match[0]);
+        parsed =
+          JSON.parse(
+            match[0]
+          );
+
       } catch (error) {
         console.error(
           "Recovered JSON could not be parsed:",
@@ -369,25 +503,38 @@ ${Number(defaultRate) || 0}
       }
 
       return String(value)
+
         // Urdu digits
-        .replace(/[۰-۹]/g, d =>
-          String(
-            "۰۱۲۳۴۵۶۷۸۹".indexOf(d)
-          )
+        .replace(
+          /[۰-۹]/g,
+          d =>
+            String(
+              "۰۱۲۳۴۵۶۷۸۹"
+                .indexOf(d)
+            )
         )
 
         // Arabic digits
-        .replace(/[٠-٩]/g, d =>
-          String(
-            "٠١٢٣٤٥٦٧٨٩".indexOf(d)
-          )
+        .replace(
+          /[٠-٩]/g,
+          d =>
+            String(
+              "٠١٢٣٤٥٦٧٨٩"
+                .indexOf(d)
+            )
         )
 
-        // Arabic decimal separator
-        .replace(/٫/g, ".")
+        // Arabic decimal point
+        .replace(
+          /٫/g,
+          "."
+        )
 
         // Arabic comma
-        .replace(/،/g, ",");
+        .replace(
+          /،/g,
+          ","
+        );
     }
 
     // =========================================================
@@ -404,9 +551,12 @@ ${Number(defaultRate) || 0}
         return NaN;
       }
 
-      const number = Number(normalized);
+      const number =
+        Number(normalized);
 
-      if (!Number.isFinite(number)) {
+      if (
+        !Number.isFinite(number)
+      ) {
         return NaN;
       }
 
@@ -430,7 +580,9 @@ ${Number(defaultRate) || 0}
     // =========================================================
 
     const rawRecords =
-      Array.isArray(parsed?.records)
+      Array.isArray(
+        parsed?.records
+      )
         ? parsed.records
         : [];
 
@@ -440,25 +592,36 @@ ${Number(defaultRate) || 0}
 
     const records = [];
 
-    for (const item of rawRecords) {
+    for (
+      const item of rawRecords
+    ) {
       if (
         !item ||
-        typeof item !== "object"
+        typeof item !==
+          "object"
       ) {
         continue;
       }
 
       const name =
-        cleanName(item.name);
+        cleanName(
+          item.name
+        );
 
       const weight =
-        cleanWeight(item.weight);
+        cleanWeight(
+          item.weight
+        );
 
       if (!name) {
         continue;
       }
 
-      if (!Number.isFinite(weight)) {
+      if (
+        !Number.isFinite(
+          weight
+        )
+      ) {
         continue;
       }
 
@@ -481,10 +644,9 @@ ${Number(defaultRate) || 0}
     });
 
   } catch (error) {
-    /*
-      NEVER expose technical error details to the user.
-      Full error stays in Vercel logs.
-    */
+    // =========================================================
+    // SERVER ERROR
+    // =========================================================
 
     console.error(
       "OCR SERVER ERROR:",
@@ -495,77 +657,4 @@ ${Number(defaultRate) || 0}
       error: "PROCESSING_FAILED"
     });
   }
-       }Records = [];
-
-    for (const item of rawRecords) {
-      if (!item || typeof item !== "object") {
-        continue;
-      }
-
-      const name =
-        cleanName(item.name);
-
-      const weight =
-        cleanWeight(item.weight);
-
-      if (!name) {
-        continue;
-      }
-
-      if (!Number.isFinite(weight)) {
-        continue;
-      }
-
-      cleanedRecords.push({
-        name,
-        weight
-      });
-    }
-
-    // =========================================================
-    // REMOVE EXACT DUPLICATES
-    // =========================================================
-
-    const seen = new Set();
-
-    const records =
-      cleanedRecords.filter(item => {
-        const key =
-          `${item.name.toLowerCase()}|${item.weight}`;
-
-        if (seen.has(key)) {
-          return false;
-        }
-
-        seen.add(key);
-        return true;
-      });
-
-    // =========================================================
-    // SUCCESS
-    // =========================================================
-
-    console.log(
-      `OCR successful: ${validImageCount} image(s), ${records.length} record(s)`
-    );
-
-    return res.status(200).json({
-      records
-    });
-
-  } catch (error) {
-    /*
-      NEVER expose technical error details to the user.
-      Full error stays in Vercel logs.
-    */
-
-    console.error(
-      "OCR SERVER ERROR:",
-      error
-    );
-
-    return res.status(500).json({
-      error: "PROCESSING_FAILED"
-    });
-  }
-    }
+}
