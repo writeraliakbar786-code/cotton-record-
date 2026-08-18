@@ -31,6 +31,205 @@ main{padding:16px}.card{background:#fff;border-radius:22px;padding:18px;margin:1
 .total-box{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.total-item{background:linear-gradient(135deg,#e8f7f1,#f5fbf9);border:1px solid #d5ebe3;border-radius:18px;padding:16px}.total-label{font-size:13px;color:#61746e}.total-value{font-size:24px;font-weight:900;color:#087052;margin-top:4px}
 @media(max-width:650px){.top h1{font-size:22px}.recordgrid{grid-template-columns:1fr 105px}.recordgrid .money{grid-column:1/-1;text-align:right}.row>*{flex:1 1 100%}.total-box{grid-template-columns:1fr}.user-bar{align-items:flex-start}.user-bar .row{flex:0 0 auto}.user-bar .row>*{flex:0 0 auto}}
 @media print{.btn,.image-picker,#thumbs,#status,.user-bar,.language-box{display:none!important}body{background:#fff}.top{background:none;color:#000}.card{box-shadow:none;border:1px solid #ddd}}
+/* =====================================================
+   PWA INSTALL POPUP
+===================================================== */
+
+.install-popup{
+  position:fixed;
+  left:16px;
+  right:16px;
+  bottom:18px;
+  z-index:9999;
+
+  max-width:520px;
+  margin:auto;
+
+  background:rgba(255,255,255,.97);
+  border:1px solid #d9ebe5;
+  border-radius:22px;
+
+  padding:14px;
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  box-shadow:
+    0 18px 50px rgba(0,70,50,.22);
+
+  backdrop-filter:blur(12px);
+
+  transform:translateY(130%);
+  opacity:0;
+
+  transition:
+    transform .35s ease,
+    opacity .35s ease;
+}
+
+.install-popup.show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+.install-icon{
+  width:50px;
+  height:50px;
+  flex:0 0 50px;
+
+  border-radius:15px;
+  object-fit:cover;
+
+  box-shadow:0 5px 15px #087f5b30;
+}
+
+.install-content{
+  flex:1;
+  min-width:0;
+}
+
+.install-title{
+  font-size:16px;
+  font-weight:900;
+  color:#18332b;
+  margin-bottom:3px;
+}
+
+.install-text{
+  font-size:12px;
+  line-height:1.4;
+  color:#687b75;
+}
+
+.install-actions{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.install-btn{
+  border:0;
+  border-radius:12px;
+
+  padding:10px 14px;
+
+  background:linear-gradient(
+    135deg,
+    #087f5b,
+    #0b9b70
+  );
+
+  color:white;
+  font-size:14px;
+  font-weight:900;
+
+  cursor:pointer;
+  white-space:nowrap;
+
+  box-shadow:0 6px 16px #087f5b35;
+
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease;
+}
+
+.install-btn:active{
+  transform:scale(.95);
+}
+
+.install-close{
+  width:32px;
+  height:32px;
+
+  border:0;
+  border-radius:50%;
+
+  background:#eef5f2;
+  color:#527068;
+
+  font-size:20px;
+  line-height:1;
+
+  cursor:pointer;
+}
+
+.install-success{
+  position:fixed;
+  left:16px;
+  right:16px;
+  top:20px;
+
+  z-index:10000;
+
+  max-width:430px;
+  margin:auto;
+
+  padding:14px 16px;
+
+  border-radius:16px;
+
+  background:#e8f7ee;
+  border:1px solid #bde4cd;
+
+  color:#12643d;
+
+  font-size:14px;
+  font-weight:800;
+
+  box-shadow:0 12px 35px #12643d20;
+
+  transform:translateY(-150%);
+  opacity:0;
+
+  transition:
+    transform .35s ease,
+    opacity .35s ease;
+}
+
+.install-success.show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+.install-success-icon{
+  font-size:20px;
+  margin-right:7px;
+}
+
+@media(max-width:500px){
+
+  .install-popup{
+    left:10px;
+    right:10px;
+    bottom:10px;
+
+    padding:12px;
+
+    border-radius:20px;
+  }
+
+  .install-icon{
+    width:44px;
+    height:44px;
+    flex-basis:44px;
+    border-radius:13px;
+  }
+
+  .install-title{
+    font-size:14px;
+  }
+
+  .install-text{
+    font-size:11px;
+  }
+
+  .install-btn{
+    padding:9px 11px;
+    font-size:13px;
+  }
+
+   }
 </style>
 </head>
 <body>
@@ -3463,8 +3662,319 @@ if ("serviceWorker" in navigator) {
   });
 
 }
+   /* =====================================================
+   PWA INSTALL SYSTEM
+===================================================== */
+
+let deferredInstallPrompt = null;
+
+const installPopup =
+  document.querySelector("#installPopup");
+
+const installApp =
+  document.querySelector("#installApp");
+
+const closeInstall =
+  document.querySelector("#closeInstall");
+
+const installSuccess =
+  document.querySelector("#installSuccess");
+
+
+/* =========================
+   CHECK INSTALLED STATE
+========================= */
+
+function isAppInstalled(){
+
+  return (
+    window.matchMedia(
+      "(display-mode: standalone)"
+    ).matches ||
+
+    window.navigator.standalone === true
+  );
+
+}
+
+
+/* =========================
+   SHOW INSTALL POPUP
+========================= */
+
+function showInstallPopup(){
+
+  if(isAppInstalled()){
+    return;
+  }
+
+  installPopup.classList.add("show");
+
+}
+
+
+/* =========================
+   HIDE INSTALL POPUP
+========================= */
+
+function hideInstallPopup(){
+
+  installPopup.classList.remove("show");
+
+}
+
+
+/* =========================
+   INSTALL PROMPT
+========================= */
+
+window.addEventListener(
+  "beforeinstallprompt",
+  function(event){
+
+    event.preventDefault();
+
+    deferredInstallPrompt = event;
+
+    showInstallPopup();
+
+  }
+);
+
+
+/* =========================
+   INSTALL BUTTON
+========================= */
+
+installApp.addEventListener(
+  "click",
+  async function(){
+
+    if(!deferredInstallPrompt){
+
+      /*
+        Browser ne install prompt available
+        nahi kiya.
+      */
+
+      return;
+
+    }
+
+    const promptEvent =
+      deferredInstallPrompt;
+
+    deferredInstallPrompt = null;
+
+    hideInstallPopup();
+
+    try{
+
+      await promptEvent.prompt();
+
+      const result =
+        await promptEvent.userChoice;
+
+      if(
+        result &&
+        result.outcome === "accepted"
+      ){
+
+        showInstallSuccess();
+
+      }
+
+    }catch(error){
+
+      console.error(
+        "PWA installation failed:",
+        error
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+closeInstall.addEventListener(
+  "click",
+  function(){
+
+    hideInstallPopup();
+
+    /*
+      User ne popup close kiya.
+      Dobara page reload par browser
+      install prompt decide karega.
+    */
+
+  }
+);
+
+
+/* =========================
+   APP INSTALLED EVENT
+========================= */
+
+window.addEventListener(
+  "appinstalled",
+  function(){
+
+    deferredInstallPrompt = null;
+
+    hideInstallPopup();
+
+    showInstallSuccess();
+
+  }
+);
+
+
+/* =========================
+   SUCCESS MESSAGE
+========================= */
+
+function showInstallSuccess(){
+
+  installSuccess.classList.add("show");
+
+  setTimeout(
+    function(){
+
+      installSuccess.classList.remove(
+        "show"
+      );
+
+    },
+    4500
+  );
+
+}
+
+
+/* =========================
+   INITIAL CHECK
+========================= */
+
+if(isAppInstalled()){
+
+  hideInstallPopup();
+
+}
+
+
+/* =========================
+   SERVICE WORKER
+========================= */
+
+if(
+  "serviceWorker" in navigator
+){
+
+  window.addEventListener(
+    "load",
+    function(){
+
+      navigator.serviceWorker
+        .register("/service-worker.js")
+        .then(
+          function(){
+
+            console.log(
+              "Service Worker registered successfully."
+            );
+
+          }
+        )
+        .catch(
+          function(error){
+
+            console.error(
+              "Service Worker registration failed:",
+              error
+            );
+
+          }
+        );
+
+    }
+  );
+
+   }
 
 </script>
+   <!-- =====================================================
+     PWA INSTALL POPUP
+===================================================== -->
+
+<div
+  id="installPopup"
+  class="install-popup"
+  aria-live="polite"
+>
+
+  <img
+    src="/icons/icon-192.png"
+    class="install-icon"
+    alt="Cotton Record"
+  >
+
+  <div class="install-content">
+
+    <div class="install-title">
+      Install Cotton Record
+    </div>
+
+    <div class="install-text">
+      Install the app for quick access from your phone.
+    </div>
+
+  </div>
+
+  <div class="install-actions">
+
+    <button
+      id="installApp"
+      class="install-btn"
+      type="button"
+    >
+      Install
+    </button>
+
+    <button
+      id="closeInstall"
+      class="install-close"
+      type="button"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- INSTALL SUCCESS MESSAGE -->
+
+<div
+  id="installSuccess"
+  class="install-success"
+  role="status"
+>
+
+  <span class="install-success-icon">✓</span>
+
+  <span>
+    Cotton Record installed successfully.
+  </span>
+
+</div>
 
 </body>
 </html>
