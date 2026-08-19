@@ -1,0 +1,2641 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#087f5b">
+<meta name="description" content="Cotton Record - Cotton weight and payment record management">
+<title>Cotton Record</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,"Noto Nastaliq Urdu","Noto Sans Arabic",sans-serif;
+  background:#eef7f4;
+  color:#18332b
+}
+.hidden{display:none!important}
+
+.auth-screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:linear-gradient(135deg,#087f5b,#0b9b70)
+}
+.auth-box,.modal-box{
+  width:100%;
+  max-width:460px;
+  background:#fff;
+  border-radius:26px;
+  padding:25px;
+  box-shadow:0 20px 60px #003c2a40
+}
+.auth-logo{text-align:center;font-size:48px}
+.auth-box h1{text-align:center;margin:4px 0}
+.auth-subtitle{
+  text-align:center;
+  color:#71837e;
+  margin-bottom:20px
+}
+
+.auth-tabs,.row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap
+}
+.auth-tab,.btn{
+  border:0;
+  border-radius:13px;
+  padding:13px 17px;
+  font-weight:800;
+  cursor:pointer
+}
+.auth-tab{
+  flex:1;
+  background:#e8f3ef;
+  color:#087052
+}
+.auth-tab.active,.primary{
+  background:#087f5b;
+  color:#fff
+}
+.secondary{
+  background:#e8f3ef;
+  color:#087052
+}
+.danger{
+  background:#ffe7e5;
+  color:#a92b22
+}
+.premium-btn{
+  background:linear-gradient(135deg,#d99b00,#f2c94c);
+  color:#fff
+}
+.btn:disabled{opacity:.55}
+
+.language-box{margin-bottom:16px}
+.language-box label,label{
+  display:block;
+  font-weight:800;
+  margin:10px 0 6px
+}
+.input,textarea,select{
+  width:100%;
+  padding:13px;
+  border:1px solid #d7e5e0;
+  border-radius:13px;
+  background:#fbfefd;
+  font-size:16px;
+  outline:none
+}
+.input:focus,textarea:focus,select:focus{
+  border-color:#0b9b70;
+  box-shadow:0 0 0 3px #0b9b7018
+}
+textarea{
+  min-height:110px;
+  resize:vertical
+}
+
+.status{
+  padding:11px;
+  border-radius:11px;
+  margin-top:10px;
+  display:none
+}
+.ok{
+  display:block;
+  background:#e8f7ee;
+  color:#12643d
+}
+.err{
+  display:block;
+  background:#ffe8e6;
+  color:#9f2b23
+}
+.loading{
+  display:block;
+  background:#eef3ff;
+  color:#294b91
+}
+.muted{
+  color:#61746e;
+  font-size:14px
+}
+
+.top{
+  background:linear-gradient(135deg,#087f5b,#0b9b70);
+  color:#fff;
+  padding:20px 17px
+}
+.top-inner,main{
+  max-width:900px;
+  margin:auto
+}
+.top h1{
+  margin:0 0 5px
+}
+.top p{
+  margin:0;
+  opacity:.9
+}
+.user-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+  gap:10px
+}
+.logout{
+  border:0;
+  border-radius:10px;
+  padding:8px 12px;
+  background:#ffffff22;
+  color:#fff;
+  font-weight:800
+}
+
+main{padding:16px}
+.card{
+  background:#fff;
+  border-radius:21px;
+  padding:18px;
+  margin:14px 0;
+  box-shadow:0 5px 24px #0b5b4214
+}
+h2{margin:0 0 9px}
+
+.pill,.plan-badge{
+  display:inline-block;
+  background:#e9f5f1;
+  color:#087052;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800
+}
+.premium-badge{
+  background:#fff0b8;
+  color:#8a6200
+}
+
+.plan-card{
+  border:1px solid #ead38b;
+  background:linear-gradient(135deg,#fffdf4,#fff8d9)
+}
+.plan-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px
+}
+.features{padding-left:20px}
+.features li{margin:6px 0}
+
+.image-picker-button{
+  width:100%;
+  min-height:60px;
+  border:2px dashed #0b9b70;
+  border-radius:15px;
+  background:#e8f3ef;
+  color:#087052;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer
+}
+#images{
+  position:absolute;
+  width:1px;
+  height:1px;
+  opacity:0
+}
+.selection-info{
+  text-align:center;
+  margin-top:8px;
+  padding:9px;
+  background:#f1f7f5;
+  border-radius:10px;
+  color:#61746e
+}
+.thumbs{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:10px;
+  margin-top:12px
+}
+.thumb{
+  border:1px solid #dbe9e4;
+  border-radius:13px;
+  overflow:hidden
+}
+.thumb img{
+  width:100%;
+  height:120px;
+  object-fit:cover
+}
+.thumb div{
+  padding:6px;
+  font-size:12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+.record{
+  border:1px solid #dceae5;
+  border-radius:15px;
+  padding:12px;
+  margin:10px 0
+}
+.recordgrid{
+  display:grid;
+  grid-template-columns:1fr 120px 120px 110px;
+  gap:8px;
+  align-items:center
+}
+.recordgrid input{
+  width:100%;
+  padding:10px;
+  border:1px solid #d5e4df;
+  border-radius:9px
+}
+.money{
+  text-align:center;
+  font-weight:800
+}
+.empty{
+  text-align:center;
+  padding:22px;
+  color:#71837e
+}
+.total-box{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:14px
+}
+.total-item{
+  background:#eff9f5;
+  border:1px solid #d5ebe3;
+  border-radius:17px;
+  padding:15px
+}
+.total-label{
+  font-size:13px;
+  color:#61746e
+}
+.total-value{
+  font-size:23px;
+  font-weight:900;
+  color:#087052;
+  margin-top:4px
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:#002d2366;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  z-index:1000
+}
+.price{
+  font-size:32px;
+  font-weight:950;
+  color:#087052;
+  margin:10px 0
+}
+.secure-note{
+  padding:10px;
+  background:#f1f7f5;
+  border-radius:11px;
+  color:#61746e;
+  font-size:13px
+}
+
+@media(max-width:650px){
+  .recordgrid{
+    grid-template-columns:1fr 105px
+  }
+  .recordgrid .money{
+    grid-column:1/-1;
+    text-align:right
+  }
+  .row>*{
+    flex:1 1 100%
+  }
+  .total-box{
+    grid-template-columns:1fr
+  }
+  .plan-head{
+    align-items:flex-start;
+    flex-direction:column
+  }
+}
+
+@media print{
+  .btn,.image-picker-button,#thumbs,#status,.user-bar,#premiumCard{
+    display:none!important
+  }
+  .top{
+    background:none;
+    color:#000
+  }
+  .card{
+    box-shadow:none;
+    border:1px solid #ddd
+  }
+}
+
+html[dir=rtl] body{text-align:right}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     LOGIN / SIGNUP
+========================= -->
+
+<section id="authScreen" class="auth-screen">
+
+<div class="auth-box">
+
+<div class="language-box">
+<label for="languageSelect" data-i18n="selectLanguage">
+Select Your Language
+</label>
+
+<select id="languageSelect">
+<option value="en">English</option>
+<option value="ur">اردو</option>
+<option value="roman">Roman Urdu</option>
+</select>
+</div>
+
+<div class="auth-logo">🌿</div>
+
+<h1 data-i18n="appName">
+Cotton Record
+</h1>
+
+<div class="auth-subtitle" data-i18n="recordManagement">
+Record Management System
+</div>
+
+<div class="auth-tabs">
+
+<button
+id="loginTab"
+class="auth-tab active"
+data-i18n="login">
+Login
+</button>
+
+<button
+id="signupTab"
+class="auth-tab"
+data-i18n="signUp">
+Sign Up
+</button>
+
+</div>
+
+<form id="loginForm">
+
+<label data-i18n="username">
+Username
+</label>
+
+<input
+id="loginUser"
+class="input"
+required
+autocomplete="username"
+data-placeholder="enterUsername"
+placeholder="Enter username">
+
+<label data-i18n="password">
+Password
+</label>
+
+<input
+id="loginPass"
+class="input"
+type="password"
+required
+autocomplete="current-password"
+data-placeholder="enterPassword"
+placeholder="Enter password">
+
+<button
+class="btn primary"
+style="width:100%;margin-top:15px"
+data-i18n="login">
+Login
+</button>
+
+</form>
+
+<form id="signupForm" class="hidden">
+
+<label data-i18n="name">
+Name
+</label>
+
+<input
+id="signupName"
+class="input"
+required
+data-placeholder="yourName"
+placeholder="Your name">
+
+<label data-i18n="username">
+Username
+</label>
+
+<input
+id="signupUser"
+class="input"
+required
+data-placeholder="createUsername"
+placeholder="Create username">
+
+<label data-i18n="password">
+Password
+</label>
+
+<input
+id="signupPass"
+class="input"
+type="password"
+minlength="6"
+required
+data-placeholder="minimumPassword"
+placeholder="Minimum 6 characters">
+
+<button
+class="btn primary"
+style="width:100%;margin-top:15px"
+data-i18n="createAccount">
+Create Account
+</button>
+
+</form>
+
+<div id="authMessage" class="status"></div>
+
+<div
+class="muted"
+style="text-align:center;margin-top:14px"
+data-i18n="secureAccountNote">
+Account security is handled by the server.
+</div>
+
+</div>
+</section>
+
+
+<!-- =========================
+     APPLICATION
+========================= -->
+
+<div id="app" class="hidden">
+
+<header class="top">
+
+<div class="top-inner">
+
+<h1>
+🌿
+<span data-i18n="appName">
+Cotton Record
+</span>
+</h1>
+
+<p data-i18n="topDescription">
+Easy Record Management • Multiple Pictures • Verification • Payment
+</p>
+
+<div class="user-bar">
+
+<span id="currentUser"></span>
+
+<button
+id="logout"
+class="logout"
+data-i18n="logout">
+Logout
+</button>
+
+</div>
+
+</div>
+</header>
+
+
+<main>
+
+<!-- =========================
+     PREMIUM
+========================= -->
+
+<section id="premiumCard" class="card plan-card">
+
+<div class="plan-head">
+
+<div>
+
+<h2 data-i18n="planTitle">
+Your Plan
+</h2>
+
+<div id="planDescription" class="muted">
+Free plan
+</div>
+
+</div>
+
+<span id="planBadge" class="plan-badge">
+FREE
+</span>
+
+</div>
+
+<ul id="planFeatures" class="features"></ul>
+
+<button
+id="premiumButton"
+class="btn premium-btn"
+style="width:100%"
+data-i18n="purchasePremium">
+⭐ Purchase Premium Plan
+</button>
+
+<div id="planMessage" class="status"></div>
+
+</section>
+
+
+<!-- =========================
+     NAME LIST
+========================= -->
+
+<section class="card">
+
+<h2 data-i18n="nameListTitle">
+1. Name List
+</h2>
+
+<div
+class="muted"
+data-i18n="nameListDescription">
+Add all names that appear in your records. Write each name on a separate line.
+</div>
+
+<label data-i18n="names">
+Names
+</label>
+
+<textarea
+id="names"
+data-placeholder="namesExample"
+placeholder="Asghar&#10;Muhammad&#10;Sain Bakhsh">
+</textarea>
+
+<div
+class="row"
+style="margin-top:10px">
+
+<button
+id="saveNames"
+class="btn secondary"
+data-i18n="saveNames">
+Save Names
+</button>
+
+<span id="nameCount" class="pill">
+0 names
+</span>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     PICTURES
+========================= -->
+
+<section class="card">
+
+<h2 data-i18n="picturesTitle">
+2. Record Pictures
+</h2>
+
+<div
+class="muted"
+data-i18n="picturesDescription">
+You can select multiple notebook photos at once.
+</div>
+
+<div style="margin-top:13px">
+
+<button
+id="selectImagesButton"
+class="image-picker-button"
+data-i18n="selectPictures">
+📷 Select Pictures
+</button>
+
+<input
+id="images"
+type="file"
+accept="image/*"
+multiple>
+
+</div>
+
+<div
+id="selectionInfo"
+class="selection-info"
+data-i18n="noPicture">
+No picture selected yet.
+</div>
+
+<div id="thumbs" class="thumbs"></div>
+
+<div
+class="row"
+style="margin-top:12px">
+
+<input
+id="rate"
+class="input"
+type="number"
+min="0"
+step=".01"
+value="25"
+data-placeholder="ratePerKg"
+placeholder="Rate per KG">
+
+<button
+id="read"
+class="btn primary"
+data-i18n="processRecords">
+Process Records
+</button>
+
+<button
+id="clearPics"
+class="btn danger"
+data-i18n="clearPictures">
+Clear Pictures
+</button>
+
+</div>
+
+<div id="status" class="status"></div>
+
+<div
+id="processingTotal"
+class="total-box hidden">
+
+<div class="total-item">
+
+<div
+class="total-label"
+data-i18n="allPicturesWeight">
+All Pictures — Total Weight
+</div>
+
+<div
+id="processingWeight"
+class="total-value">
+0.00 kg
+</div>
+
+</div>
+
+<div class="total-item">
+
+<div
+class="total-label"
+data-i18n="allPicturesPayment">
+All Pictures — Total Payment
+</div>
+
+<div
+id="processingMoney"
+class="total-value">
+Rs. 0.00
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     DETECTED RECORDS
+========================= -->
+
+<section class="card">
+
+<div
+class="row"
+style="align-items:center">
+
+<div>
+
+<h2 data-i18n="detectedRecords">
+3. Detected Records
+</h2>
+
+<div
+class="muted"
+data-i18n="verifyRecords">
+Verify or edit every name and weight before saving.
+</div>
+
+</div>
+
+<span id="count" class="pill">
+0 records
+</span>
+
+</div>
+
+<div id="records">
+
+<div
+class="empty"
+data-i18n="noRecords">
+No records yet.
+</div>
+
+</div>
+
+<div
+class="row"
+style="margin-top:12px">
+
+<button
+id="add"
+class="btn secondary"
+data-i18n="addRow">
++ Add Row
+</button>
+
+<button
+id="save"
+class="btn primary"
+data-i18n="saveRecords">
+Save Records
+</button>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     FINAL SUMMARY
+========================= -->
+
+<section class="card">
+
+<div
+class="row"
+style="align-items:center">
+
+<div>
+
+<h2 data-i18n="finalSummary">
+4. Final Summary
+</h2>
+
+<div
+class="muted"
+data-i18n="summaryDescription">
+Entries with the same name are automatically combined.
+</div>
+
+</div>
+
+<button
+id="clearAll"
+class="btn danger"
+data-i18n="clearResults">
+Clear Results
+</button>
+
+</div>
+
+<div id="summary">
+
+<div
+class="empty"
+data-i18n="saveForResult">
+Save records to see the result here.
+</div>
+
+</div>
+
+<div
+id="grandTotal"
+class="total-box hidden">
+
+<div class="total-item">
+
+<div
+class="total-label"
+data-i18n="grandWeight">
+Grand Total Weight
+</div>
+
+<div
+id="grandWeight"
+class="total-value">
+0.00 kg
+</div>
+
+</div>
+
+<div class="total-item">
+
+<div
+class="total-label"
+data-i18n="grandPayment">
+Grand Total Payment
+</div>
+
+<div
+id="grandMoney"
+class="total-value">
+Rs. 0.00
+</div>
+
+</div>
+
+</div>
+
+<div
+class="row"
+style="margin-top:12px">
+
+<button
+id="csv"
+class="btn secondary"
+data-i18n="exportCSV">
+Export CSV
+</button>
+
+<button
+id="png"
+class="btn primary"
+data-i18n="exportPNG">
+Export PNG
+</button>
+
+<button
+id="print"
+class="btn secondary"
+data-i18n="print">
+Print
+</button>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     SECURITY
+========================= -->
+
+<section class="card">
+
+<div
+class="muted"
+data-i18n="securityFooter">
+Passwords and premium access are verified server-side. Never put secret API keys in index.html.
+</div>
+
+</section>
+
+</main>
+</div>
+
+
+<!-- =========================
+     PREMIUM MODAL
+========================= -->
+
+<div
+id="premiumModal"
+class="modal hidden">
+
+<div class="modal-box">
+
+<h2 data-i18n="premiumTitle">
+⭐ Premium Plan
+</h2>
+
+<div
+class="muted"
+data-i18n="premiumDescription">
+Unlock higher limits and premium features.
+</div>
+
+<div
+class="price"
+data-i18n="premiumPrice">
+Rs. 999 / month
+</div>
+
+<ul class="features">
+
+<li data-i18n="premiumFeature1">
+Higher OCR processing limits
+</li>
+
+<li data-i18n="premiumFeature2">
+More images per request
+</li>
+
+<li data-i18n="premiumFeature3">
+Premium account status
+</li>
+
+<li data-i18n="premiumFeature4">
+Priority feature access
+</li>
+
+</ul>
+
+<div
+class="secure-note"
+data-i18n="paymentNote">
+Payment is verified by the server. This page does not store card details.
+</div>
+
+<div
+id="paymentMessage"
+class="status">
+</div>
+
+<div class="row">
+
+<button
+id="closePremium"
+class="btn secondary"
+data-i18n="cancel">
+Cancel
+</button>
+
+<button
+id="startPayment"
+class="btn premium-btn"
+data-i18n="continuePayment">
+Continue to Payment
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<script>
+"use strict";
+
+const T={
+
+en:{
+selectLanguage:"Select Your Language",
+appName:"Cotton Record",
+recordManagement:"Record Management System",
+login:"Login",
+signUp:"Sign Up",
+username:"Username",
+password:"Password",
+name:"Name",
+enterUsername:"Enter username",
+enterPassword:"Enter password",
+yourName:"Your name",
+createUsername:"Create username",
+minimumPassword:"Minimum 6 characters",
+createAccount:"Create Account",
+secureAccountNote:"Account security is handled by the server.",
+logout:"Logout",
+topDescription:"Easy Record Management • Multiple Pictures • Verification • Payment",
+planTitle:"Your Plan",
+freePlan:"Free plan",
+premiumPlan:"Premium plan",
+freeFeature1:"Basic record management",
+freeFeature2:"Limited OCR processing",
+freeFeature3:"CSV / PNG export",
+premiumFeature1:"Higher OCR processing limits",
+premiumFeature2:"More images per request",
+premiumFeature3:"Premium account status",
+premiumFeature4:"Priority feature access",
+purchasePremium:"⭐ Purchase Premium Plan",
+nameListTitle:"1. Name List",
+nameListDescription:"Add all names that appear in your records. Write each name on a separate line.",
+names:"Names",
+namesExample:"For example\nAsghar\nMuhammad\nSain Bakhsh",
+saveNames:"Save Names",
+picturesTitle:"2. Record Pictures",
+picturesDescription:"You can select multiple notebook photos at once.",
+selectPictures:"📷 Select Pictures",
+noPicture:"No picture selected yet.",
+ratePerKg:"Rate per KG",
+processRecords:"Process Records",
+clearPictures:"Clear Pictures",
+allPicturesWeight:"All Pictures — Total Weight",
+allPicturesPayment:"All Pictures — Total Payment",
+detectedRecords:"3. Detected Records",
+verifyRecords:"Verify or edit every name and weight before saving.",
+noRecords:"No records yet.",
+addRow:"+ Add Row",
+saveRecords:"Save Records",
+finalSummary:"4. Final Summary",
+summaryDescription:"Entries with the same name are automatically combined.",
+clearResults:"Clear Results",
+saveForResult:"Save records to see the result here.",
+grandWeight:"Grand Total Weight",
+grandPayment:"Grand Total Payment",
+exportCSV:"Export CSV",
+exportPNG:"Export PNG",
+print:"Print",
+securityFooter:"Passwords and premium access are verified server-side. Never put secret API keys in index.html.",
+premiumTitle:"⭐ Premium Plan",
+premiumDescription:"Unlock higher limits and premium features.",
+premiumPrice:"Rs. 999 / month",
+paymentNote:"Payment is verified by the server. This page does not store card details.",
+cancel:"Cancel",
+continuePayment:"Continue to Payment",
+namesCount:"names",
+recordsCount:"records",
+pictureSelected:"picture selected.",
+picturesSelected:"pictures selected.",
+namesSaved:"Names saved successfully.",
+selectPictureFirst:"Please select pictures first.",
+processing:"Records are being processed…",
+processingSuccess:"Records successfully processed. Verify every row and save it.",
+processingFailed:"Records could not be processed. Please try again.",
+resultsSaved:"Calculation saved successfully.",
+resultsCleared:"Saved results have been cleared.",
+noSavedResults:"There are no saved results to export.",
+noPNG:"Save results first to create a PNG.",
+pngSuccess:"Final result exported as PNG.",
+pngFailed:"PNG export failed.",
+clearConfirm:"Do you want to clear saved results?",
+paymentUnavailable:"Payment API is not connected yet.",
+paymentStarting:"Opening secure payment...",
+sessionExpired:"Session expired. Please login again.",
+premiumActive:"Premium active.",
+wrongLogin:"Invalid username or password."
+},
+
+ur:{
+selectLanguage:"اپنی زبان منتخب کریں",
+appName:"کاٹن ریکارڈ",
+recordManagement:"ریکارڈ مینجمنٹ سسٹم",
+login:"لاگ اِن",
+signUp:"سائن اَپ",
+username:"یوزرنیم",
+password:"پاس ورڈ",
+name:"نام",
+enterUsername:"یوزرنیم درج کریں",
+enterPassword:"پاس ورڈ درج کریں",
+yourName:"اپنا نام درج کریں",
+createUsername:"یوزرنیم بنائیں",
+minimumPassword:"کم از کم 6 حروف",
+createAccount:"اکاؤنٹ بنائیں",
+secureAccountNote:"اکاؤنٹ کی سیکیورٹی سرور پر ہینڈل ہوتی ہے۔",
+logout:"لاگ آؤٹ",
+topDescription:"آسان ریکارڈ مینجمنٹ • متعدد تصاویر • تصدیق • ادائیگی",
+planTitle:"آپ کا پلان",
+freePlan:"فری پلان",
+premiumPlan:"پریمیم پلان",
+freeFeature1:"بنیادی ریکارڈ مینجمنٹ",
+freeFeature2:"محدود OCR پروسیسنگ",
+freeFeature3:"CSV / PNG ایکسپورٹ",
+premiumFeature1:"زیادہ OCR پروسیسنگ",
+premiumFeature2:"زیادہ تصاویر فی درخواست",
+premiumFeature3:"پریمیم اکاؤنٹ",
+premiumFeature4:"ترجیحی فیچرز",
+purchasePremium:"⭐ پریمیم پلان خریدیں",
+nameListTitle:"1. ناموں کی فہرست",
+nameListDescription:"ریکارڈ میں موجود تمام نام یہاں شامل کریں۔ ہر نام الگ لائن میں لکھیں۔",
+names:"نام",
+namesExample:"مثلاً\nاصغر\nمحمد\nسائیں بخش",
+saveNames:"نام محفوظ کریں",
+picturesTitle:"2. ریکارڈ کی تصاویر",
+picturesDescription:"آپ متعدد تصاویر منتخب کر سکتے ہیں۔",
+selectPictures:"📷 تصاویر منتخب کریں",
+noPicture:"ابھی کوئی تصویر منتخب نہیں کی گئی۔",
+ratePerKg:"فی کلو ریٹ",
+processRecords:"ریکارڈ پروسیس کریں",
+clearPictures:"تصاویر صاف کریں",
+allPicturesWeight:"تمام تصاویر — کل وزن",
+allPicturesPayment:"تمام تصاویر — کل ادائیگی",
+detectedRecords:"3. حاصل شدہ ریکارڈ",
+verifyRecords:"محفوظ کرنے سے پہلے ہر نام اور وزن چیک کریں۔",
+noRecords:"ابھی کوئی ریکارڈ نہیں۔",
+addRow:"+ نئی قطار",
+saveRecords:"ریکارڈ محفوظ کریں",
+finalSummary:"4. حتمی خلاصہ",
+summaryDescription:"ایک جیسے نام خودکار طور پر جمع ہو جاتے ہیں۔",
+clearResults:"نتائج صاف کریں",
+saveForResult:"نتیجہ دیکھنے کے لیے ریکارڈ محفوظ کریں۔",
+grandWeight:"کل مجموعی وزن",
+grandPayment:"کل مجموعی ادائیگی",
+exportCSV:"CSV ایکسپورٹ",
+exportPNG:"PNG ایکسپورٹ",
+print:"پرنٹ",
+securityFooter:"پاس ورڈ اور پریمیم رسائی سرور پر verify ہونی چاہیے۔",
+premiumTitle:"⭐ پریمیم پلان",
+premiumDescription:"زیادہ limits اور premium features حاصل کریں۔",
+premiumPrice:"999 روپے / ماہ",
+paymentNote:"ادائیگی سرور verify کرے گا۔ card details محفوظ نہیں کی جاتیں۔",
+cancel:"منسوخ",
+continuePayment:"ادائیگی جاری رکھیں",
+namesCount:"نام",
+recordsCount:"ریکارڈ",
+pictureSelected:"تصویر منتخب کی گئی۔",
+picturesSelected:"تصاویر منتخب کی گئی ہیں۔",
+namesSaved:"نام محفوظ ہو گئے۔",
+selectPictureFirst:"پہلے تصاویر منتخب کریں۔",
+processing:"ریکارڈ پروسیس ہو رہے ہیں…",
+processingSuccess:"ریکارڈ پروسیس ہو گئے۔ ہر قطار چیک کریں۔",
+processingFailed:"ریکارڈ پروسیس نہیں ہو سکے۔",
+resultsSaved:"حساب محفوظ ہو گیا۔",
+resultsCleared:"نتائج صاف کر دیے گئے۔",
+noSavedResults:"کوئی محفوظ نتیجہ نہیں۔",
+noPNG:"پہلے نتیجہ محفوظ کریں۔",
+pngSuccess:"PNG ایکسپورٹ ہو گیا۔",
+pngFailed:"PNG ایکسپورٹ ناکام ہو گیا۔",
+clearConfirm:"کیا آپ محفوظ نتائج صاف کرنا چاہتے ہیں؟",
+paymentUnavailable:"Payment API ابھی connected نہیں ہے۔",
+paymentStarting:"محفوظ ادائیگی کھولی جا رہی ہے...",
+sessionExpired:"Session ختم ہو گیا۔ دوبارہ login کریں۔",
+premiumActive:"پریمیم فعال ہے۔",
+wrongLogin:"یوزرنیم یا پاس ورڈ غلط ہے۔"
+},
+
+roman:{
+selectLanguage:"Apni Language Select Karein",
+appName:"Cotton Record",
+recordManagement:"Record Management System",
+login:"Login",
+signUp:"Sign Up",
+username:"Username",
+password:"Password",
+name:"Naam",
+enterUsername:"Username enter karein",
+enterPassword:"Password enter karein",
+yourName:"Apna naam enter karein",
+createUsername:"Username banayein",
+minimumPassword:"Kam az kam 6 characters",
+createAccount:"Account Banayein",
+secureAccountNote:"Account security server par handle hoti hai.",
+logout:"Logout",
+topDescription:"Asaan Record Management • Multiple Pictures • Verification • Payment",
+planTitle:"Aap ka Plan",
+freePlan:"Free plan",
+premiumPlan:"Premium plan",
+freeFeature1:"Basic record management",
+freeFeature2:"Limited OCR processing",
+freeFeature3:"CSV / PNG export",
+premiumFeature1:"Higher OCR processing limits",
+premiumFeature2:"Zyada images per request",
+premiumFeature3:"Premium account status",
+premiumFeature4:"Priority features",
+purchasePremium:"⭐ Premium Plan Purchase Karein",
+nameListTitle:"1. Naam List",
+nameListDescription:"Record mein tamam naam yahan add karein. Har naam alag line mein likhein.",
+names:"Names",
+namesExample:"Misal\nAsghar\nMuhammad\nSain Bakhsh",
+saveNames:"Names Save Karein",
+picturesTitle:"2. Record Pictures",
+picturesDescription:"Multiple notebook photos select karein.",
+selectPictures:"📷 Pictures Select Karein",
+noPicture:"Abhi koi picture select nahi ki gayi.",
+ratePerKg:"Rate per KG",
+processRecords:"Records Process Karein",
+clearPictures:"Pictures Clear Karein",
+allPicturesWeight:"All Pictures — Total Weight",
+allPicturesPayment:"All Pictures — Total Payment",
+detectedRecords:"3. Detected Records",
+verifyRecords:"Save se pehle har naam aur weight verify karein.",
+noRecords:"Abhi koi record nahi.",
+addRow:"+ Add Row",
+saveRecords:"Record Save Karein",
+finalSummary:"4. Final Summary",
+summaryDescription:"Same naam automatically combine hotay hain.",
+clearResults:"Results Clear Karein",
+saveForResult:"Result ke liye record save karein.",
+grandWeight:"Grand Total Weight",
+grandPayment:"Grand Total Payment",
+exportCSV:"Export CSV",
+exportPNG:"Export PNG",
+print:"Print",
+securityFooter:"Password aur premium access server-side verify honi chahiye.",
+premiumTitle:"⭐ Premium Plan",
+premiumDescription:"Higher limits aur premium features unlock karein.",
+premiumPrice:"Rs. 999 / month",
+paymentNote:"Payment server verify karega. Card details save nahi hoti.",
+cancel:"Cancel",
+continuePayment:"Payment Continue Karein",
+namesCount:"names",
+recordsCount:"records",
+pictureSelected:"picture selected.",
+picturesSelected:"pictures selected.",
+namesSaved:"Names save ho gaye.",
+selectPictureFirst:"Pehle pictures select karein.",
+processing:"Records process ho rahe hain…",
+processingSuccess:"Records process ho gaye. Verify karke save karein.",
+processingFailed:"Records process nahi ho sake.",
+resultsSaved:"Calculation save ho gaya.",
+resultsCleared:"Results clear kar diye gaye.",
+noSavedResults:"Koi saved result nahi.",
+noPNG:"Pehle result save karein.",
+pngSuccess:"PNG export ho gaya.",
+pngFailed:"PNG export nahi ho saka.",
+clearConfirm:"Kia aap saved results clear karna chahte hain?",
+paymentUnavailable:"Payment API abhi connected nahi.",
+paymentStarting:"Secure payment open ho rahi hai...",
+sessionExpired:"Session expire ho gaya. Dobara login karein.",
+premiumActive:"Premium active hai.",
+wrongLogin:"Username ya password ghalat hai."
+}
+
+};
+
+
+let lang=localStorage.getItem("cotton_language")||"en";
+let user=null;
+let plan="free";
+let selected=[];
+let records=[];
+let saved=[];
+
+
+const $=s=>document.querySelector(s);
+
+const t=k=>
+  (T[lang]&&T[lang][k])||
+  T.en[k]||
+  k;
+
+
+function applyLanguage(){
+
+  document.documentElement.lang=
+    lang==="ur"?"ur":"en";
+
+  document.documentElement.dir=
+    lang==="ur"?"rtl":"ltr";
+
+  document
+    .querySelectorAll("[data-i18n]")
+    .forEach(e=>{
+      e.textContent=t(e.dataset.i18n);
+    });
+
+  document
+    .querySelectorAll("[data-placeholder]")
+    .forEach(e=>{
+      e.placeholder=t(e.dataset.placeholder);
+    });
+
+  refreshNameCount();
+  updateRecordCount();
+  updateSelectionText();
+  updatePlan();
+
+}
+
+
+$("#languageSelect").value=lang;
+
+$("#languageSelect").onchange=e=>{
+
+  lang=e.target.value;
+
+  localStorage.setItem(
+    "cotton_language",
+    lang
+  );
+
+  applyLanguage();
+
+};
+
+
+function msg(el,text,type){
+
+  el.className="status "+type;
+  el.textContent=text;
+  el.style.display="block";
+
+}
+
+
+function esc(v){
+
+  return String(v).replace(
+    /[&<>"']/g,
+    c=>({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[c])
+  );
+
+}
+
+
+function money(v){
+
+  return Number(v||0).toLocaleString(
+    "en-PK",
+    {
+      minimumFractionDigits:2,
+      maximumFractionDigits:2
+    }
+  );
+
+}
+
+
+async function api(url,opt={}){
+
+  const r=
+    await fetch(
+      url,
+      {
+        credentials:"include",
+        ...opt,
+        headers:{
+          "Content-Type":"application/json",
+          ...(opt.headers||{})
+        }
+      }
+    );
+
+  let d={};
+
+  try{
+    d=await r.json();
+  }catch{}
+
+  if(r.status===401){
+
+    logout(false);
+
+    throw Error("SESSION_EXPIRED");
+
+  }
+
+  if(!r.ok)
+    throw Error(d.error||"REQUEST_FAILED");
+
+  return d;
+
+}
+
+
+function showLogin(){
+
+  $("#loginForm")
+    .classList.remove("hidden");
+
+  $("#signupForm")
+    .classList.add("hidden");
+
+  $("#loginTab")
+    .classList.add("active");
+
+  $("#signupTab")
+    .classList.remove("active");
+
+}
+
+
+function showSignup(){
+
+  $("#loginForm")
+    .classList.add("hidden");
+
+  $("#signupForm")
+    .classList.remove("hidden");
+
+  $("#loginTab")
+    .classList.remove("active");
+
+  $("#signupTab")
+    .classList.add("active");
+
+}
+
+
+$("#loginTab").onclick=showLogin;
+$("#signupTab").onclick=showSignup;
+
+
+$("#signupForm").onsubmit=async e=>{
+
+  e.preventDefault();
+
+  try{
+
+    const d=
+      await api(
+        "/api/auth/signup",
+        {
+          method:"POST",
+          body:JSON.stringify({
+            name:$("#signupName").value.trim(),
+            username:$("#signupUser").value.trim(),
+            password:$("#signupPass").value
+          })
+        }
+      );
+
+    user=d.user;
+    plan=user.plan||"free";
+
+    openApp();
+
+  }catch(e){
+
+    msg(
+      $("#authMessage"),
+      e.message,
+      "err"
+    );
+
+  }
+
+};
+
+
+$("#loginForm").onsubmit=async e=>{
+
+  e.preventDefault();
+
+  try{
+
+    const d=
+      await api(
+        "/api/auth/login",
+        {
+          method:"POST",
+          body:JSON.stringify({
+            username:$("#loginUser").value.trim(),
+            password:$("#loginPass").value
+          })
+        }
+      );
+
+    user=d.user;
+    plan=user.plan||"free";
+
+    openApp();
+
+  }catch(e){
+
+    msg(
+      $("#authMessage"),
+      e.message==="REQUEST_FAILED"
+        ?t("wrongLogin")
+        :e.message,
+      "err"
+    );
+
+  }
+
+};
+
+
+async function checkSession(){
+
+  try{
+
+    const d=
+      await api("/api/auth/me");
+
+    if(d.user){
+
+      user=d.user;
+      plan=d.user.plan||"free";
+
+      openApp();
+
+      return;
+
+    }
+
+  }catch{}
+
+  $("#authScreen")
+    .classList.remove("hidden");
+
+  $("#app")
+    .classList.add("hidden");
+
+}
+
+
+function openApp(){
+
+  $("#authScreen")
+    .classList.add("hidden");
+
+  $("#app")
+    .classList.remove("hidden");
+
+  $("#currentUser").textContent=
+    (user?.name||user?.username||"")+
+    " • "+
+    (
+      plan==="premium"
+      ?t("premiumPlan")
+      :t("freePlan")
+    );
+
+  loadData();
+
+  applyLanguage();
+
+}
+
+
+async function logout(server=true){
+
+  if(server){
+
+    try{
+
+      await api(
+        "/api/auth/logout",
+        {
+          method:"POST",
+          body:"{}"
+        }
+      );
+
+    }catch{}
+
+  }
+
+  user=null;
+  plan="free";
+
+  $("#app")
+    .classList.add("hidden");
+
+  $("#authScreen")
+    .classList.remove("hidden");
+
+  showLogin();
+
+}
+
+
+$("#logout").onclick=()=>logout(true);
+
+
+function key(x){
+
+  return x+
+    "_"+
+    (
+      user?.id||
+      user?.username||
+      "guest"
+    );
+
+}
+
+
+function loadData(){
+
+  $("#names").value=
+    localStorage.getItem(
+      key("cotton_names")
+    )||"";
+
+  try{
+
+    saved=
+      JSON.parse(
+        localStorage.getItem(
+          key("cotton_results")
+        )||"[]"
+      );
+
+  }catch{
+
+    saved=[];
+
+  }
+
+  if(!Array.isArray(saved))
+    saved=[];
+
+  renderSummary();
+
+}
+
+
+function refreshNameCount(){
+
+  $("#nameCount").textContent=
+    getNames().length+
+    " "+
+    t("namesCount");
+
+}
+
+
+function getNames(){
+
+  return (
+    $("#names").value||""
+  )
+  .split(/\n|,/)
+  .map(x=>x.trim())
+  .filter(Boolean);
+
+}
+
+
+$("#names").oninput=
+  refreshNameCount;
+
+
+$("#saveNames").onclick=()=>{
+
+  localStorage.setItem(
+    key("cotton_names"),
+    $("#names").value
+  );
+
+  msg(
+    $("#status"),
+    t("namesSaved"),
+    "ok"
+  );
+
+};
+
+
+$("#selectImagesButton").onclick=
+  ()=>$("#images").click();
+
+
+$("#images").onchange=e=>{
+
+  selected=[
+    ...e.target.files
+  ];
+
+  renderThumbs();
+
+};
+
+
+function updateSelectionText(){
+
+  $("#selectionInfo").textContent=
+    selected.length
+    ?selected.length+
+      " "+
+      (
+        selected.length===1
+        ?t("pictureSelected")
+        :t("picturesSelected")
+      )
+    :t("noPicture");
+
+}
+
+
+function renderThumbs(){
+
+  $("#thumbs").innerHTML="";
+
+  updateSelectionText();
+
+  selected.forEach((f,i)=>{
+
+    let w=document.createElement("div");
+    let im=document.createElement("img");
+    let d=document.createElement("div");
+
+    let u=
+      URL.createObjectURL(f);
+
+    w.className="thumb";
+
+    im.src=u;
+
+    im.onload=
+      ()=>URL.revokeObjectURL(u);
+
+    d.textContent=
+      (i+1)+". "+f.name;
+
+    w.append(
+      im,
+      d
+    );
+
+    $("#thumbs")
+      .append(w);
+
+  });
+
+}
+
+
+$("#clearPics").onclick=()=>{
+
+  selected=[];
+  $("#images").value="";
+
+  renderThumbs();
+
+  $("#processingTotal")
+    .classList.add("hidden");
+
+  msg(
+    $("#status"),
+    "Pictures cleared",
+    "ok"
+  );
+
+};
+
+
+function b64(f){
+
+  return new Promise(
+    (res,rej)=>{
+
+      let r=
+        new FileReader();
+
+      r.onload=
+        ()=>res(
+          String(r.result)
+            .split(",")[1]
+        );
+
+      r.onerror=rej;
+
+      r.readAsDataURL(f);
+
+    }
+  );
+
+}
+
+
+$("#read").onclick=async()=>{
+
+  if(!selected.length){
+
+    msg(
+      $("#status"),
+      t("selectPictureFirst"),
+      "err"
+    );
+
+    return;
+
+  }
+
+  let b=$("#read");
+
+  b.disabled=true;
+
+  msg(
+    $("#status"),
+    t("processing"),
+    "loading"
+  );
+
+  try{
+
+    let images=[];
+
+    for(let f of selected){
+
+      if(f.size>8*1024*1024)
+        throw Error("FILE_TOO_LARGE");
+
+      images.push({
+
+        name:f.name,
+
+        mimeType:
+          f.type||"image/jpeg",
+
+        data:
+          await b64(f)
+
+      });
+
+    }
+
+    let d=
+      await api(
+        "/api/ocr",
+        {
+          method:"POST",
+          body:JSON.stringify({
+            images,
+            names:getNames(),
+            defaultRate:
+              Number($("#rate").value)||0
+          })
+        }
+      );
+
+    if(!Array.isArray(d.records))
+      throw Error("PROCESSING_FAILED");
+
+    records=
+      d.records
+      .map(x=>({
+
+        name:
+          String(x.name||"").trim(),
+
+        weight:
+          Number(x.weight)||0,
+
+        rate:
+          Number(x.rate)||
+          Number($("#rate").value)||
+          0
+
+      }))
+      .filter(x=>x.name);
+
+    renderRecords();
+
+    totalBox();
+
+    msg(
+      $("#status"),
+      t("processingSuccess"),
+      "ok"
+    );
+
+  }catch(e){
+
+    msg(
+      $("#status"),
+      e.message==="SESSION_EXPIRED"
+        ?t("sessionExpired")
+        :t("processingFailed"),
+      "err"
+    );
+
+  }finally{
+
+    b.disabled=false;
+
+  }
+
+};
+
+
+function calc(a){
+
+  return a.reduce(
+    (z,x)=>({
+
+      weight:
+        z.weight+
+        (Number(x.weight)||0),
+
+      money:
+        z.money+
+        (
+          (Number(x.weight)||0)*
+          (Number(x.rate)||0)
+        )
+
+    }),
+    {
+      weight:0,
+      money:0
+    }
+  );
+
+}
+
+
+function totalBox(){
+
+  let x=calc(records);
+
+  $("#processingWeight")
+    .textContent=
+    x.weight.toFixed(2)+
+    " kg";
+
+  $("#processingMoney")
+    .textContent=
+    "Rs. "+
+    money(x.money);
+
+  $("#processingTotal")
+    .classList.remove("hidden");
+
+}
+
+
+function updateRecordCount(){
+
+  $("#count").textContent=
+    records.length+
+    " "+
+    t("recordsCount");
+
+}
+
+
+function renderRecords(){
+
+  $("#records").innerHTML="";
+
+  updateRecordCount();
+
+  if(!records.length){
+
+    $("#records").innerHTML=
+      '<div class="empty">'+
+      esc(t("noRecords"))+
+      "</div>";
+
+    return;
+
+  }
+
+  records.forEach((r,i)=>{
+
+    let box=
+      document.createElement("div");
+
+    let g=
+      document.createElement("div");
+
+    box.className="record";
+    g.className="recordgrid";
+
+    ["name","weight","rate"]
+      .forEach(k=>{
+
+        let x=
+          document.createElement("input");
+
+        x.value=r[k];
+
+        x.type=
+          k==="name"
+          ?"text"
+          :"number";
+
+        x.step=".01";
+        x.min="0";
+
+        x.oninput=()=>{
+
+          r[k]=
+            k==="name"
+            ?x.value
+            :Number(x.value)||0;
+
+          renderRecords();
+
+          totalBox();
+
+        };
+
+        g.append(x);
+
+      });
+
+    let m=
+      document.createElement("div");
+
+    m.className="money";
+
+    m.textContent=
+      "Rs. "+
+      money(r.weight*r.rate);
+
+    g.append(m);
+
+    let del=
+      document.createElement("button");
+
+    del.className=
+      "btn danger";
+
+    del.textContent="Delete";
+
+    del.onclick=()=>{
+
+      records.splice(i,1);
+
+      renderRecords();
+
+      totalBox();
+
+    };
+
+    box.append(
+      g,
+      del
+    );
+
+    $("#records")
+      .append(box);
+
+  });
+
+}
+
+
+$("#add").onclick=()=>{
+
+  records.push({
+
+    name:"",
+    weight:0,
+    rate:
+      Number($("#rate").value)||0
+
+  });
+
+  renderRecords();
+
+  totalBox();
+
+};
+
+
+$("#save").onclick=()=>{
+
+  let map={};
+
+  records.forEach(x=>{
+
+    let k=
+      x.name
+        .trim()
+        .toLowerCase();
+
+    if(!k)return;
+
+    if(!map[k]){
+
+      map[k]={
+
+        name:x.name.trim(),
+
+        entries:0,
+
+        weight:0,
+
+        money:0
+
+      };
+
+    }
+
+    map[k].entries++;
+
+    map[k].weight+=
+      Number(x.weight)||0;
+
+    map[k].money+=
+      (
+        Number(x.weight)||0
+      )*
+      (
+        Number(x.rate)||0
+      );
+
+  });
+
+  saved=
+    Object.values(map);
+
+  localStorage.setItem(
+    key("cotton_results"),
+    JSON.stringify(saved)
+  );
+
+  renderSummary();
+
+  msg(
+    $("#status"),
+    t("resultsSaved"),
+    "ok"
+  );
+
+};
+
+
+function renderSummary(){
+
+  if(!saved.length){
+
+    $("#summary").innerHTML=
+      '<div class="empty">'+
+      esc(t("saveForResult"))+
+      "</div>";
+
+    $("#grandTotal")
+      .classList.add("hidden");
+
+    return;
+
+  }
+
+  $("#summary").innerHTML="";
+
+  let w=0;
+  let m=0;
+
+  saved.forEach(x=>{
+
+    w+=Number(x.weight)||0;
+    m+=Number(x.money)||0;
+
+    let b=
+      document.createElement("div");
+
+    b.className="record";
+
+    b.innerHTML=
+      "<b style='font-size:20px'>"+
+      esc(x.name)+
+      "</b>"+
+      "<div class='muted'>"+
+      x.entries+
+      " "+
+      t("recordsCount")+
+      "</div>"+
+      "<div class='row'>"+
+      "<div><b>"+
+      t("grandWeight")+
+      "</b><br>"+
+      Number(x.weight).toFixed(2)+
+      " kg</div>"+
+      "<div><b>"+
+      t("grandPayment")+
+      "</b><br>Rs. "+
+      money(x.money)+
+      "</div>"+
+      "</div>";
+
+    $("#summary")
+      .append(b);
+
+  });
+
+  $("#grandWeight")
+    .textContent=
+    w.toFixed(2)+
+    " kg";
+
+  $("#grandMoney")
+    .textContent=
+    "Rs. "+
+    money(m);
+
+  $("#grandTotal")
+    .classList.remove("hidden");
+
+}
+
+
+$("#clearAll").onclick=()=>{
+
+  if(confirm(t("clearConfirm"))){
+
+    saved=[];
+
+    localStorage.removeItem(
+      key("cotton_results")
+    );
+
+    renderSummary();
+
+    msg(
+      $("#status"),
+      t("resultsCleared"),
+      "ok"
+    );
+
+  }
+
+};
+
+
+$("#csv").onclick=()=>{
+
+  if(!saved.length){
+
+    return msg(
+      $("#status"),
+      t("noSavedResults"),
+      "err"
+    );
+
+  }
+
+  let csv=
+    "Person Name,Entries,Total Weight KG,Total Payment PKR\n"+
+    saved.map(x=>
+      `"${String(x.name)
+        .replaceAll('"','""')}",${x.entries},${x.weight},${x.money}`
+    ).join("\n");
+
+  let u=
+    URL.createObjectURL(
+      new Blob(
+        ["\ufeff"+csv],
+        {type:"text/csv"}
+      )
+    );
+
+  let a=
+    document.createElement("a");
+
+  a.href=u;
+
+  a.download=
+    "cotton-record.csv";
+
+  a.click();
+
+  setTimeout(
+    ()=>URL.revokeObjectURL(u),
+    1000
+  );
+
+};
+
+
+$("#print").onclick=
+  ()=>print();
+
+
+/* =========================
+   PNG EXPORT
+========================= */
+
+$("#png").onclick=async()=>{
+
+  if(!saved.length){
+
+    msg(
+      $("#status"),
+      t("noPNG"),
+      "err"
+    );
+
+    return;
+
+  }
+
+  try{
+
+    const canvas=
+      document.createElement("canvas");
+
+    const ctx=
+      canvas.getContext("2d");
+
+    const width=900;
+
+    const rowHeight=90;
+
+    const height=
+      190+
+      saved.length*rowHeight+
+      150;
+
+    canvas.width=width;
+    canvas.height=height;
+
+    ctx.fillStyle="#ffffff";
+    ctx.fillRect(
+      0,
+      0,
+      width,
+      height
+    );
+
+    ctx.fillStyle="#087f5b";
+    ctx.font=
+      "bold 34px Arial";
+
+    ctx.fillText(
+      "Cotton Record",
+      40,
+      55
+    );
+
+    ctx.fillStyle="#18332b";
+    ctx.font=
+      "bold 22px Arial";
+
+    ctx.fillText(
+      "Final Summary",
+      40,
+      95
+    );
+
+    let y=145;
+
+    saved.forEach((x,i)=>{
+
+      ctx.fillStyle="#eef7f4";
+
+      ctx.fillRect(
+        30,
+        y-30,
+        width-60,
+        70
+      );
+
+      ctx.fillStyle="#18332b";
+
+      ctx.font=
+        "bold 20px Arial";
+
+      ctx.fillText(
+        String(x.name),
+        50,
+        y
+      );
+
+      ctx.font=
+        "16px Arial";
+
+      ctx.fillText(
+        "Weight: "+
+        Number(x.weight).toFixed(2)+
+        " kg",
+        350,
+        y
+      );
+
+      ctx.fillText(
+        "Payment: Rs. "+
+        money(x.money),
+        600,
+        y
+      );
+
+      y+=rowHeight;
+
+    });
+
+    let totals=
+      calc(
+        saved.map(x=>({
+          weight:x.weight,
+          rate:
+            Number(x.weight)
+              ?Number(x.money)/
+               Number(x.weight)
+              :0
+        }))
+      );
+
+    ctx.fillStyle="#087052";
+
+    ctx.font=
+      "bold 22px Arial";
+
+    ctx.fillText(
+      "Grand Total Weight: "+
+      Number(
+        saved.reduce(
+          (a,x)=>a+(Number(x.weight)||0),
+          0
+        )
+      ).toFixed(2)+
+      " kg",
+      40,
+      y+20
+    );
+
+    ctx.fillText(
+      "Grand Total Payment: Rs. "+
+      money(
+        saved.reduce(
+          (a,x)=>a+(Number(x.money)||0),
+          0
+        )
+      ),
+      40,
+      y+60
+    );
+
+    canvas.toBlob(blob=>{
+
+      if(!blob)
+        throw Error("PNG_FAILED");
+
+      let u=
+        URL.createObjectURL(blob);
+
+      let a=
+        document.createElement("a");
+
+      a.href=u;
+
+      a.download=
+        "cotton-record-summary.png";
+
+      a.click();
+
+      setTimeout(
+        ()=>URL.revokeObjectURL(u),
+        1000
+      );
+
+      msg(
+        $("#status"),
+        t("pngSuccess"),
+        "ok"
+      );
+
+    },"image/png");
+
+  }catch(e){
+
+    msg(
+      $("#status"),
+      t("pngFailed"),
+      "err"
+    );
+
+  }
+
+};
+
+
+function updatePlan(){
+
+  let p=
+    plan==="premium";
+
+  $("#planBadge").textContent=
+    p?"PREMIUM":"FREE";
+
+  $("#planBadge").className=
+    "plan-badge"+
+    (p?" premium-badge":"");
+
+  $("#planDescription").textContent=
+    p
+    ?t("premiumPlan")
+    :t("freePlan");
+
+  let keys=
+    p
+    ?[
+      "premiumFeature1",
+      "premiumFeature2",
+      "premiumFeature3",
+      "premiumFeature4"
+    ]
+    :[
+      "freeFeature1",
+      "freeFeature2",
+      "freeFeature3"
+    ];
+
+  $("#planFeatures").innerHTML=
+    keys
+      .map(k=>
+        "<li>"+
+        esc(t(k))+
+        "</li>"
+      )
+      .join("");
+
+  $("#premiumButton")
+    .classList
+    .toggle("hidden",p);
+
+}
+
+
+$("#premiumButton").onclick=()=>{
+
+  $("#premiumModal")
+    .classList
+    .remove("hidden");
+
+  $("#paymentMessage")
+    .style.display="none";
+
+};
+
+
+$("#closePremium").onclick=()=>{
+
+  $("#premiumModal")
+    .classList
+    .add("hidden");
+
+};
+
+
+$("#startPayment").onclick=async()=>{
+
+  let b=
+    $("#startPayment");
+
+  b.disabled=true;
+
+  msg(
+    $("#paymentMessage"),
+    t("paymentStarting"),
+    "loading"
+  );
+
+  try{
+
+    let d=
+      await api(
+        "/api/payment/create",
+        {
+          method:"POST",
+          body:JSON.stringify({
+            plan:"premium_monthly"
+          })
+        }
+      );
+
+    if(d.checkoutUrl)
+      location.href=d.checkoutUrl;
+
+    else if(d.url)
+      location.href=d.url;
+
+    else
+      throw Error("NO_CHECKOUT");
+
+  }catch(e){
+
+    msg(
+      $("#paymentMessage"),
+      t("paymentUnavailable"),
+      "err"
+    );
+
+    b.disabled=false;
+
+  }
+
+};
+
+
+applyLanguage();
+
+checkSession();
+
+</script>
+
+</body>
+</html>
