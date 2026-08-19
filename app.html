@@ -8,1647 +8,2123 @@
 <title>Cotton Record</title>
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon.svg">
-
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,"Noto Nastaliq Urdu","Noto Sans Arabic",sans-serif;
-  background:#eef7f4;
-  color:#18332b
-}
+body{margin:0;font-family:system-ui,"Noto Nastaliq Urdu","Noto Sans Arabic",sans-serif;background:#eef7f4;color:#18332b}
 .hidden{display:none!important}
+.auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#087f5b,#0b9b70)}
+.auth-box{width:100%;max-width:430px;background:#fff;border-radius:28px;padding:26px;box-shadow:0 20px 60px #003c2a40}
+.auth-logo{text-align:center;font-size:48px;margin-bottom:8px}.auth-box h1{text-align:center;margin:0 0 6px}.auth-subtitle{text-align:center;color:#71837e;margin-bottom:22px}
+.language-box{margin:0 0 18px}.language-label,label{display:block;font-weight:800;margin:10px 0 6px}
+.language-select,.input,textarea{width:100%;padding:13px 14px;border:1px solid #d7e5e0;border-radius:14px;background:#fbfefd;color:#18332b;font-size:16px;outline:none}
+.language-select:focus,.input:focus,textarea:focus{border-color:#0b9b70;box-shadow:0 0 0 3px #0b9b7018}
+textarea{min-height:120px;resize:vertical}
+.auth-tabs,.row{display:flex;gap:10px;flex-wrap:wrap}.auth-tabs{margin-bottom:18px}.auth-tab{flex:1;padding:12px;border:0;border-radius:12px;font-weight:800;background:#e8f3ef;color:#087052}.auth-tab.active{background:#087f5b;color:#fff}
+.btn{border:0;border-radius:14px;padding:14px 18px;font-size:16px;font-weight:800;cursor:pointer;touch-action:manipulation}.primary{background:linear-gradient(135deg,#087f5b,#0b9b70);color:#fff}.secondary{background:#e8f3ef;color:#087052}.danger{background:#ffe7e5;color:#a92b22}.btn:disabled{opacity:.6}
+.row>*{flex:1 1 180px}.top{background:linear-gradient(135deg,#087f5b,#0b9b70);color:#fff;padding:22px 18px}.top-inner,main{max-width:900px;margin:auto}.top h1{margin:0 0 5px;font-size:25px}.top p{margin:0;opacity:.9}.user-bar{max-width:900px;margin:12px auto 0;display:flex;justify-content:space-between;align-items:center;gap:10px}.user-name{font-size:13px;opacity:.9}.logout{border:0;border-radius:10px;padding:8px 12px;background:#ffffff22;color:#fff;font-weight:700;cursor:pointer}
+#installApp{background:#fff;color:#087f5b;box-shadow:0 3px 10px #003c2a25}#installApp:active{transform:scale(.97)}
+main{padding:16px}.card{background:#fff;border-radius:22px;padding:18px;margin:14px 0;box-shadow:0 5px 24px #0b5b4214}h2{margin:0 0 10px;font-size:21px}.muted{color:#61746e;font-size:14px}
+.image-picker{margin:14px 0 8px}.image-picker-button{width:100%;min-height:62px;display:flex;align-items:center;justify-content:center;background:#e8f3ef;color:#087052;border:2px dashed #0b9b70;border-radius:16px;padding:15px;font-size:16px;font-weight:800;cursor:pointer}#images{position:absolute;width:1px;height:1px;opacity:0}
+.selection-info{margin-top:8px;padding:9px 12px;border-radius:10px;background:#f1f7f5;color:#61746e;font-size:13px;text-align:center}.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:12px}.thumb{border:1px solid #dbe9e4;border-radius:14px;overflow:hidden}.thumb img{width:100%;height:120px;object-fit:cover;display:block}.thumb div{padding:7px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status{padding:12px;border-radius:12px;margin-top:10px;display:none}.ok{display:block;background:#e8f7ee;color:#12643d}.err{display:block;background:#ffe8e6;color:#9f2b23}.loading{display:block;background:#eef3ff;color:#294b91}
+.record{border:1px solid #dceae5;border-radius:16px;padding:12px;margin:10px 0}.recordgrid{display:grid;grid-template-columns:1fr 120px 120px 110px;gap:8px;align-items:center}.recordgrid input{width:100%;padding:11px;border:1px solid #d5e4df;border-radius:10px;font-size:15px}.money{font-weight:800;text-align:center}.pill{display:inline-block;background:#e9f5f1;color:#087052;padding:6px 10px;border-radius:999px;font-size:13px}.empty{text-align:center;padding:24px;color:#71837e}
+.total-box{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.total-item{background:linear-gradient(135deg,#e8f7f1,#f5fbf9);border:1px solid #d5ebe3;border-radius:18px;padding:16px}.total-label{font-size:13px;color:#61746e}.total-value{font-size:24px;font-weight:900;color:#087052;margin-top:4px}
+@media(max-width:650px){.top h1{font-size:22px}.recordgrid{grid-template-columns:1fr 105px}.recordgrid .money{grid-column:1/-1;text-align:right}.row>*{flex:1 1 100%}.total-box{grid-template-columns:1fr}.user-bar{align-items:flex-start}.user-bar .row{flex:0 0 auto}.user-bar .row>*{flex:0 0 auto}}
+@media print{.btn,.image-picker,#thumbs,#status,.user-bar,.language-box{display:none!important}body{background:#fff}.top{background:none;color:#000}.card{box-shadow:none;border:1px solid #ddd}}
+/* =====================================================
+   PWA INSTALL POPUP
+===================================================== */
 
-.auth-screen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:linear-gradient(135deg,#087f5b,#0b9b70)
-}
-.auth-box,.modal-box{
-  width:100%;
-  max-width:460px;
-  background:#fff;
-  border-radius:26px;
-  padding:25px;
-  box-shadow:0 20px 60px #003c2a40
-}
-.auth-logo{text-align:center;font-size:48px}
-.auth-box h1{text-align:center;margin:4px 0}
-.auth-subtitle{
-  text-align:center;
-  color:#71837e;
-  margin-bottom:20px
-}
-
-.auth-tabs,.row{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap
-}
-.auth-tab,.btn{
-  border:0;
-  border-radius:13px;
-  padding:13px 17px;
-  font-weight:800;
-  cursor:pointer
-}
-.auth-tab{
-  flex:1;
-  background:#e8f3ef;
-  color:#087052
-}
-.auth-tab.active,.primary{
-  background:#087f5b;
-  color:#fff
-}
-.secondary{
-  background:#e8f3ef;
-  color:#087052
-}
-.danger{
-  background:#ffe7e5;
-  color:#a92b22
-}
-.premium-btn{
-  background:linear-gradient(135deg,#d99b00,#f2c94c);
-  color:#fff
-}
-.btn:disabled{opacity:.55}
-
-.language-box{margin-bottom:16px}
-.language-box label,label{
-  display:block;
-  font-weight:800;
-  margin:10px 0 6px
-}
-.input,textarea,select{
-  width:100%;
-  padding:13px;
-  border:1px solid #d7e5e0;
-  border-radius:13px;
-  background:#fbfefd;
-  font-size:16px;
-  outline:none
-}
-.input:focus,textarea:focus,select:focus{
-  border-color:#0b9b70;
-  box-shadow:0 0 0 3px #0b9b7018
-}
-textarea{
-  min-height:110px;
-  resize:vertical
-}
-
-.status{
-  padding:11px;
-  border-radius:11px;
-  margin-top:10px;
-  display:none
-}
-.ok{
-  display:block;
-  background:#e8f7ee;
-  color:#12643d
-}
-.err{
-  display:block;
-  background:#ffe8e6;
-  color:#9f2b23
-}
-.loading{
-  display:block;
-  background:#eef3ff;
-  color:#294b91
-}
-.muted{
-  color:#61746e;
-  font-size:14px
-}
-
-.top{
-  background:linear-gradient(135deg,#087f5b,#0b9b70);
-  color:#fff;
-  padding:20px 17px
-}
-.top-inner,main{
-  max-width:900px;
-  margin:auto
-}
-.top h1{
-  margin:0 0 5px
-}
-.top p{
-  margin:0;
-  opacity:.9
-}
-.user-bar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:12px;
-  gap:10px
-}
-.logout{
-  border:0;
-  border-radius:10px;
-  padding:8px 12px;
-  background:#ffffff22;
-  color:#fff;
-  font-weight:800
-}
-
-main{padding:16px}
-.card{
-  background:#fff;
-  border-radius:21px;
-  padding:18px;
-  margin:14px 0;
-  box-shadow:0 5px 24px #0b5b4214
-}
-h2{margin:0 0 9px}
-
-.pill,.plan-badge{
-  display:inline-block;
-  background:#e9f5f1;
-  color:#087052;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:13px;
-  font-weight:800
-}
-.premium-badge{
-  background:#fff0b8;
-  color:#8a6200
-}
-
-.plan-card{
-  border:1px solid #ead38b;
-  background:linear-gradient(135deg,#fffdf4,#fff8d9)
-}
-.plan-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px
-}
-.features{padding-left:20px}
-.features li{margin:6px 0}
-
-.image-picker-button{
-  width:100%;
-  min-height:60px;
-  border:2px dashed #0b9b70;
-  border-radius:15px;
-  background:#e8f3ef;
-  color:#087052;
-  font-size:16px;
-  font-weight:800;
-  cursor:pointer
-}
-#images{
-  position:absolute;
-  width:1px;
-  height:1px;
-  opacity:0
-}
-.selection-info{
-  text-align:center;
-  margin-top:8px;
-  padding:9px;
-  background:#f1f7f5;
-  border-radius:10px;
-  color:#61746e
-}
-.thumbs{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-  gap:10px;
-  margin-top:12px
-}
-.thumb{
-  border:1px solid #dbe9e4;
-  border-radius:13px;
-  overflow:hidden
-}
-.thumb img{
-  width:100%;
-  height:120px;
-  object-fit:cover
-}
-.thumb div{
-  padding:6px;
-  font-size:12px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis
-}
-
-.record{
-  border:1px solid #dceae5;
-  border-radius:15px;
-  padding:12px;
-  margin:10px 0
-}
-.recordgrid{
-  display:grid;
-  grid-template-columns:1fr 120px 120px 110px;
-  gap:8px;
-  align-items:center
-}
-.recordgrid input{
-  width:100%;
-  padding:10px;
-  border:1px solid #d5e4df;
-  border-radius:9px
-}
-.money{
-  text-align:center;
-  font-weight:800
-}
-.empty{
-  text-align:center;
-  padding:22px;
-  color:#71837e
-}
-.total-box{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-top:14px
-}
-.total-item{
-  background:#eff9f5;
-  border:1px solid #d5ebe3;
-  border-radius:17px;
-  padding:15px
-}
-.total-label{
-  font-size:13px;
-  color:#61746e
-}
-.total-value{
-  font-size:23px;
-  font-weight:900;
-  color:#087052;
-  margin-top:4px
-}
-
-.modal{
+.install-popup{
   position:fixed;
-  inset:0;
-  background:#002d2366;
+  left:16px;
+  right:16px;
+  bottom:18px;
+  z-index:9999;
+
+  max-width:520px;
+  margin:auto;
+
+  background:rgba(255,255,255,.97);
+  border:1px solid #d9ebe5;
+  border-radius:22px;
+
+  padding:14px;
+
   display:flex;
   align-items:center;
-  justify-content:center;
-  padding:18px;
-  z-index:1000
-}
-.price{
-  font-size:32px;
-  font-weight:950;
-  color:#087052;
-  margin:10px 0
-}
-.secure-note{
-  padding:10px;
-  background:#f1f7f5;
-  border-radius:11px;
-  color:#61746e;
-  font-size:13px
+  gap:12px;
+
+  box-shadow:
+    0 18px 50px rgba(0,70,50,.22);
+
+  backdrop-filter:blur(12px);
+
+  transform:translateY(130%);
+  opacity:0;
+
+  transition:
+    transform .35s ease,
+    opacity .35s ease;
 }
 
-@media(max-width:650px){
-  .recordgrid{
-    grid-template-columns:1fr 105px
-  }
-  .recordgrid .money{
-    grid-column:1/-1;
-    text-align:right
-  }
-  .row>*{
-    flex:1 1 100%
-  }
-  .total-box{
-    grid-template-columns:1fr
-  }
-  .plan-head{
-    align-items:flex-start;
-    flex-direction:column
-  }
+.install-popup.show{
+  transform:translateY(0);
+  opacity:1;
 }
 
-@media print{
-  .btn,.image-picker-button,#thumbs,#status,.user-bar,#premiumCard{
-    display:none!important
-  }
-  .top{
-    background:none;
-    color:#000
-  }
-  .card{
-    box-shadow:none;
-    border:1px solid #ddd
-  }
+.install-icon{
+  width:50px;
+  height:50px;
+  flex:0 0 50px;
+
+  border-radius:15px;
+  object-fit:cover;
+
+  box-shadow:0 5px 15px #087f5b30;
 }
 
-html[dir=rtl] body{text-align:right}
+.install-content{
+  flex:1;
+  min-width:0;
+}
+
+.install-title{
+  font-size:16px;
+  font-weight:900;
+  color:#18332b;
+  margin-bottom:3px;
+}
+
+.install-text{
+  font-size:12px;
+  line-height:1.4;
+  color:#687b75;
+}
+
+.install-actions{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.install-btn{
+  border:0;
+  border-radius:12px;
+
+  padding:10px 14px;
+
+  background:linear-gradient(
+    135deg,
+    #087f5b,
+    #0b9b70
+  );
+
+  color:white;
+  font-size:14px;
+  font-weight:900;
+
+  cursor:pointer;
+  white-space:nowrap;
+
+  box-shadow:0 6px 16px #087f5b35;
+
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease;
+}
+
+.install-btn:active{
+  transform:scale(.95);
+}
+
+.install-close{
+  width:32px;
+  height:32px;
+
+  border:0;
+  border-radius:50%;
+
+  background:#eef5f2;
+  color:#527068;
+
+  font-size:20px;
+  line-height:1;
+
+  cursor:pointer;
+}
+
+.install-success{
+  position:fixed;
+  left:16px;
+  right:16px;
+  top:20px;
+
+  z-index:10000;
+
+  max-width:430px;
+  margin:auto;
+
+  padding:14px 16px;
+
+  border-radius:16px;
+
+  background:#e8f7ee;
+  border:1px solid #bde4cd;
+
+  color:#12643d;
+
+  font-size:14px;
+  font-weight:800;
+
+  box-shadow:0 12px 35px #12643d20;
+
+  transform:translateY(-150%);
+  opacity:0;
+
+  transition:
+    transform .35s ease,
+    opacity .35s ease;
+}
+
+.install-success.show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+.install-success-icon{
+  font-size:20px;
+  margin-right:7px;
+}
+
+@media(max-width:500px){
+
+  .install-popup{
+    left:10px;
+    right:10px;
+    bottom:10px;
+
+    padding:12px;
+
+    border-radius:20px;
+  }
+
+  .install-icon{
+    width:44px;
+    height:44px;
+    flex-basis:44px;
+    border-radius:13px;
+  }
+
+  .install-title{
+    font-size:14px;
+  }
+
+  .install-text{
+    font-size:11px;
+  }
+
+  .install-btn{
+    padding:9px 11px;
+    font-size:13px;
+  }
+
+   }
 </style>
 </head>
-
 <body>
 
-<!-- =========================
-     LOGIN / SIGNUP
-========================= -->
-
 <section id="authScreen" class="auth-screen">
-
 <div class="auth-box">
-
 <div class="language-box">
-<label for="languageSelect" data-i18n="selectLanguage">
-Select Your Language
-</label>
-
-<select id="languageSelect">
-<option value="en">English</option>
-<option value="ur">اردو</option>
-<option value="roman">Roman Urdu</option>
-</select>
+<label class="language-label" for="languageSelect" data-i18n="selectLanguage">Select Your Language</label>
+<select id="languageSelect" class="language-select"><option value="en">English</option><option value="ur">اردو</option><option value="roman">Roman Urdu</option></select>
 </div>
-
 <div class="auth-logo">🌿</div>
-
-<h1 data-i18n="appName">
-Cotton Record
-</h1>
-
-<div class="auth-subtitle" data-i18n="recordManagement">
-Record Management System
-</div>
-
-<div class="auth-tabs">
-
-<button
-id="loginTab"
-class="auth-tab active"
-data-i18n="login">
-Login
-</button>
-
-<button
-id="signupTab"
-class="auth-tab"
-data-i18n="signUp">
-Sign Up
-</button>
-
-</div>
-
+<h1 data-i18n="appName">Cotton Record</h1>
+<div class="auth-subtitle" data-i18n="recordManagement">Record Management System</div>
+<div class="auth-tabs"><button id="loginTab" class="auth-tab active" type="button" data-i18n="login">Login</button><button id="signupTab" class="auth-tab" type="button" data-i18n="signUp">Sign Up</button></div>
 <form id="loginForm">
-
-<label data-i18n="username">
-Username
-</label>
-
-<input
-id="loginUser"
-class="input"
-required
-autocomplete="username"
-data-placeholder="enterUsername"
-placeholder="Enter username">
-
-<label data-i18n="password">
-Password
-</label>
-
-<input
-id="loginPass"
-class="input"
-type="password"
-required
-autocomplete="current-password"
-data-placeholder="enterPassword"
-placeholder="Enter password">
-
-<button
-class="btn primary"
-style="width:100%;margin-top:15px"
-data-i18n="login">
-Login
-</button>
-
+<label data-i18n="emailUsername">Email / Username</label><input id="loginUser" class="input" type="text" required autocomplete="username" data-placeholder="enterUsername" placeholder="Enter username">
+<label data-i18n="password">Password</label><input id="loginPass" class="input" type="password" required autocomplete="current-password" data-placeholder="enterPassword" placeholder="Enter password">
+<button class="btn primary" style="width:100%;margin-top:16px" type="submit" data-i18n="login">Login</button>
 </form>
-
 <form id="signupForm" class="hidden">
-
-<label data-i18n="name">
-Name
-</label>
-
-<input
-id="signupName"
-class="input"
-required
-data-placeholder="yourName"
-placeholder="Your name">
-
-<label data-i18n="username">
-Username
-</label>
-
-<input
-id="signupUser"
-class="input"
-required
-data-placeholder="createUsername"
-placeholder="Create username">
-
-<label data-i18n="password">
-Password
-</label>
-
-<input
-id="signupPass"
-class="input"
-type="password"
-minlength="6"
-required
-data-placeholder="minimumPassword"
-placeholder="Minimum 6 characters">
-
-<button
-class="btn primary"
-style="width:100%;margin-top:15px"
-data-i18n="createAccount">
-Create Account
-</button>
-
+<label data-i18n="name">Name</label><input id="signupName" class="input" type="text" required data-placeholder="yourName" placeholder="Your name">
+<label data-i18n="username">Username</label><input id="signupUser" class="input" type="text" required data-placeholder="createUsername" placeholder="Create username">
+<label data-i18n="password">Password</label><input id="signupPass" class="input" type="password" required minlength="6" data-placeholder="minimumPassword" placeholder="Minimum 6 characters">
+<button class="btn primary" style="width:100%;margin-top:16px" type="submit" data-i18n="createAccount">Create Account</button>
 </form>
-
 <div id="authMessage" class="status"></div>
-
-<div
-class="muted"
-style="text-align:center;margin-top:14px"
-data-i18n="secureAccountNote">
-Account security is handled by the server.
-</div>
-
+<div class="muted" style="margin-top:15px;text-align:center" data-i18n="accountStored">Your account is stored on this device.</div>
 </div>
 </section>
 
+<div id="app" class="hidden">
+<header class="top"><div class="top-inner">
+<h1>🌿 <span data-i18n="appName">Cotton Record</span></h1>
+<p data-i18n="topDescription">Easy Record Management • Multiple Pictures • Verification • Payment</p>
+<div class="user-bar">
+<span id="currentUser" class="user-name"></span>
+<div class="row" style="justify-content:flex-end;flex:0 0 auto">
+<button id="installApp" class="logout hidden" type="button">📲 Install App</button>
+<button id="logout" class="logout" type="button" data-i18n="logout">Logout</button>
+</div>
+</div>
+</div></header>
 
-<!-- =========================
+<main>
+<section class="card">
+<h2 data-i18n="nameListTitle">1. Name List</h2>
+<div class="muted" data-i18n="nameListDescription">Add all names that appear in your records. Write each name on a separate line.</div>
+<label for="names" data-i18n="names">Names</label>
+<textarea id="names" data-placeholder="namesExample" placeholder="For example&#10;Asghar&#10;Muhammad&#10;Sain Bakhsh&#10;Sher Muhammad"></textarea>
+<div class="row" style="margin-top:10px"><button class="btn secondary" id="saveNames" type="button" data-i18n="saveNames">Save Names</button><span class="pill" id="nameCount">0 names</span></div>
+</section>
+
+<section class="card">
+<h2 data-i18n="picturesTitle">2. Record Pictures</h2>
+<div class="muted" data-i18n="picturesDescription">You can select multiple notebook photos at once.</div>
+<div class="image-picker"><button id="selectImagesButton" class="image-picker-button" type="button" data-i18n="selectPictures">📷 Select Pictures</button><input id="images" type="file" accept="image/*" multiple></div>
+<div id="selectionInfo" class="selection-info" data-i18n="noPicture">No picture selected yet.</div>
+<div id="thumbs" class="thumbs"></div>
+<div class="row" style="margin-top:12px"><input id="rate" class="input" type="number" min="0" step="0.01" value="25" data-placeholder="ratePerKg" placeholder="Rate per KG"><button id="read" class="btn primary" type="button" data-i18n="processRecords">Process Records</button><button id="clearPics" class="btn danger" type="button" data-i18n="clearPictures">Clear Pictures</button></div>
+<div id="status" class="status"></div>
+<div id="processingTotal" class="total-box hidden">
+<div class="total-item"><div class="total-label" data-i18n="allPicturesWeight">All Pictures — Total Weight</div><div id="processingWeight" class="total-value">0.00 kg</div></div>
+<div class="total-item"><div class="total-label" data-i18n="allPicturesPayment">All Pictures — Total Payment</div><div id="processingMoney" class="total-value">Rs. 0.00</div></div>
+</div>
+</section>
+
+<section class="card">
+<div class="row" style="align-items:center"><div><h2 data-i18n="detectedRecords">3. Detected Records</h2><div class="muted" data-i18n="verifyRecords">Verify or edit every name and weight before saving.</div></div><span id="count" class="pill">0 records</span></div>
+<div id="records"><div class="empty" data-i18n="noRecords">No records yet.</div></div>
+<div class="row" style="margin-top:12px"><button id="add" class="btn secondary" type="button" data-i18n="addRow">+ Add Row</button><button id="save" class="btn primary" type="button" data-i18n="saveRecords">Save Records</button></div>
+</section>
+
+<section class="card">
+<div class="row" style="align-items:center"><div><h2 data-i18n="finalSummary">4. Final Summary</h2><div class="muted" data-i18n="summaryDescription">Entries with the same name are automatically combined.</div></div><button id="clearAll" class="btn danger" type="button" data-i18n="clearResults">Clear Results</button></div>
+<div id="summary"><div class="empty" data-i18n="saveForResult">Save records to see the result here.</div></div>
+<div id="grandTotal" class="total-box hidden"><div class="total-item"><div class="total-label" data-i18n="grandWeight">Grand Total Weight</div><div id="grandWeight" class="total-value">0.00 kg</div></div><div class="total-item"><div class="total-label" data-i18n="grandPayment">Grand Total Payment</div><div id="grandMoney" class="total-value">Rs. 0.00</div></div></div>
+<div class="row" style="margin-top:12px"><button id="csv" class="btn secondary" type="button" data-i18n="exportCSV">Export CSV</button><button id="png" class="btn primary" type="button" data-i18n="exportPNG">Export PNG</button><button id="print" class="btn secondary" type="button" data-i18n="print">Print</button></div>
+</section>
+<section class="card"><div class="muted" data-i18n="dataProtection">Record data is handled through protected processing.</div></section>
+</main>
+</div>
+
+<script>
+"use strict";
+
+/* =====================================================
+   LANGUAGE
+===================================================== */
+const translations={
+en:{
+selectLanguage:"Select Your Language",appName:"Cotton Record",recordManagement:"Record Management System",login:"Login",signUp:"Sign Up",
+emailUsername:"Email / Username",password:"Password",name:"Name",username:"Username",enterUsername:"Enter username",enterPassword:"Enter password",
+yourName:"Your name",createUsername:"Create username",minimumPassword:"Minimum 6 characters",createAccount:"Create Account",
+accountStored:"Your account is stored on this device.",logout:"Logout",topDescription:"Easy Record Management • Multiple Pictures • Verification • Payment",
+nameListTitle:"1. Name List",nameListDescription:"Add all names that appear in your records. Write each name on a separate line.",names:"Names",
+namesExample:"For example\nAsghar\nMuhammad\nSain Bakhsh\nSher Muhammad",saveNames:"Save Names",picturesTitle:"2. Record Pictures",
+picturesDescription:"You can select multiple notebook photos at once.",selectPictures:"📷 Select Pictures",noPicture:"No picture selected yet.",
+ratePerKg:"Rate per KG",processRecords:"Process Records",clearPictures:"Clear Pictures",allPicturesWeight:"All Pictures — Total Weight",
+allPicturesPayment:"All Pictures — Total Payment",detectedRecords:"3. Detected Records",verifyRecords:"Verify or edit every name and weight before saving.",
+noRecords:"No records yet.",addRow:"+ Add Row",saveRecords:"Save Records",finalSummary:"4. Final Summary",
+summaryDescription:"Entries with the same name are automatically combined.",clearResults:"Clear Results",saveForResult:"Save records to see the result here.",
+grandWeight:"Grand Total Weight",grandPayment:"Grand Total Payment",exportCSV:"Export CSV",exportPNG:"Export PNG",print:"Print",
+dataProtection:"Record data is handled through protected processing.",namesCount:"names",recordsCount:"records",pictureSelected:"picture selected.",
+picturesSelected:"pictures selected.",namesSaved:"Names saved successfully.",accountCreated:"Account successfully created.",
+accountExists:"Account already exists on this device. Please login.",completeFields:"Please complete all fields correctly.",
+wrongLogin:"Username or password is incorrect.",picturesCleared:"Pictures have been cleared.",selectPictureFirst:"Please select pictures first.",
+processing:"Records are being processed…",processingSuccess:"Records successfully processed. Verify every row and save it.",
+processingFailed:"Records could not be processed. Please try again.",resultsSaved:"Calculation saved successfully.",
+resultsCleared:"Saved results have been cleared.",noSavedResults:"There are no saved results to export.",noPNG:"Save results first to create a PNG.",
+pngSuccess:"Final result exported as PNG.",pngFailed:"PNG export failed. Please try again.",clearConfirm:"Do you want to clear saved results?",
+loggedIn:"Logged in: ",installApp:"📲 Install App",installStarting:"Cotton Record is being installed…",installSuccess:"✓ Cotton Record has been installed successfully on your device."
+},
+ur:{
+selectLanguage:"اپنی زبان منتخب کریں",appName:"کاٹن ریکارڈ",recordManagement:"ریکارڈ مینجمنٹ سسٹم",login:"لاگ اِن",signUp:"سائن اَپ",
+emailUsername:"ای میل / یوزرنیم",password:"پاس ورڈ",name:"نام",username:"یوزرنیم",enterUsername:"یوزرنیم درج کریں",enterPassword:"پاس ورڈ درج کریں",
+yourName:"اپنا نام درج کریں",createUsername:"یوزرنیم بنائیں",minimumPassword:"کم از کم 6 حروف",createAccount:"اکاؤنٹ بنائیں",
+accountStored:"آپ کا اکاؤنٹ اس ڈیوائس پر محفوظ ہے۔",logout:"لاگ آؤٹ",topDescription:"آسان ریکارڈ مینجمنٹ • متعدد تصاویر • تصدیق • ادائیگی",
+nameListTitle:"1. ناموں کی فہرست",nameListDescription:"ریکارڈ میں موجود تمام نام یہاں شامل کریں۔ ہر نام الگ لائن میں لکھیں۔",names:"نام",
+namesExample:"مثلاً\nاصغر\nمحمد\nسائیں بخش\nشیر محمد",saveNames:"نام محفوظ کریں",picturesTitle:"2. ریکارڈ کی تصاویر",
+picturesDescription:"آپ ایک ہی بار میں متعدد نوٹ بک تصاویر منتخب کر سکتے ہیں۔",selectPictures:"📷 تصاویر منتخب کریں",noPicture:"ابھی کوئی تصویر منتخب نہیں کی گئی۔",
+ratePerKg:"فی کلو ریٹ",processRecords:"ریکارڈ پروسیس کریں",clearPictures:"تصاویر صاف کریں",allPicturesWeight:"تمام تصاویر — کل وزن",
+allPicturesPayment:"تمام تصاویر — کل ادائیگی",detectedRecords:"3. حاصل شدہ ریکارڈ",verifyRecords:"محفوظ کرنے سے پہلے ہر نام اور وزن کو چیک یا ایڈٹ کریں۔",
+noRecords:"ابھی کوئی ریکارڈ نہیں۔",addRow:"+ نئی قطار",saveRecords:"ریکارڈ محفوظ کریں",finalSummary:"4. حتمی خلاصہ",
+summaryDescription:"ایک جیسے نام کی تمام انٹریاں خودکار طور پر جمع ہو جاتی ہیں۔",clearResults:"نتائج صاف کریں",saveForResult:"نتیجہ دیکھنے کے لیے ریکارڈ محفوظ کریں۔",
+grandWeight:"کل مجموعی وزن",grandPayment:"کل مجموعی ادائیگی",exportCSV:"CSV ایکسپورٹ",exportPNG:"PNG ایکسپورٹ",print:"پرنٹ",
+dataProtection:"ریکارڈ ڈیٹا محفوظ طریقے سے پروسیس کیا جاتا ہے۔",namesCount:"نام",recordsCount:"ریکارڈ",pictureSelected:"تصویر منتخب کی گئی۔",
+picturesSelected:"تصاویر منتخب کی گئی ہیں۔",namesSaved:"نام کامیابی سے محفوظ ہو گئے۔",accountCreated:"اکاؤنٹ کامیابی سے بنا دیا گیا۔",
+accountExists:"اس ڈیوائس پر اکاؤنٹ پہلے سے موجود ہے۔ لاگ اِن کریں۔",completeFields:"براہِ کرم تمام معلومات درست طریقے سے مکمل کریں۔",
+wrongLogin:"یوزرنیم یا پاس ورڈ غلط ہے۔",picturesCleared:"تصاویر صاف کر دی گئی ہیں۔",selectPictureFirst:"پہلے تصاویر منتخب کریں۔",processing:"ریکارڈ پروسیس ہو رہے ہیں…",
+processingSuccess:"ریکارڈ کامیابی سے پروسیس ہو گئے۔ ہر قطار چیک کرکے محفوظ کریں۔",processingFailed:"ریکارڈ پروسیس نہیں ہو سکے۔ براہِ کرم دوبارہ کوشش کریں۔",
+resultsSaved:"حساب کامیابی سے محفوظ ہو گیا۔",resultsCleared:"محفوظ نتائج صاف کر دیے گئے ہیں۔",noSavedResults:"ایکسپورٹ کرنے کے لیے کوئی محفوظ نتیجہ موجود نہیں۔",
+noPNG:"PNG بنانے کے لیے پہلے نتیجہ محفوظ کریں۔",pngSuccess:"حتمی نتیجہ PNG میں ایکسپورٹ ہو گیا۔",pngFailed:"PNG ایکسپورٹ نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+clearConfirm:"کیا آپ محفوظ نتائج صاف کرنا چاہتے ہیں؟",loggedIn:"لاگ اِن: ",installApp:"📲 ایپ انسٹال کریں",
+installStarting:"کاٹن ریکارڈ انسٹال ہو رہی ہے…",installSuccess:"✓ کاٹن ریکارڈ کامیابی سے آپ کے فون میں انسٹال ہو گئی ہے۔"
+},
+roman:{
+selectLanguage:"Apni Language Select Karein",appName:"Cotton Record",recordManagement:"Record Management System",login:"Login",signUp:"Sign Up",
+emailUsername:"Email / Username",password:"Password",name:"Naam",username:"Username",enterUsername:"Username enter karein",enterPassword:"Password enter karein",
+yourName:"Apna naam enter karein",createUsername:"Username banayein",minimumPassword:"Kam az kam 6 characters",createAccount:"Account Banayein",
+accountStored:"Aap ka account is device par save hai.",logout:"Logout",topDescription:"Asaan Record Management • Multiple Pictures • Verification • Payment",
+nameListTitle:"1. Naam List",nameListDescription:"Record mein mojood tamam naam yahan add karein. Har naam alag line mein likhein.",names:"Names",
+namesExample:"Misal ke taur par\nAsghar\nMuhammad\nSain Bakhsh\nSher Muhammad",saveNames:"Names Save Karein",picturesTitle:"2. Record Pictures",
+picturesDescription:"Aap aik hi baar mein multiple notebook photos select kar sakte hain.",selectPictures:"📷 Pictures Select Karein",noPicture:"Abhi koi picture select nahi ki gayi.",
+ratePerKg:"Rate per KG",processRecords:"Records Process Karein",clearPictures:"Pictures Clear Karein",allPicturesWeight:"All Pictures — Total Weight",
+allPicturesPayment:"All Pictures — Total Payment",detectedRecords:"3. Detected Records",verifyRecords:"Save karne se pehle har naam aur weight verify/edit karein.",
+noRecords:"Abhi koi record nahi.",addRow:"+ Add Row",saveRecords:"Record Save Karein",finalSummary:"4. Final Summary",
+summaryDescription:"Same naam ki entries automatically combine hoti hain.",clearResults:"Results Clear Karein",saveForResult:"Result dekhne ke liye record save karein.",
+grandWeight:"Grand Total Weight",grandPayment:"Grand Total Payment",exportCSV:"Export CSV",exportPNG:"Export PNG",print:"Print",
+dataProtection:"Record data protected processing ke zariye handle hota hai.",namesCount:"names",recordsCount:"records",pictureSelected:"picture selected.",
+picturesSelected:"pictures selected.",namesSaved:"Names successfully save ho gaye.",accountCreated:"Account successfully create ho gaya.",
+accountExists:"Is device par account pehle se mojood hai. Login karein.",completeFields:"Please tamam fields correctly complete karein.",
+wrongLogin:"Username ya password incorrect hai.",picturesCleared:"Pictures clear kar di gayi hain.",selectPictureFirst:"Pehle pictures select karein.",
+processing:"Records process ho rahe hain…",processingSuccess:"Records successfully process ho gaye. Har row verify karke save karein.",
+processingFailed:"Records process nahi ho sake. Please dobara try karein.",resultsSaved:"Calculation successfully save ho gaya.",resultsCleared:"Saved results clear kar diye gaye hain.",
+noSavedResults:"Export karne ke liye koi saved result nahi.",noPNG:"PNG banane ke liye pehle result save karein.",pngSuccess:"Final result PNG mein export ho gaya.",
+pngFailed:"PNG export nahi ho saka. Please dobara try karein.",clearConfirm:"Kia aap saved results clear karna chahte hain?",loggedIn:"Logged in: ",
+installApp:"📲 Install App",installStarting:"Cotton Record install ho rahi hai…",installSuccess:"✓ Cotton Record successfully aap ke phone mein install ho gayi hai."
+}};
+
+let currentLanguage=localStorage.getItem("cotton_language")||"en";
+const $=s=>document.querySelector(s);
+function t(k){return translations[currentLanguage]?.[k]||translations.en[k]||k}
+function applyLanguage(){
+ const html=document.documentElement;
+ html.lang=currentLanguage==="ur"?"ur":"en";html.dir=currentLanguage==="ur"?"rtl":"ltr";
+ document.querySelectorAll("[data-i18n]").forEach(e=>e.textContent=t(e.getAttribute("data-i18n")));
+ document.querySelectorAll("[data-placeholder]").forEach(e=>e.placeholder=t(e.getAttribute("data-placeholder")));
+ refreshNameCount();updateRecordCount();updateSelectionText();
+ if(saved.length)renderSummary();
+ if(!isAppInstalled()&&!deferredInstallPrompt) updateInstallButtonText();
+}
+$("#languageSelect").value=currentLanguage;
+$("#languageSelect").addEventListener("change",e=>{currentLanguage=e.target.value;localStorage.setItem("cotton_language",currentLanguage);applyLanguage()});
+
+/* =====================================================
+   PWA INSTALL
+===================================================== */
+let deferredInstallPrompt=null;
+const installButton=$("#installApp");
+
+function isAppInstalled(){
+ return (window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches) ||
+        window.navigator.standalone===true;
+}
+function updateInstallButtonText(){
+ installButton.textContent=t("installApp");
+}
+window.addEventListener("beforeinstallprompt",e=>{
+ e.preventDefault();
+ deferredInstallPrompt=e;
+ if(!isAppInstalled()){
+   installButton.classList.remove("hidden");
+   updateInstallButtonText();
+ }
+});
+installButton.addEventListener("click",async()=>{
+ if(!deferredInstallPrompt)return;
+ try{
+   const prompt=deferredInstallPrompt;
+   await prompt.prompt();
+   const choice=await prompt.userChoice;
+   if(choice.outcome==="accepted")show(t("installStarting"),"loading");
+ }catch(err){console.error("PWA installation failed:",err)}
+ deferredInstallPrompt=null;
+ installButton.classList.add("hidden");
+});
+window.addEventListener("appinstalled",()=>{
+ deferredInstallPrompt=null;
+ installButton.classList.add("hidden");
+ show(t("installSuccess"),"ok");
+});
+if(isAppInstalled())installButton.classList.add("hidden");
+else updateInstallButtonText();
+
+if("serviceWorker" in navigator){
+ window.addEventListener("load",()=>{
+   navigator.serviceWorker.register("/service-worker.js")
+   .then(()=>console.log("Cotton Record Service Worker registered."))
+   .catch(err=>console.error("Service Worker registration failed:",err));
+ });
+}
+
+/* =====================================================
+   HELPERS / AUTH
+===================================================== */
+function safeStorageGet(k){try{return localStorage.getItem(k)}catch{return null}}
+function safeStorageSet(k,v){try{localStorage.setItem(k,v);return true}catch{return false}}
+function safeStorageRemove(k){try{localStorage.removeItem(k)}catch{}}
+function money(v){return Number(v||0).toLocaleString("en-PK",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function authShow(m,type){$("#authMessage").className="status "+type;$("#authMessage").textContent=m}
+function showLogin(){$("#loginForm").classList.remove("hidden");$("#signupForm").classList.add("hidden");$("#loginTab").classList.add("active");$("#signupTab").classList.remove("active")}
+function showSignup(){$("#loginForm").classList.add("hidden");$("#signupForm").classList.remove("hidden");$("#loginTab").classList.remove("active");$("#signupTab").classList.add("active")}
+$("#loginTab").addEventListener("click",showLogin);$("#signupTab").addEventListener("click",showSignup);
+function getUser(){try{return JSON.parse(safeStorageGet("cotton_user")||"null")}catch{return null}}
+function setLoggedIn(u){safeStorageSet("cotton_logged_in","true");safeStorageSet("cotton_current_user",JSON.stringify(u))}
+function getCurrentUser(){try{return JSON.parse(safeStorageGet("cotton_current_user")||"null")}catch{return null}}
+function userKey(base){return base+"_"+(getCurrentUser()?.username||"guest")}
+let selected=[],records=[],saved=[];
+function openApp(){
+ const u=getCurrentUser();
+ if(!u){$("#authScreen").classList.remove("hidden");$("#app").classList.add("hidden");return}
+ $("#authScreen").classList.add("hidden");$("#app").classList.remove("hidden");
+ $("#currentUser").textContent=t("loggedIn")+(u.name||u.username);
+ loadUserData();applyLanguage();
+ if(isAppInstalled())installButton.classList.add("hidden");
+}
+$("#logout").addEventListener("click",()=>{safeStorageRemove("cotton_logged_in");safeStorageRemove("cotton_current_user");$("#app").classList.add("hidden");$("#authScreen").classList.remove("hidden");showLogin()});
+$("#signupForm").addEventListener("submit",e=>{
+ e.preventDefault();const name=$("#signupName").value.trim(),username=$("#signupUser").value.trim(),password=$("#signupPass").value;
+ if(!name||!username||password.length<6)return authShow(t("completeFields"),"err");
+ if(getUser())return authShow(t("accountExists"),"err");
+ const u={name,username,password};safeStorageSet("cotton_user",JSON.stringify(u));setLoggedIn(u);authShow(t("accountCreated"),"ok");setTimeout(openApp,400);
+});
+$("#loginForm").addEventListener("submit",e=>{
+ e.preventDefault();const username=$("#loginUser").value.trim(),password=$("#loginPass").value,u=getUser();
+ if(!u||u.username!==username||u.password!==password)return authShow(t("wrongLogin"),"err");
+ setLoggedIn(u);openApp();
+});
+
+/* =====================================================
+   USER DATA / NAMES
+===================================================== */
+function loadUserData(){
+ $("#names").value=safeStorageGet(userKey("cotton_names"))||"";
+ try{saved=JSON.parse(safeStorageGet(userKey("cotton_results"))||"[]");if(!Array.isArray(saved))saved=[]}catch{saved=[]}
+ refreshNameCount();renderSummary();
+}
+function getNames(){return ($("#names").value||"").split(/\n|,/).map(x=>x.trim()).filter(Boolean)}
+function refreshNameCount(){$("#nameCount").textContent=getNames().length+" "+t("namesCount")}
+$("#names").addEventListener("input",refreshNameCount);
+$("#saveNames").addEventListener("click",()=>{safeStorageSet(userKey("cotton_names"),$("#names").value);refreshNameCount();show(t("namesSaved"),"ok")});
+
+/* =====================================================
+   IMAGES
+===================================================== */
+const imageInput=$("#images");
+$("#selectImagesButton").addEventListener("click",()=>imageInput.click());
+imageInput.addEventListener("change",()=>{selected=Array.from(imageInput.files||[]);renderThumbs()});
+function updateSelectionText(){
+ $("#selectionInfo").textContent=!selected.length?t("noPicture"):selected.length+" "+(selected.length===1?t("pictureSelected"):t("picturesSelected"));
+}
+function renderThumbs(){
+ $("#thumbs").innerHTML="";updateSelectionText();
+ selected.forEach((file,i)=>{
+  const w=document.createElement("div");w.className="thumb";
+  const img=document.createElement("img"),url=URL.createObjectURL(file);img.src=url;img.onload=()=>URL.revokeObjectURL(url);
+  const l=document.createElement("div");l.textContent=(i+1)+". "+file.name;w.append(img,l);$("#thumbs").appendChild(w);
+ });
+}
+function show(m,type){const s=$("#status");s.className="status "+type;s.textContent=m;s.style.display="block"}
+$("#clearPics").addEventListener("click",()=>{selected=[];imageInput.value="";renderThumbs();$("#processingTotal").classList.add("hidden");show(t("picturesCleared"),"ok")});
+function toBase64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(",")[1]||"");r.onerror=()=>reject(new Error("FILE_READ_FAILED"));r.readAsDataURL(file)})}
+
+/* =====================================================
+   OCR
+===================================================== */
+$("#read").addEventListener("click",async()=>{
+ if(!selected.length)return show(t("selectPictureFirst"),"err");
+ const b=$("#read");b.disabled=true;show(t("processing"),"loading");
+ try{
+  const images=[];
+  for(const file of selected){
+   if(file.size>8*1024*1024)throw new Error("FILE_TOO_LARGE");
+   images.push({name:file.name,mimeType:file.type||"image/jpeg",data:await toBase64(file)});
+  }
+  const response=await fetch("/api/ocr",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({images,names:getNames(),defaultRate:Number($("#rate").value)||0})});
+  let data={};try{data=await response.json()}catch{}
+  if(!response.ok||!Array.isArray(data.records))throw new Error("PROCESSING_FAILED");
+  records=data.records.map(item=>({name:String(item.name||"").trim(),weight:Number(item.weight)||0,rate:Number($("#rate").value)||0})).filter(x=>x.name&&x.weight>=0);
+  renderRecords();updateProcessingTotal();show(t("processingSuccess"),"ok");
+ }catch(err){console.error("Processing failed:",err);show(t("processingFailed"),"err")}
+ finally{b.disabled=false}
+});
+function calculateRecordsTotal(list){return list.reduce((a,x)=>{const w=Number(x.weight)||0,r=Number(x.rate)||0;a.weight+=w;a.payment+=w*r;return a},{weight:0,payment:0})}
+function updateProcessingTotal(){const x=calculateRecordsTotal(records);$("#processingWeight").textContent=x.weight.toFixed(2)+" kg";$("#processingMoney").textContent="Rs. "+money(x.payment);$("#processingTotal").classList.remove("hidden")}
+
+/* =====================================================
+   RECORDS
+===================================================== */
+function updateRecordCount(){$("#count").textContent=records.length+" "+t("recordsCount")}
+function renderRecords(){
+ const c=$("#records");updateRecordCount();
+ if(!records.length){c.innerHTML='<div class="empty">'+escapeHTML(t("noRecords"))+"</div>";return}
+ c.innerHTML="";
+ records.forEach((record,index)=>{
+  const box=document.createElement("div");box.className="record";const grid=document.createElement("div");grid.className="recordgrid";
+  const name=document.createElement("input");name.type="text";name.placeholder=currentLanguage==="ur"?"نام":"Name";name.value=record.name;
+  const weight=document.createElement("input");weight.type="number";weight.step="0.01";weight.min="0";weight.placeholder=currentLanguage==="ur"?"وزن":"Weight";weight.value=record.weight;
+  const rate=document.createElement("input");rate.type="number";rate.step="0.01";rate.min="0";rate.placeholder=currentLanguage==="ur"?"ریٹ":"Rate";rate.value=record.rate;
+  const m=document.createElement("div");m.className="money";
+  function update(){record.name=name.value;record.weight=Number(weight.value)||0;record.rate=Number(rate.value)||0;m.textContent="Rs. "+money(record.weight*record.rate);updateProcessingTotal()}
+  update();name.addEventListener("input",update);weight.addEventListener("input",update);rate.addEventListener("input",update);
+  grid.append(name,weight,rate,m);const del=document.createElement("button");del.type="button";del.className="btn danger";del.style.marginTop="8px";del.textContent=currentLanguage==="ur"?"حذف کریں":"Delete";
+  del.addEventListener("click",()=>{records.splice(index,1);renderRecords();updateProcessingTotal()});box.append(grid,del);c.appendChild(box);
+ });
+}
+$("#add").addEventListener("click",()=>{records.push({name:"",weight:0,rate:Number($("#rate").value)||0});renderRecords();updateProcessingTotal()});
+$("#save").addEventListener("click",()=>{
+ const defaultRate=Number($("#rate").value)||0;
+ records=records.filter(x=>String(x.name||"").trim()!==""&&Number(x.weight)>=0).map(x=>({name:String(x.name).trim(),weight:Number(x.weight)||0,rate:Number(x.rate)||defaultRate}));
+ const map={};
+ records.forEach(x=>{const key=x.name.trim().toLocaleLowerCase();if(!map[key])map[key]={name:x.name,entries:0,weight:0,money:0};map[key].entries++;map[key].weight+=x.weight;map[key].money+=x.weight*x.rate});
+ saved=Object.values(map);safeStorageSet(userKey("cotton_results"),JSON.stringify(saved));renderSummary();updateProcessingTotal();show(t("resultsSaved"),"ok");
+});
+
+/* =====================================================
+   SUMMARY / EXPORTS
+===================================================== */
+function escapeHTML(v){return String(v).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]))}
+function renderSummary(){
+ const s=$("#summary");
+ if(!saved.length){s.innerHTML='<div class="empty">'+escapeHTML(t("saveForResult"))+"</div>";$("#grandTotal").classList.add("hidden");return}
+ s.innerHTML="";let tw=0,tm=0;
+ saved.forEach(x=>{
+  tw+=Number(x.weight)||0;tm+=Number(x.money)||0;
+  const b=document.createElement("div");b.className="record";
+  const totalWeight=currentLanguage==="ur"?"کل وزن": "Total Weight",totalPayment=currentLanguage==="ur"?"کل ادائیگی":"Total Payment";
+  b.innerHTML='<div style="font-size:20px;font-weight:900">'+escapeHTML(x.name)+'</div><div class="muted">'+x.entries+" "+escapeHTML(t("recordsCount"))+'</div><div class="row" style="margin-top:8px"><div><b>'+totalWeight+'</b><br>'+Number(x.weight).toFixed(2)+' kg</div><div><b>'+totalPayment+'</b><br>Rs. '+money(x.money)+'</div></div>';
+  s.appendChild(b);
+ });
+ $("#grandWeight").textContent=tw.toFixed(2)+" kg";$("#grandMoney").textContent="Rs. "+money(tm);$("#grandTotal").classList.remove("hidden");
+}
+$("#clearAll").addEventListener("click",()=>{if(!confirm(t("clearConfirm")))return;saved=[];safeStorageRemove(userKey("cotton_results"));renderSummary();show(t("resultsCleared"),"ok")});
+$("#csv").addEventListener("click",()=>{
+ if(!saved.length)return show(t("noSavedResults"),"err");
+ let csv="Person Name,Entries,Total Weight KG,Total Payment PKR\n";
+ csv+=saved.map(x=>'"'+String(x.name).replaceAll('"','""')+'",'+x.entries+","+Number(x.weight).toFixed(2)+","+Number(x.money).toFixed(2)).join("\n");
+ const url=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");a.href=url;a.download="cotton-record.csv";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+$("#png").addEventListener("click",()=>{if(!saved.length)return show(t("noPNG"),"err");createPNG()});
+function createPNG(){
+ const canvas=document.createElement("canvas"),width=1080,rowHeight=92,height=210+saved.length*rowHeight+170;canvas.width=width;canvas.height=height;const ctx=canvas.getContext("2d");
+ ctx.fillStyle="#fff";ctx.fillRect(0,0,width,height);ctx.fillStyle="#087f5b";ctx.fillRect(0,0,width,150);ctx.fillStyle="#fff";ctx.font="bold 42px Arial";ctx.fillText(currentLanguage==="ur"?"کاٹن ریکارڈ":"Cotton Record",50,65);ctx.font="24px Arial";ctx.fillText(currentLanguage==="ur"?"حتمی ریکارڈ خلاصہ":"Final Record Summary",50,105);
+ let y=195;ctx.fillStyle="#18332b";ctx.font="bold 24px Arial";ctx.fillText(currentLanguage==="ur"?"نام":"Name",50,y);ctx.fillText(currentLanguage==="ur"?"انٹریاں":"Entries",560,y);ctx.fillText(currentLanguage==="ur"?"وزن":"Weight",700,y);ctx.fillText(currentLanguage==="ur"?"ادائیگی":"Payment",850,y);y+=35;
+ let tw=0,tm=0;
+ saved.forEach(x=>{tw+=Number(x.weight)||0;tm+=Number(x.money)||0;ctx.strokeStyle="#dceae5";ctx.beginPath();ctx.moveTo(40,y);ctx.lineTo(width-40,y);ctx.stroke();y+=55;ctx.fillStyle="#18332b";ctx.font="22px Arial";ctx.fillText(String(x.name).slice(0,25),50,y);ctx.fillText(String(x.entries),575,y);ctx.fillText(Number(x.weight).toFixed(2)+" kg",700,y);ctx.fillText("Rs. "+money(x.money),850,y);y+=37});
+ ctx.fillStyle="#e8f7f1";ctx.fillRect(40,y,width-80,105);y+=42;ctx.fillStyle="#087052";ctx.font="bold 25px Arial";ctx.fillText((currentLanguage==="ur"?"کل مجموعی وزن: ":"Grand Total Weight: ")+tw.toFixed(2)+" kg",65,y);ctx.fillText((currentLanguage==="ur"?"کل مجموعی ادائیگی: Rs. ":"Grand Total Payment: Rs. ")+money(tm),65,y+40);
+ canvas.toBlob(blob=>{if(!blob)return show(t("pngFailed"),"err");const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="cotton-record-summary.png";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);show(t("pngSuccess"),"ok")},"image/png");
+}
+$("#print").addEventListener("click",()=>window.print());
+
+/* =====================================================
+   START
+===================================================== */
+applyLanguage();
+if(safeStorageGet("cotton_logged_in")==="true"&&getCurrentUser())openApp();
+else{$("#authScreen").classList.remove("hidden");$("#app").classList.add("hidden")}
+</script>
+
+   
+
+      
+
+    </form>
+
+
+    <div
+      id="authMessage"
+      class="status"
+    ></div>
+
+    <div
+      class="muted"
+      style="margin-top:15px;text-align:center"
+      data-i18n="accountStored"
+    >
+      Your account is stored on this device.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
      APPLICATION
-========================= -->
+===================================================== -->
 
 <div id="app" class="hidden">
 
 <header class="top">
 
-<div class="top-inner">
+  <div class="top-inner">
 
-<h1>
-🌿
-<span data-i18n="appName">
-Cotton Record
-</span>
-</h1>
+    <h1>
+      🌿
+      <span data-i18n="appName">
+        Cotton Record
+      </span>
+    </h1>
 
-<p data-i18n="topDescription">
-Easy Record Management • Multiple Pictures • Verification • Payment
-</p>
+    <p data-i18n="topDescription">
+      Easy Record Management • Multiple Pictures • Verification • Payment
+    </p>
 
-<div class="user-bar">
+    <div class="user-bar">
 
-<span id="currentUser"></span>
+      <span
+        id="currentUser"
+        class="user-name"
+      ></span>
 
-<button
-id="logout"
-class="logout"
-data-i18n="logout">
-Logout
-</button>
+      <button
+        id="logout"
+        class="logout"
+        type="button"
+        data-i18n="logout"
+      >
+        Logout
+      </button>
 
-</div>
+    </div>
 
-</div>
+  </div>
+
 </header>
 
 
 <main>
 
-<!-- =========================
-     PREMIUM
-========================= -->
-
-<section id="premiumCard" class="card plan-card">
-
-<div class="plan-head">
-
-<div>
-
-<h2 data-i18n="planTitle">
-Your Plan
-</h2>
-
-<div id="planDescription" class="muted">
-Free plan
-</div>
-
-</div>
-
-<span id="planBadge" class="plan-badge">
-FREE
-</span>
-
-</div>
-
-<ul id="planFeatures" class="features"></ul>
-
-<button
-id="premiumButton"
-class="btn premium-btn"
-style="width:100%"
-data-i18n="purchasePremium">
-⭐ Purchase Premium Plan
-</button>
-
-<div id="planMessage" class="status"></div>
-
-</section>
-
-
-<!-- =========================
+<!-- =====================================================
      NAME LIST
-========================= -->
+===================================================== -->
 
 <section class="card">
 
-<h2 data-i18n="nameListTitle">
-1. Name List
-</h2>
+  <h2 data-i18n="nameListTitle">
+    1. Naam List
+  </h2>
 
-<div
-class="muted"
-data-i18n="nameListDescription">
-Add all names that appear in your records. Write each name on a separate line.
-</div>
+  <div
+    class="muted"
+    data-i18n="nameListDescription"
+  >
+    Record mein maujood tamam naam yahan add karein.
+    Har naam alag line mein likhein.
+  </div>
 
-<label data-i18n="names">
-Names
-</label>
+  <label
+    for="names"
+    data-i18n="names"
+  >
+    Names
+  </label>
 
-<textarea
-id="names"
-data-placeholder="namesExample"
-placeholder="Asghar&#10;Muhammad&#10;Sain Bakhsh">
-</textarea>
+  <textarea
+    id="names"
+    data-placeholder="namesExample"
+    placeholder="مثلاً
+اصغر
+محمد
+سائیں بخش
+شیر محمد"
+  ></textarea>
 
-<div
-class="row"
-style="margin-top:10px">
+  <div
+    class="row"
+    style="margin-top:10px"
+  >
 
-<button
-id="saveNames"
-class="btn secondary"
-data-i18n="saveNames">
-Save Names
-</button>
+    <button
+      class="btn secondary"
+      id="saveNames"
+      type="button"
+      data-i18n="saveNames"
+    >
+      Save Names
+    </button>
 
-<span id="nameCount" class="pill">
-0 names
-</span>
+    <span
+      class="pill"
+      id="nameCount"
+    >
+      0 names
+    </span>
 
-</div>
+  </div>
 
 </section>
 
 
-<!-- =========================
+<!-- =====================================================
      PICTURES
-========================= -->
+===================================================== -->
 
 <section class="card">
 
-<h2 data-i18n="picturesTitle">
-2. Record Pictures
-</h2>
+  <h2 data-i18n="picturesTitle">
+    2. Record Pictures
+  </h2>
 
-<div
-class="muted"
-data-i18n="picturesDescription">
-You can select multiple notebook photos at once.
-</div>
+  <div
+    class="muted"
+    data-i18n="picturesDescription"
+  >
+    Multiple notebook photos ek hi baar select kar sakte hain.
+  </div>
 
-<div style="margin-top:13px">
 
-<button
-id="selectImagesButton"
-class="image-picker-button"
-data-i18n="selectPictures">
-📷 Select Pictures
-</button>
+  <div class="image-picker">
 
-<input
-id="images"
-type="file"
-accept="image/*"
-multiple>
+    <button
+      id="selectImagesButton"
+      class="image-picker-button"
+      type="button"
+      data-i18n="selectPictures"
+    >
+      📷 Pictures Select Karein
+    </button>
 
-</div>
+    <input
+      id="images"
+      type="file"
+      accept="image/*"
+      multiple
+    >
 
-<div
-id="selectionInfo"
-class="selection-info"
-data-i18n="noPicture">
-No picture selected yet.
-</div>
+  </div>
 
-<div id="thumbs" class="thumbs"></div>
 
-<div
-class="row"
-style="margin-top:12px">
+  <div
+    id="selectionInfo"
+    class="selection-info"
+    data-i18n="noPicture"
+  >
+    Abhi koi picture select nahi ki gayi.
+  </div>
 
-<input
-id="rate"
-class="input"
-type="number"
-min="0"
-step=".01"
-value="25"
-data-placeholder="ratePerKg"
-placeholder="Rate per KG">
 
-<button
-id="read"
-class="btn primary"
-data-i18n="processRecords">
-Process Records
-</button>
+  <div
+    id="thumbs"
+    class="thumbs"
+  ></div>
 
-<button
-id="clearPics"
-class="btn danger"
-data-i18n="clearPictures">
-Clear Pictures
-</button>
 
-</div>
+  <div
+    class="row"
+    style="margin-top:12px"
+  >
 
-<div id="status" class="status"></div>
+    <input
+      id="rate"
+      class="input"
+      type="number"
+      min="0"
+      step="0.01"
+      value="25"
+      data-placeholder="ratePerKg"
+      placeholder="Rate per KG"
+    >
 
-<div
-id="processingTotal"
-class="total-box hidden">
+    <button
+      id="read"
+      class="btn primary"
+      type="button"
+      data-i18n="processRecords"
+    >
+      Records Process Karein
+    </button>
 
-<div class="total-item">
+    <button
+      id="clearPics"
+      class="btn danger"
+      type="button"
+      data-i18n="clearPictures"
+    >
+      Clear Pictures
+    </button>
 
-<div
-class="total-label"
-data-i18n="allPicturesWeight">
-All Pictures — Total Weight
-</div>
+  </div>
 
-<div
-id="processingWeight"
-class="total-value">
-0.00 kg
-</div>
 
-</div>
+  <div
+    id="status"
+    class="status"
+  ></div>
 
-<div class="total-item">
 
-<div
-class="total-label"
-data-i18n="allPicturesPayment">
-All Pictures — Total Payment
-</div>
+  <!-- ALL PICTURES TOTAL -->
 
-<div
-id="processingMoney"
-class="total-value">
-Rs. 0.00
-</div>
+  <div
+    id="processingTotal"
+    class="total-box hidden"
+  >
 
-</div>
+    <div class="total-item">
 
-</div>
+      <div
+        class="total-label"
+        data-i18n="allPicturesWeight"
+      >
+        All Pictures — Total Weight
+      </div>
+
+      <div
+        id="processingWeight"
+        class="total-value"
+      >
+        0.00 kg
+      </div>
+
+    </div>
+
+
+    <div class="total-item">
+
+      <div
+        class="total-label"
+        data-i18n="allPicturesPayment"
+      >
+        All Pictures — Total Payment
+      </div>
+
+      <div
+        id="processingMoney"
+        class="total-value"
+      >
+        Rs. 0.00
+      </div>
+
+    </div>
+
+  </div>
 
 </section>
 
 
-<!-- =========================
+<!-- =====================================================
      DETECTED RECORDS
-========================= -->
+===================================================== -->
 
 <section class="card">
 
-<div
-class="row"
-style="align-items:center">
+  <div
+    class="row"
+    style="align-items:center"
+  >
 
-<div>
+    <div>
 
-<h2 data-i18n="detectedRecords">
-3. Detected Records
-</h2>
+      <h2 data-i18n="detectedRecords">
+        3. Detected Records
+      </h2>
 
-<div
-class="muted"
-data-i18n="verifyRecords">
-Verify or edit every name and weight before saving.
-</div>
+      <div
+        class="muted"
+        data-i18n="verifyRecords"
+      >
+        Save karne se pehle har naam aur weight verify/edit karein.
+      </div>
 
-</div>
+    </div>
 
-<span id="count" class="pill">
-0 records
-</span>
+    <span
+      id="count"
+      class="pill"
+    >
+      0 records
+    </span>
 
-</div>
+  </div>
 
-<div id="records">
 
-<div
-class="empty"
-data-i18n="noRecords">
-No records yet.
-</div>
+  <div id="records">
 
-</div>
+    <div
+      class="empty"
+      data-i18n="noRecords"
+    >
+      Abhi koi record nahi.
+    </div>
 
-<div
-class="row"
-style="margin-top:12px">
+  </div>
 
-<button
-id="add"
-class="btn secondary"
-data-i18n="addRow">
-+ Add Row
-</button>
 
-<button
-id="save"
-class="btn primary"
-data-i18n="saveRecords">
-Save Records
-</button>
+  <div
+    class="row"
+    style="margin-top:12px"
+  >
 
-</div>
+    <button
+      id="add"
+      class="btn secondary"
+      type="button"
+      data-i18n="addRow"
+    >
+      + Add Row
+    </button>
+
+    <button
+      id="save"
+      class="btn primary"
+      type="button"
+      data-i18n="saveRecords"
+    >
+      Record Save Karein
+    </button>
+
+  </div>
 
 </section>
 
 
-<!-- =========================
+<!-- =====================================================
      FINAL SUMMARY
-========================= -->
+===================================================== -->
 
 <section class="card">
 
-<div
-class="row"
-style="align-items:center">
+  <div
+    class="row"
+    style="align-items:center"
+  >
 
-<div>
+    <div>
 
-<h2 data-i18n="finalSummary">
-4. Final Summary
-</h2>
+      <h2 data-i18n="finalSummary">
+        4. Final Summary
+      </h2>
 
-<div
-class="muted"
-data-i18n="summaryDescription">
-Entries with the same name are automatically combined.
-</div>
+      <div
+        class="muted"
+        data-i18n="summaryDescription"
+      >
+        Same naam ki entries automatically combine hoti hain.
+      </div>
 
-</div>
+    </div>
 
-<button
-id="clearAll"
-class="btn danger"
-data-i18n="clearResults">
-Clear Results
-</button>
+    <button
+      id="clearAll"
+      class="btn danger"
+      type="button"
+      data-i18n="clearResults"
+    >
+      Clear Results
+    </button>
 
-</div>
+  </div>
 
-<div id="summary">
 
-<div
-class="empty"
-data-i18n="saveForResult">
-Save records to see the result here.
-</div>
+  <div id="summary">
 
-</div>
+    <div
+      class="empty"
+      data-i18n="saveForResult"
+    >
+      Record Save Karein ke baad result yahan aayega.
+    </div>
 
-<div
-id="grandTotal"
-class="total-box hidden">
+  </div>
 
-<div class="total-item">
 
-<div
-class="total-label"
-data-i18n="grandWeight">
-Grand Total Weight
-</div>
+  <!-- FINAL GRAND TOTAL -->
 
-<div
-id="grandWeight"
-class="total-value">
-0.00 kg
-</div>
+  <div
+    id="grandTotal"
+    class="total-box hidden"
+  >
 
-</div>
+    <div class="total-item">
 
-<div class="total-item">
+      <div
+        class="total-label"
+        data-i18n="grandWeight"
+      >
+        Grand Total Weight
+      </div>
 
-<div
-class="total-label"
-data-i18n="grandPayment">
-Grand Total Payment
-</div>
+      <div
+        id="grandWeight"
+        class="total-value"
+      >
+        0.00 kg
+      </div>
 
-<div
-id="grandMoney"
-class="total-value">
-Rs. 0.00
-</div>
+    </div>
 
-</div>
 
-</div>
+    <div class="total-item">
 
-<div
-class="row"
-style="margin-top:12px">
+      <div
+        class="total-label"
+        data-i18n="grandPayment"
+      >
+        Grand Total Payment
+      </div>
 
-<button
-id="csv"
-class="btn secondary"
-data-i18n="exportCSV">
-Export CSV
-</button>
+      <div
+        id="grandMoney"
+        class="total-value"
+      >
+        Rs. 0.00
+      </div>
 
-<button
-id="png"
-class="btn primary"
-data-i18n="exportPNG">
-Export PNG
-</button>
+    </div>
 
-<button
-id="print"
-class="btn secondary"
-data-i18n="print">
-Print
-</button>
+  </div>
 
-</div>
+
+  <div
+    class="row"
+    style="margin-top:12px"
+  >
+
+    <button
+      id="csv"
+      class="btn secondary"
+      type="button"
+      data-i18n="exportCSV"
+    >
+      Export CSV
+    </button>
+
+    <button
+      id="png"
+      class="btn primary"
+      type="button"
+      data-i18n="exportPNG"
+    >
+      Export PNG
+    </button>
+
+    <button
+      id="print"
+      class="btn secondary"
+      type="button"
+      data-i18n="print"
+    >
+      Print
+    </button>
+
+  </div>
 
 </section>
 
 
-<!-- =========================
-     SECURITY
-========================= -->
-
 <section class="card">
 
-<div
-class="muted"
-data-i18n="securityFooter">
-Passwords and premium access are verified server-side. Never put secret API keys in index.html.
-</div>
+  <div
+    class="muted"
+    data-i18n="dataProtection"
+  >
+    Record data protected processing ke zariye handle hota hai.
+  </div>
 
 </section>
 
 </main>
-</div>
 
-
-<!-- =========================
-     PREMIUM MODAL
-========================= -->
-
-<div
-id="premiumModal"
-class="modal hidden">
-
-<div class="modal-box">
-
-<h2 data-i18n="premiumTitle">
-⭐ Premium Plan
-</h2>
-
-<div
-class="muted"
-data-i18n="premiumDescription">
-Unlock higher limits and premium features.
-</div>
-
-<div
-class="price"
-data-i18n="premiumPrice">
-Rs. 999 / month
-</div>
-
-<ul class="features">
-
-<li data-i18n="premiumFeature1">
-Higher OCR processing limits
-</li>
-
-<li data-i18n="premiumFeature2">
-More images per request
-</li>
-
-<li data-i18n="premiumFeature3">
-Premium account status
-</li>
-
-<li data-i18n="premiumFeature4">
-Priority feature access
-</li>
-
-</ul>
-
-<div
-class="secure-note"
-data-i18n="paymentNote">
-Payment is verified by the server. This page does not store card details.
-</div>
-
-<div
-id="paymentMessage"
-class="status">
-</div>
-
-<div class="row">
-
-<button
-id="closePremium"
-class="btn secondary"
-data-i18n="cancel">
-Cancel
-</button>
-
-<button
-id="startPayment"
-class="btn premium-btn"
-data-i18n="continuePayment">
-Continue to Payment
-</button>
-
-</div>
-
-</div>
 </div>
 
 
 <script>
+
 "use strict";
 
-const T={
+/* =====================================================
+   LANGUAGE SYSTEM
+===================================================== */
 
-en:{
-selectLanguage:"Select Your Language",
-appName:"Cotton Record",
-recordManagement:"Record Management System",
-login:"Login",
-signUp:"Sign Up",
-username:"Username",
-password:"Password",
-name:"Name",
-enterUsername:"Enter username",
-enterPassword:"Enter password",
-yourName:"Your name",
-createUsername:"Create username",
-minimumPassword:"Minimum 6 characters",
-createAccount:"Create Account",
-secureAccountNote:"Account security is handled by the server.",
-logout:"Logout",
-topDescription:"Easy Record Management • Multiple Pictures • Verification • Payment",
-planTitle:"Your Plan",
-freePlan:"Free plan",
-premiumPlan:"Premium plan",
-freeFeature1:"Basic record management",
-freeFeature2:"Limited OCR processing",
-freeFeature3:"CSV / PNG export",
-premiumFeature1:"Higher OCR processing limits",
-premiumFeature2:"More images per request",
-premiumFeature3:"Premium account status",
-premiumFeature4:"Priority feature access",
-purchasePremium:"⭐ Purchase Premium Plan",
-nameListTitle:"1. Name List",
-nameListDescription:"Add all names that appear in your records. Write each name on a separate line.",
-names:"Names",
-namesExample:"For example\nAsghar\nMuhammad\nSain Bakhsh",
-saveNames:"Save Names",
-picturesTitle:"2. Record Pictures",
-picturesDescription:"You can select multiple notebook photos at once.",
-selectPictures:"📷 Select Pictures",
-noPicture:"No picture selected yet.",
-ratePerKg:"Rate per KG",
-processRecords:"Process Records",
-clearPictures:"Clear Pictures",
-allPicturesWeight:"All Pictures — Total Weight",
-allPicturesPayment:"All Pictures — Total Payment",
-detectedRecords:"3. Detected Records",
-verifyRecords:"Verify or edit every name and weight before saving.",
-noRecords:"No records yet.",
-addRow:"+ Add Row",
-saveRecords:"Save Records",
-finalSummary:"4. Final Summary",
-summaryDescription:"Entries with the same name are automatically combined.",
-clearResults:"Clear Results",
-saveForResult:"Save records to see the result here.",
-grandWeight:"Grand Total Weight",
-grandPayment:"Grand Total Payment",
-exportCSV:"Export CSV",
-exportPNG:"Export PNG",
-print:"Print",
-securityFooter:"Passwords and premium access are verified server-side. Never put secret API keys in index.html.",
-premiumTitle:"⭐ Premium Plan",
-premiumDescription:"Unlock higher limits and premium features.",
-premiumPrice:"Rs. 999 / month",
-paymentNote:"Payment is verified by the server. This page does not store card details.",
-cancel:"Cancel",
-continuePayment:"Continue to Payment",
-namesCount:"names",
-recordsCount:"records",
-pictureSelected:"picture selected.",
-picturesSelected:"pictures selected.",
-namesSaved:"Names saved successfully.",
-selectPictureFirst:"Please select pictures first.",
-processing:"Records are being processed…",
-processingSuccess:"Records successfully processed. Verify every row and save it.",
-processingFailed:"Records could not be processed. Please try again.",
-resultsSaved:"Calculation saved successfully.",
-resultsCleared:"Saved results have been cleared.",
-noSavedResults:"There are no saved results to export.",
-noPNG:"Save results first to create a PNG.",
-pngSuccess:"Final result exported as PNG.",
-pngFailed:"PNG export failed.",
-clearConfirm:"Do you want to clear saved results?",
-paymentUnavailable:"Payment API is not connected yet.",
-paymentStarting:"Opening secure payment...",
-sessionExpired:"Session expired. Please login again.",
-premiumActive:"Premium active.",
-wrongLogin:"Invalid username or password."
-},
+const translations = {
 
-ur:{
-selectLanguage:"اپنی زبان منتخب کریں",
-appName:"کاٹن ریکارڈ",
-recordManagement:"ریکارڈ مینجمنٹ سسٹم",
-login:"لاگ اِن",
-signUp:"سائن اَپ",
-username:"یوزرنیم",
-password:"پاس ورڈ",
-name:"نام",
-enterUsername:"یوزرنیم درج کریں",
-enterPassword:"پاس ورڈ درج کریں",
-yourName:"اپنا نام درج کریں",
-createUsername:"یوزرنیم بنائیں",
-minimumPassword:"کم از کم 6 حروف",
-createAccount:"اکاؤنٹ بنائیں",
-secureAccountNote:"اکاؤنٹ کی سیکیورٹی سرور پر ہینڈل ہوتی ہے۔",
-logout:"لاگ آؤٹ",
-topDescription:"آسان ریکارڈ مینجمنٹ • متعدد تصاویر • تصدیق • ادائیگی",
-planTitle:"آپ کا پلان",
-freePlan:"فری پلان",
-premiumPlan:"پریمیم پلان",
-freeFeature1:"بنیادی ریکارڈ مینجمنٹ",
-freeFeature2:"محدود OCR پروسیسنگ",
-freeFeature3:"CSV / PNG ایکسپورٹ",
-premiumFeature1:"زیادہ OCR پروسیسنگ",
-premiumFeature2:"زیادہ تصاویر فی درخواست",
-premiumFeature3:"پریمیم اکاؤنٹ",
-premiumFeature4:"ترجیحی فیچرز",
-purchasePremium:"⭐ پریمیم پلان خریدیں",
-nameListTitle:"1. ناموں کی فہرست",
-nameListDescription:"ریکارڈ میں موجود تمام نام یہاں شامل کریں۔ ہر نام الگ لائن میں لکھیں۔",
-names:"نام",
-namesExample:"مثلاً\nاصغر\nمحمد\nسائیں بخش",
-saveNames:"نام محفوظ کریں",
-picturesTitle:"2. ریکارڈ کی تصاویر",
-picturesDescription:"آپ متعدد تصاویر منتخب کر سکتے ہیں۔",
-selectPictures:"📷 تصاویر منتخب کریں",
-noPicture:"ابھی کوئی تصویر منتخب نہیں کی گئی۔",
-ratePerKg:"فی کلو ریٹ",
-processRecords:"ریکارڈ پروسیس کریں",
-clearPictures:"تصاویر صاف کریں",
-allPicturesWeight:"تمام تصاویر — کل وزن",
-allPicturesPayment:"تمام تصاویر — کل ادائیگی",
-detectedRecords:"3. حاصل شدہ ریکارڈ",
-verifyRecords:"محفوظ کرنے سے پہلے ہر نام اور وزن چیک کریں۔",
-noRecords:"ابھی کوئی ریکارڈ نہیں۔",
-addRow:"+ نئی قطار",
-saveRecords:"ریکارڈ محفوظ کریں",
-finalSummary:"4. حتمی خلاصہ",
-summaryDescription:"ایک جیسے نام خودکار طور پر جمع ہو جاتے ہیں۔",
-clearResults:"نتائج صاف کریں",
-saveForResult:"نتیجہ دیکھنے کے لیے ریکارڈ محفوظ کریں۔",
-grandWeight:"کل مجموعی وزن",
-grandPayment:"کل مجموعی ادائیگی",
-exportCSV:"CSV ایکسپورٹ",
-exportPNG:"PNG ایکسپورٹ",
-print:"پرنٹ",
-securityFooter:"پاس ورڈ اور پریمیم رسائی سرور پر verify ہونی چاہیے۔",
-premiumTitle:"⭐ پریمیم پلان",
-premiumDescription:"زیادہ limits اور premium features حاصل کریں۔",
-premiumPrice:"999 روپے / ماہ",
-paymentNote:"ادائیگی سرور verify کرے گا۔ card details محفوظ نہیں کی جاتیں۔",
-cancel:"منسوخ",
-continuePayment:"ادائیگی جاری رکھیں",
-namesCount:"نام",
-recordsCount:"ریکارڈ",
-pictureSelected:"تصویر منتخب کی گئی۔",
-picturesSelected:"تصاویر منتخب کی گئی ہیں۔",
-namesSaved:"نام محفوظ ہو گئے۔",
-selectPictureFirst:"پہلے تصاویر منتخب کریں۔",
-processing:"ریکارڈ پروسیس ہو رہے ہیں…",
-processingSuccess:"ریکارڈ پروسیس ہو گئے۔ ہر قطار چیک کریں۔",
-processingFailed:"ریکارڈ پروسیس نہیں ہو سکے۔",
-resultsSaved:"حساب محفوظ ہو گیا۔",
-resultsCleared:"نتائج صاف کر دیے گئے۔",
-noSavedResults:"کوئی محفوظ نتیجہ نہیں۔",
-noPNG:"پہلے نتیجہ محفوظ کریں۔",
-pngSuccess:"PNG ایکسپورٹ ہو گیا۔",
-pngFailed:"PNG ایکسپورٹ ناکام ہو گیا۔",
-clearConfirm:"کیا آپ محفوظ نتائج صاف کرنا چاہتے ہیں؟",
-paymentUnavailable:"Payment API ابھی connected نہیں ہے۔",
-paymentStarting:"محفوظ ادائیگی کھولی جا رہی ہے...",
-sessionExpired:"Session ختم ہو گیا۔ دوبارہ login کریں۔",
-premiumActive:"پریمیم فعال ہے۔",
-wrongLogin:"یوزرنیم یا پاس ورڈ غلط ہے۔"
-},
+  en: {
 
-roman:{
-selectLanguage:"Apni Language Select Karein",
-appName:"Cotton Record",
-recordManagement:"Record Management System",
-login:"Login",
-signUp:"Sign Up",
-username:"Username",
-password:"Password",
-name:"Naam",
-enterUsername:"Username enter karein",
-enterPassword:"Password enter karein",
-yourName:"Apna naam enter karein",
-createUsername:"Username banayein",
-minimumPassword:"Kam az kam 6 characters",
-createAccount:"Account Banayein",
-secureAccountNote:"Account security server par handle hoti hai.",
-logout:"Logout",
-topDescription:"Asaan Record Management • Multiple Pictures • Verification • Payment",
-planTitle:"Aap ka Plan",
-freePlan:"Free plan",
-premiumPlan:"Premium plan",
-freeFeature1:"Basic record management",
-freeFeature2:"Limited OCR processing",
-freeFeature3:"CSV / PNG export",
-premiumFeature1:"Higher OCR processing limits",
-premiumFeature2:"Zyada images per request",
-premiumFeature3:"Premium account status",
-premiumFeature4:"Priority features",
-purchasePremium:"⭐ Premium Plan Purchase Karein",
-nameListTitle:"1. Naam List",
-nameListDescription:"Record mein tamam naam yahan add karein. Har naam alag line mein likhein.",
-names:"Names",
-namesExample:"Misal\nAsghar\nMuhammad\nSain Bakhsh",
-saveNames:"Names Save Karein",
-picturesTitle:"2. Record Pictures",
-picturesDescription:"Multiple notebook photos select karein.",
-selectPictures:"📷 Pictures Select Karein",
-noPicture:"Abhi koi picture select nahi ki gayi.",
-ratePerKg:"Rate per KG",
-processRecords:"Records Process Karein",
-clearPictures:"Pictures Clear Karein",
-allPicturesWeight:"All Pictures — Total Weight",
-allPicturesPayment:"All Pictures — Total Payment",
-detectedRecords:"3. Detected Records",
-verifyRecords:"Save se pehle har naam aur weight verify karein.",
-noRecords:"Abhi koi record nahi.",
-addRow:"+ Add Row",
-saveRecords:"Record Save Karein",
-finalSummary:"4. Final Summary",
-summaryDescription:"Same naam automatically combine hotay hain.",
-clearResults:"Results Clear Karein",
-saveForResult:"Result ke liye record save karein.",
-grandWeight:"Grand Total Weight",
-grandPayment:"Grand Total Payment",
-exportCSV:"Export CSV",
-exportPNG:"Export PNG",
-print:"Print",
-securityFooter:"Password aur premium access server-side verify honi chahiye.",
-premiumTitle:"⭐ Premium Plan",
-premiumDescription:"Higher limits aur premium features unlock karein.",
-premiumPrice:"Rs. 999 / month",
-paymentNote:"Payment server verify karega. Card details save nahi hoti.",
-cancel:"Cancel",
-continuePayment:"Payment Continue Karein",
-namesCount:"names",
-recordsCount:"records",
-pictureSelected:"picture selected.",
-picturesSelected:"pictures selected.",
-namesSaved:"Names save ho gaye.",
-selectPictureFirst:"Pehle pictures select karein.",
-processing:"Records process ho rahe hain…",
-processingSuccess:"Records process ho gaye. Verify karke save karein.",
-processingFailed:"Records process nahi ho sake.",
-resultsSaved:"Calculation save ho gaya.",
-resultsCleared:"Results clear kar diye gaye.",
-noSavedResults:"Koi saved result nahi.",
-noPNG:"Pehle result save karein.",
-pngSuccess:"PNG export ho gaya.",
-pngFailed:"PNG export nahi ho saka.",
-clearConfirm:"Kia aap saved results clear karna chahte hain?",
-paymentUnavailable:"Payment API abhi connected nahi.",
-paymentStarting:"Secure payment open ho rahi hai...",
-sessionExpired:"Session expire ho gaya. Dobara login karein.",
-premiumActive:"Premium active hai.",
-wrongLogin:"Username ya password ghalat hai."
-}
+    selectLanguage:"Select Your Language",
+    appName:"Cotton Record",
+    recordManagement:"Record Management System",
+
+    login:"Login",
+    signUp:"Sign Up",
+
+    emailUsername:"Email / Username",
+    password:"Password",
+    name:"Name",
+    username:"Username",
+
+    enterUsername:"Enter username",
+    enterPassword:"Enter password",
+    yourName:"Your name",
+    createUsername:"Create username",
+    minimumPassword:"Minimum 6 characters",
+
+    createAccount:"Create Account",
+    accountStored:"Your account is stored on this device.",
+    logout:"Logout",
+
+    topDescription:
+      "Easy Record Management • Multiple Pictures • Verification • Payment",
+
+    nameListTitle:"1. Name List",
+
+    nameListDescription:
+      "Add all names that appear in your records. Write each name on a separate line.",
+
+    names:"Names",
+
+    namesExample:
+      "For example\nAsghar\nMuhammad\nSain Bakhsh\nSher Muhammad",
+
+    saveNames:"Save Names",
+
+    picturesTitle:"2. Record Pictures",
+
+    picturesDescription:
+      "You can select multiple notebook photos at once.",
+
+    selectPictures:"📷 Select Pictures",
+
+    noPicture:"No picture selected yet.",
+
+    ratePerKg:"Rate per KG",
+
+    processRecords:"Process Records",
+
+    clearPictures:"Clear Pictures",
+
+    allPicturesWeight:
+      "All Pictures — Total Weight",
+
+    allPicturesPayment:
+      "All Pictures — Total Payment",
+
+    detectedRecords:"3. Detected Records",
+
+    verifyRecords:
+      "Verify or edit every name and weight before saving.",
+
+    noRecords:"No records yet.",
+
+    addRow:"+ Add Row",
+
+    saveRecords:"Save Records",
+
+    finalSummary:"4. Final Summary",
+
+    summaryDescription:
+      "Entries with the same name are automatically combined.",
+
+    clearResults:"Clear Results",
+
+    saveForResult:
+      "Save records to see the result here.",
+
+    grandWeight:"Grand Total Weight",
+
+    grandPayment:"Grand Total Payment",
+
+    exportCSV:"Export CSV",
+    exportPNG:"Export PNG",
+    print:"Print",
+
+    dataProtection:
+      "Record data is handled through protected processing.",
+
+    namesCount:"names",
+    recordsCount:"records",
+
+    pictureSelected:"picture selected.",
+    picturesSelected:"pictures selected.",
+
+    namesSaved:"Names saved successfully.",
+    accountCreated:"Account successfully created.",
+    accountExists:
+      "Account already exists on this device. Please login.",
+
+    completeFields:
+      "Please complete all fields correctly.",
+
+    wrongLogin:
+      "Username or password is incorrect.",
+
+    picturesCleared:
+      "Pictures have been cleared.",
+
+    selectPictureFirst:
+      "Please select pictures first.",
+
+    processing:
+      "Records are being processed…",
+
+    processingSuccess:
+      "Records successfully processed. Verify every row and save it.",
+
+    processingFailed:
+      "Records could not be processed. Please try again.",
+
+    resultsSaved:
+      "Calculation saved successfully.",
+
+    resultsCleared:
+      "Saved results have been cleared.",
+
+    noSavedResults:
+      "There are no saved results to export.",
+
+    noPNG:
+      "Save results first to create a PNG.",
+
+    pngSuccess:
+      "Final result exported as PNG.",
+
+    pngFailed:
+      "PNG export failed. Please try again.",
+
+    clearConfirm:
+      "Do you want to clear saved results?",
+
+    loggedIn:"Logged in: "
+
+  },
+
+
+  ur: {
+
+    selectLanguage:"اپنی زبان منتخب کریں",
+    appName:"کاٹن ریکارڈ",
+    recordManagement:"ریکارڈ مینجمنٹ سسٹم",
+
+    login:"لاگ اِن",
+    signUp:"سائن اَپ",
+
+    emailUsername:"ای میل / یوزرنیم",
+    password:"پاس ورڈ",
+    name:"نام",
+    username:"یوزرنیم",
+
+    enterUsername:"یوزرنیم درج کریں",
+    enterPassword:"پاس ورڈ درج کریں",
+    yourName:"اپنا نام درج کریں",
+    createUsername:"یوزرنیم بنائیں",
+    minimumPassword:"کم از کم 6 حروف",
+
+    createAccount:"اکاؤنٹ بنائیں",
+    accountStored:"آپ کا اکاؤنٹ اس ڈیوائس پر محفوظ ہے۔",
+    logout:"لاگ آؤٹ",
+
+    topDescription:
+      "آسان ریکارڈ مینجمنٹ • متعدد تصاویر • تصدیق • ادائیگی",
+
+    nameListTitle:"1. ناموں کی فہرست",
+
+    nameListDescription:
+      "ریکارڈ میں موجود تمام نام یہاں شامل کریں۔ ہر نام الگ لائن میں لکھیں۔",
+
+    names:"نام",
+
+    namesExample:
+      "مثلاً\nاصغر\nمحمد\nسائیں بخش\nشیر محمد",
+
+    saveNames:"نام محفوظ کریں",
+
+    picturesTitle:"2. ریکارڈ کی تصاویر",
+
+    picturesDescription:
+      "آپ ایک ہی بار میں متعدد نوٹ بک تصاویر منتخب کر سکتے ہیں۔",
+
+    selectPictures:"📷 تصاویر منتخب کریں",
+
+    noPicture:"ابھی کوئی تصویر منتخب نہیں کی گئی۔",
+
+    ratePerKg:"فی کلو ریٹ",
+
+    processRecords:"ریکارڈ پروسیس کریں",
+
+    clearPictures:"تصاویر صاف کریں",
+
+    allPicturesWeight:
+      "تمام تصاویر — کل وزن",
+
+    allPicturesPayment:
+      "تمام تصاویر — کل ادائیگی",
+
+    detectedRecords:"3. حاصل شدہ ریکارڈ",
+
+    verifyRecords:
+      "محفوظ کرنے سے پہلے ہر نام اور وزن کو چیک یا ایڈٹ کریں۔",
+
+    noRecords:"ابھی کوئی ریکارڈ نہیں۔",
+
+    addRow:"+ نئی قطار",
+
+    saveRecords:"ریکارڈ محفوظ کریں",
+
+    finalSummary:"4. حتمی خلاصہ",
+
+    summaryDescription:
+      "ایک جیسے نام کی تمام انٹریاں خودکار طور پر جمع ہو جاتی ہیں۔",
+
+    clearResults:"نتائج صاف کریں",
+
+    saveForResult:
+      "نتیجہ دیکھنے کے لیے ریکارڈ محفوظ کریں۔",
+
+    grandWeight:"کل مجموعی وزن",
+
+    grandPayment:"کل مجموعی ادائیگی",
+
+    exportCSV:"CSV ایکسپورٹ",
+    exportPNG:"PNG ایکسپورٹ",
+    print:"پرنٹ",
+
+    dataProtection:
+      "ریکارڈ ڈیٹا محفوظ طریقے سے پروسیس کیا جاتا ہے۔",
+
+    namesCount:"نام",
+    recordsCount:"ریکارڈ",
+
+    pictureSelected:"تصویر منتخب کی گئی۔",
+    picturesSelected:"تصاویر منتخب کی گئی ہیں۔",
+
+    namesSaved:"نام کامیابی سے محفوظ ہو گئے۔",
+    accountCreated:"اکاؤنٹ کامیابی سے بنا دیا گیا۔",
+
+    accountExists:
+      "اس ڈیوائس پر اکاؤنٹ پہلے سے موجود ہے۔ لاگ اِن کریں۔",
+
+    completeFields:
+      "براہِ کرم تمام معلومات درست طریقے سے مکمل کریں۔",
+
+    wrongLogin:
+      "یوزرنیم یا پاس ورڈ غلط ہے۔",
+
+    picturesCleared:
+      "تصاویر صاف کر دی گئی ہیں۔",
+
+    selectPictureFirst:
+      "پہلے تصاویر منتخب کریں۔",
+
+    processing:
+      "ریکارڈ پروسیس ہو رہے ہیں…",
+
+    processingSuccess:
+      "ریکارڈ کامیابی سے پروسیس ہو گئے۔ ہر قطار چیک کرکے محفوظ کریں۔",
+
+    processingFailed:
+      "ریکارڈ پروسیس نہیں ہو سکے۔ براہِ کرم دوبارہ کوشش کریں۔",
+
+    resultsSaved:
+      "حساب کامیابی سے محفوظ ہو گیا۔",
+
+    resultsCleared:
+      "محفوظ نتائج صاف کر دیے گئے ہیں۔",
+
+    noSavedResults:
+      "ایکسپورٹ کرنے کے لیے کوئی محفوظ نتیجہ موجود نہیں۔",
+
+    noPNG:
+      "PNG بنانے کے لیے پہلے نتیجہ محفوظ کریں۔",
+
+    pngSuccess:
+      "حتمی نتیجہ PNG میں ایکسپورٹ ہو گیا۔",
+
+    pngFailed:
+      "PNG ایکسپورٹ نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+
+    clearConfirm:
+      "کیا آپ محفوظ نتائج صاف کرنا چاہتے ہیں؟",
+
+    loggedIn:"لاگ اِن: "
+
+  },
+
+
+  roman: {
+
+    selectLanguage:"Apni Language Select Karein",
+    appName:"Cotton Record",
+    recordManagement:"Record Management System",
+
+    login:"Login",
+    signUp:"Sign Up",
+
+    emailUsername:"Email / Username",
+    password:"Password",
+    name:"Naam",
+    username:"Username",
+
+    enterUsername:"Username enter karein",
+    enterPassword:"Password enter karein",
+    yourName:"Apna naam enter karein",
+    createUsername:"Username banayein",
+    minimumPassword:"Kam az kam 6 characters",
+
+    createAccount:"Account Banayein",
+    accountStored:
+      "Aap ka account is device par save hai.",
+
+    logout:"Logout",
+
+    topDescription:
+      "Asaan Record Management • Multiple Pictures • Verification • Payment",
+
+    nameListTitle:"1. Naam List",
+
+    nameListDescription:
+      "Record mein mojood tamam naam yahan add karein. Har naam alag line mein likhein.",
+
+    names:"Names",
+
+    namesExample:
+      "Misal ke taur par\nAsghar\nMuhammad\nSain Bakhsh\nSher Muhammad",
+
+    saveNames:"Names Save Karein",
+
+    picturesTitle:"2. Record Pictures",
+
+    picturesDescription:
+      "Aap aik hi baar mein multiple notebook photos select kar sakte hain.",
+
+    selectPictures:"📷 Pictures Select Karein",
+
+    noPicture:"Abhi koi picture select nahi ki gayi.",
+
+    ratePerKg:"Rate per KG",
+
+    processRecords:"Records Process Karein",
+
+    clearPictures:"Pictures Clear Karein",
+
+    allPicturesWeight:
+      "All Pictures — Total Weight",
+
+    allPicturesPayment:
+      "All Pictures — Total Payment",
+
+    detectedRecords:"3. Detected Records",
+
+    verifyRecords:
+      "Save karne se pehle har naam aur weight verify/edit karein.",
+
+    noRecords:"Abhi koi record nahi.",
+
+    addRow:"+ Add Row",
+
+    saveRecords:"Record Save Karein",
+
+    finalSummary:"4. Final Summary",
+
+    summaryDescription:
+      "Same naam ki entries automatically combine hoti hain.",
+
+    clearResults:"Results Clear Karein",
+
+    saveForResult:
+      "Result dekhne ke liye record save karein.",
+
+    grandWeight:"Grand Total Weight",
+
+    grandPayment:"Grand Total Payment",
+
+    exportCSV:"Export CSV",
+    exportPNG:"Export PNG",
+    print:"Print",
+
+    dataProtection:
+      "Record data protected processing ke zariye handle hota hai.",
+
+    namesCount:"names",
+    recordsCount:"records",
+
+    pictureSelected:"picture selected.",
+    picturesSelected:"pictures selected.",
+
+    namesSaved:"Names successfully save ho gaye.",
+    accountCreated:"Account successfully create ho gaya.",
+
+    accountExists:
+      "Is device par account pehle se mojood hai. Login karein.",
+
+    completeFields:
+      "Please tamam fields correctly complete karein.",
+
+    wrongLogin:
+      "Username ya password incorrect hai.",
+
+    picturesCleared:
+      "Pictures clear kar di gayi hain.",
+
+    selectPictureFirst:
+      "Pehle pictures select karein.",
+
+    processing:
+      "Records process ho rahe hain…",
+
+    processingSuccess:
+      "Records successfully process ho gaye. Har row verify karke save karein.",
+
+    processingFailed:
+      "Records process nahi ho sake. Please dobara try karein.",
+
+    resultsSaved:
+      "Calculation successfully save ho gaya.",
+
+    resultsCleared:
+      "Saved results clear kar diye gaye hain.",
+
+    noSavedResults:
+      "Export karne ke liye koi saved result nahi.",
+
+    noPNG:
+      "PNG banane ke liye pehle result save karein.",
+
+    pngSuccess:
+      "Final result PNG mein export ho gaya.",
+
+    pngFailed:
+      "PNG export nahi ho saka. Please dobara try karein.",
+
+    clearConfirm:
+      "Kia aap saved results clear karna chahte hain?",
+
+    loggedIn:"Logged in: "
+
+  }
 
 };
 
 
-let lang=localStorage.getItem("cotton_language")||"en";
-let user=null;
-let plan="free";
-let selected=[];
-let records=[];
-let saved=[];
+/* =========================
+   LANGUAGE FUNCTIONS
+========================= */
+
+let currentLanguage =
+  localStorage.getItem(
+    "cotton_language"
+  ) || "en";
 
 
-const $=s=>document.querySelector(s);
+function t(key){
 
-const t=k=>
-  (T[lang]&&T[lang][k])||
-  T.en[k]||
-  k;
+  return (
+    translations[currentLanguage]?.[key] ||
+    translations.en[key] ||
+    key
+  );
+
+}
 
 
 function applyLanguage(){
 
-  document.documentElement.lang=
-    lang==="ur"?"ur":"en";
-
-  document.documentElement.dir=
-    lang==="ur"?"rtl":"ltr";
-
-  document
-    .querySelectorAll("[data-i18n]")
-    .forEach(e=>{
-      e.textContent=t(e.dataset.i18n);
-    });
-
-  document
-    .querySelectorAll("[data-placeholder]")
-    .forEach(e=>{
-      e.placeholder=t(e.dataset.placeholder);
-    });
-
-  refreshNameCount();
-  updateRecordCount();
-  updateSelectionText();
-  updatePlan();
-
-}
+  const html =
+    document.documentElement;
 
 
-$("#languageSelect").value=lang;
+  if(currentLanguage === "ur"){
 
-$("#languageSelect").onchange=e=>{
+    html.lang="ur";
+    html.dir="rtl";
 
-  lang=e.target.value;
+  }else{
 
-  localStorage.setItem(
-    "cotton_language",
-    lang
-  );
-
-  applyLanguage();
-
-};
-
-
-function msg(el,text,type){
-
-  el.className="status "+type;
-  el.textContent=text;
-  el.style.display="block";
-
-}
-
-
-function esc(v){
-
-  return String(v).replace(
-    /[&<>"']/g,
-    c=>({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#039;"
-    }[c])
-  );
-
-}
-
-
-function money(v){
-
-  return Number(v||0).toLocaleString(
-    "en-PK",
-    {
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
-    }
-  );
-
-}
-
-
-async function api(url,opt={}){
-
-  const r=
-    await fetch(
-      url,
-      {
-        credentials:"include",
-        ...opt,
-        headers:{
-          "Content-Type":"application/json",
-          ...(opt.headers||{})
-        }
-      }
-    );
-
-  let d={};
-
-  try{
-    d=await r.json();
-  }catch{}
-
-  if(r.status===401){
-
-    logout(false);
-
-    throw Error("SESSION_EXPIRED");
+    html.lang="en";
+    html.dir="ltr";
 
   }
 
-  if(!r.ok)
-    throw Error(d.error||"REQUEST_FAILED");
 
-  return d;
+  document
+    .querySelectorAll("[data-i18n]")
+    .forEach(
+      element => {
+
+        const key =
+          element.getAttribute(
+            "data-i18n"
+          );
+
+        element.textContent =
+          t(key);
+
+      }
+    );
+
+
+  document
+    .querySelectorAll("[data-placeholder]")
+    .forEach(
+      element => {
+
+        const key =
+          element.getAttribute(
+            "data-placeholder"
+          );
+
+        element.placeholder =
+          t(key);
+
+      }
+    );
+
+
+  updateDynamicLanguage();
+
+}
+
+
+function updateDynamicLanguage(){
+
+  refreshNameCount();
+
+  updateRecordCount();
+
+  updateSelectionText();
+
+  if(saved.length){
+
+    renderSummary();
+
+  }
+
+}
+
+
+const languageSelect =
+  document.querySelector(
+    "#languageSelect"
+  );
+
+
+languageSelect.value =
+  currentLanguage;
+
+
+languageSelect.addEventListener(
+  "change",
+  function(){
+
+    currentLanguage =
+      this.value;
+
+    localStorage.setItem(
+      "cotton_language",
+      currentLanguage
+    );
+
+    applyLanguage();
+
+  }
+);
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+const $ = (selector) =>
+  document.querySelector(selector);
+
+
+function money(value){
+
+  return Number(value || 0)
+    .toLocaleString(
+      "en-PK",
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
+    );
+
+}
+
+
+function safeStorageGet(key){
+
+  try{
+    return localStorage.getItem(key);
+  }catch{
+    return null;
+  }
+
+}
+
+
+function safeStorageSet(key,value){
+
+  try{
+    localStorage.setItem(key,value);
+    return true;
+  }catch{
+    return false;
+  }
+
+}
+
+
+function safeStorageRemove(key){
+
+  try{
+    localStorage.removeItem(key);
+  }catch{}
+
+}
+
+
+/* =====================================================
+   AUTH
+===================================================== */
+
+const authScreen =
+  $("#authScreen");
+
+const app =
+  $("#app");
+
+const loginForm =
+  $("#loginForm");
+
+const signupForm =
+  $("#signupForm");
+
+const loginTab =
+  $("#loginTab");
+
+const signupTab =
+  $("#signupTab");
+
+const authMessage =
+  $("#authMessage");
+
+
+function authShow(message,type){
+
+  authMessage.className =
+    "status " + type;
+
+  authMessage.textContent =
+    message;
 
 }
 
 
 function showLogin(){
 
-  $("#loginForm")
-    .classList.remove("hidden");
+  loginForm.classList.remove("hidden");
 
-  $("#signupForm")
-    .classList.add("hidden");
+  signupForm.classList.add("hidden");
 
-  $("#loginTab")
-    .classList.add("active");
+  loginTab.classList.add("active");
 
-  $("#signupTab")
-    .classList.remove("active");
+  signupTab.classList.remove("active");
 
 }
 
 
 function showSignup(){
 
-  $("#loginForm")
-    .classList.add("hidden");
+  loginForm.classList.add("hidden");
 
-  $("#signupForm")
-    .classList.remove("hidden");
+  signupForm.classList.remove("hidden");
 
-  $("#loginTab")
-    .classList.remove("active");
+  loginTab.classList.remove("active");
 
-  $("#signupTab")
-    .classList.add("active");
+  signupTab.classList.add("active");
 
 }
 
 
-$("#loginTab").onclick=showLogin;
-$("#signupTab").onclick=showSignup;
+loginTab.addEventListener(
+  "click",
+  showLogin
+);
 
 
-$("#signupForm").onsubmit=async e=>{
+signupTab.addEventListener(
+  "click",
+  showSignup
+);
 
-  e.preventDefault();
+
+function getUser(){
 
   try{
 
-    const d=
-      await api(
-        "/api/auth/signup",
-        {
-          method:"POST",
-          body:JSON.stringify({
-            name:$("#signupName").value.trim(),
-            username:$("#signupUser").value.trim(),
-            password:$("#signupPass").value
-          })
-        }
-      );
-
-    user=d.user;
-    plan=user.plan||"free";
-
-    openApp();
-
-  }catch(e){
-
-    msg(
-      $("#authMessage"),
-      e.message,
-      "err"
+    return JSON.parse(
+      safeStorageGet("cotton_user") || "null"
     );
+
+  }catch{
+
+    return null;
 
   }
 
-};
+}
 
 
-$("#loginForm").onsubmit=async e=>{
+function setLoggedIn(user){
 
-  e.preventDefault();
+  safeStorageSet(
+    "cotton_logged_in",
+    "true"
+  );
+
+  safeStorageSet(
+    "cotton_current_user",
+    JSON.stringify(user)
+  );
+
+}
+
+
+function getCurrentUser(){
 
   try{
 
-    const d=
-      await api(
-        "/api/auth/login",
-        {
-          method:"POST",
-          body:JSON.stringify({
-            username:$("#loginUser").value.trim(),
-            password:$("#loginPass").value
-          })
-        }
-      );
-
-    user=d.user;
-    plan=user.plan||"free";
-
-    openApp();
-
-  }catch(e){
-
-    msg(
-      $("#authMessage"),
-      e.message==="REQUEST_FAILED"
-        ?t("wrongLogin")
-        :e.message,
-      "err"
+    return JSON.parse(
+      safeStorageGet(
+        "cotton_current_user"
+      ) || "null"
     );
 
+  }catch{
+
+    return null;
+
   }
-
-};
-
-
-async function checkSession(){
-
-  try{
-
-    const d=
-      await api("/api/auth/me");
-
-    if(d.user){
-
-      user=d.user;
-      plan=d.user.plan||"free";
-
-      openApp();
-
-      return;
-
-    }
-
-  }catch{}
-
-  $("#authScreen")
-    .classList.remove("hidden");
-
-  $("#app")
-    .classList.add("hidden");
 
 }
 
 
 function openApp(){
 
-  $("#authScreen")
-    .classList.add("hidden");
+  const user =
+    getCurrentUser();
 
-  $("#app")
-    .classList.remove("hidden");
+  if(!user){
 
-  $("#currentUser").textContent=
-    (user?.name||user?.username||"")+
-    " • "+
-    (
-      plan==="premium"
-      ?t("premiumPlan")
-      :t("freePlan")
-    );
+    authScreen.classList.remove("hidden");
 
-  loadData();
+    app.classList.add("hidden");
+
+    return;
+
+  }
+
+  authScreen.classList.add("hidden");
+
+  app.classList.remove("hidden");
+
+
+  $("#currentUser").textContent =
+    t("loggedIn") +
+    (user.name || user.username);
+
+
+  loadUserData();
 
   applyLanguage();
 
 }
 
 
-async function logout(server=true){
+function logout(){
 
-  if(server){
+  safeStorageRemove(
+    "cotton_logged_in"
+  );
 
-    try{
+  safeStorageRemove(
+    "cotton_current_user"
+  );
 
-      await api(
-        "/api/auth/logout",
-        {
-          method:"POST",
-          body:"{}"
-        }
-      );
+  app.classList.add("hidden");
 
-    }catch{}
-
-  }
-
-  user=null;
-  plan="free";
-
-  $("#app")
-    .classList.add("hidden");
-
-  $("#authScreen")
-    .classList.remove("hidden");
+  authScreen.classList.remove("hidden");
 
   showLogin();
 
 }
 
 
-$("#logout").onclick=()=>logout(true);
+$("#logout").addEventListener(
+  "click",
+  logout
+);
 
 
-function key(x){
+/* SIGN UP */
 
-  return x+
-    "_"+
-    (
-      user?.id||
-      user?.username||
-      "guest"
+signupForm.addEventListener(
+  "submit",
+  function(event){
+
+    event.preventDefault();
+
+    const name =
+      $("#signupName").value.trim();
+
+    const username =
+      $("#signupUser").value.trim();
+
+    const password =
+      $("#signupPass").value;
+
+
+    if(
+      !name ||
+      !username ||
+      password.length < 6
+    ){
+
+      authShow(
+        t("completeFields"),
+        "err"
+      );
+
+      return;
+
+    }
+
+
+    const existing =
+      getUser();
+
+    if(existing){
+
+      authShow(
+        t("accountExists"),
+        "err"
+      );
+
+      return;
+
+    }
+
+
+    const user = {
+
+      name,
+      username,
+      password
+
+    };
+
+
+    safeStorageSet(
+      "cotton_user",
+      JSON.stringify(user)
     );
+
+
+    setLoggedIn(user);
+
+
+    authShow(
+      t("accountCreated"),
+      "ok"
+    );
+
+
+    setTimeout(
+      openApp,
+      500
+    );
+
+  }
+);
+
+
+/* LOGIN */
+
+loginForm.addEventListener(
+  "submit",
+  function(event){
+
+    event.preventDefault();
+
+    const username =
+      $("#loginUser").value.trim();
+
+    const password =
+      $("#loginPass").value;
+
+
+    const user =
+      getUser();
+
+
+    if(
+      !user ||
+      user.username !== username ||
+      user.password !== password
+    ){
+
+      authShow(
+        t("wrongLogin"),
+        "err"
+      );
+
+      return;
+
+    }
+
+
+    setLoggedIn(user);
+
+    openApp();
+
+  }
+);
+
+
+/* =====================================================
+   USER DATA
+===================================================== */
+
+function userKey(base){
+
+  const user =
+    getCurrentUser();
+
+  const username =
+    user?.username || "guest";
+
+  return (
+    base +
+    "_" +
+    username
+  );
 
 }
 
 
-function loadData(){
+let selected = [];
+let records = [];
+let saved = [];
 
-  $("#names").value=
-    localStorage.getItem(
-      key("cotton_names")
-    )||"";
+
+function loadUserData(){
+
+  const names =
+    safeStorageGet(
+      userKey("cotton_names")
+    ) || "";
+
+
+  $("#names").value =
+    names;
+
 
   try{
 
-    saved=
+    saved =
       JSON.parse(
-        localStorage.getItem(
-          key("cotton_results")
-        )||"[]"
+        safeStorageGet(
+          userKey("cotton_results")
+        ) || "[]"
       );
+
+    if(!Array.isArray(saved)){
+      saved=[];
+    }
 
   }catch{
 
@@ -1656,161 +2132,171 @@ function loadData(){
 
   }
 
-  if(!Array.isArray(saved))
-    saved=[];
+
+  refreshNameCount();
 
   renderSummary();
 
 }
 
 
+/* =====================================================
+   NAMES
+===================================================== */
+
+function getNames(){
+
+  return ($("#names").value || "")
+    .split(/\n|,/)
+    .map(x=>x.trim())
+    .filter(Boolean);
+
+}
+
+
 function refreshNameCount(){
 
-  $("#nameCount").textContent=
-    getNames().length+
-    " "+
+  $("#nameCount").textContent =
+    getNames().length +
+    " " +
     t("namesCount");
 
 }
 
 
-function getNames(){
-
-  return (
-    $("#names").value||""
-  )
-  .split(/\n|,/)
-  .map(x=>x.trim())
-  .filter(Boolean);
-
-}
+$("#names").addEventListener(
+  "input",
+  refreshNameCount
+);
 
 
-$("#names").oninput=
-  refreshNameCount;
+$("#saveNames").addEventListener(
+  "click",
+  function(){
+
+    safeStorageSet(
+      userKey("cotton_names"),
+      $("#names").value
+    );
+
+    refreshNameCount();
+
+    show(
+      t("namesSaved"),
+      "ok"
+    );
+
+  }
+);
 
 
-$("#saveNames").onclick=()=>{
+/* =====================================================
+   IMAGE PICKER
+===================================================== */
 
-  localStorage.setItem(
-    key("cotton_names"),
-    $("#names").value
-  );
-
-  msg(
-    $("#status"),
-    t("namesSaved"),
-    "ok"
-  );
-
-};
+const imageInput =
+  $("#images");
 
 
-$("#selectImagesButton").onclick=
-  ()=>$("#images").click();
+$("#selectImagesButton").addEventListener(
+  "click",
+  function(){
+
+    imageInput.click();
+
+  }
+);
 
 
-$("#images").onchange=e=>{
+imageInput.addEventListener(
+  "change",
+  function(){
 
-  selected=[
-    ...e.target.files
-  ];
+    selected =
+      Array.from(
+        this.files || []
+      );
 
-  renderThumbs();
+    renderThumbs();
 
-};
+  }
+);
 
 
 function updateSelectionText(){
 
-  $("#selectionInfo").textContent=
-    selected.length
-    ?selected.length+
-      " "+
-      (
-        selected.length===1
-        ?t("pictureSelected")
-        :t("picturesSelected")
-      )
-    :t("noPicture");
+  if(!selected.length){
+
+    $("#selectionInfo").textContent =
+      t("noPicture");
+
+    return;
+
+  }
+
+
+  $("#selectionInfo").textContent =
+    selected.length +
+    (
+      selected.length === 1
+      ? " " + t("pictureSelected")
+      : " " + t("picturesSelected")
+    );
 
 }
 
 
 function renderThumbs(){
 
-  $("#thumbs").innerHTML="";
+  const thumbs =
+    $("#thumbs");
+
+
+  thumbs.innerHTML = "";
+
 
   updateSelectionText();
 
-  selected.forEach((f,i)=>{
 
-    let w=document.createElement("div");
-    let im=document.createElement("img");
-    let d=document.createElement("div");
+  selected.forEach(
+    function(file,index){
 
-    let u=
-      URL.createObjectURL(f);
+      const wrapper =
+        document.createElement("div");
 
-    w.className="thumb";
-
-    im.src=u;
-
-    im.onload=
-      ()=>URL.revokeObjectURL(u);
-
-    d.textContent=
-      (i+1)+". "+f.name;
-
-    w.append(
-      im,
-      d
-    );
-
-    $("#thumbs")
-      .append(w);
-
-  });
-
-}
+      wrapper.className =
+        "thumb";
 
 
-$("#clearPics").onclick=()=>{
+      const image =
+        document.createElement("img");
 
-  selected=[];
-  $("#images").value="";
+      const url =
+        URL.createObjectURL(file);
 
-  renderThumbs();
+      image.src =
+        url;
 
-  $("#processingTotal")
-    .classList.add("hidden");
-
-  msg(
-    $("#status"),
-    "Pictures cleared",
-    "ok"
-  );
-
-};
+      image.onload =
+        function(){
+          URL.revokeObjectURL(url);
+        };
 
 
-function b64(f){
+      const label =
+        document.createElement("div");
 
-  return new Promise(
-    (res,rej)=>{
+      label.textContent =
+        (index+1) +
+        ". " +
+        file.name;
 
-      let r=
-        new FileReader();
 
-      r.onload=
-        ()=>res(
-          String(r.result)
-            .split(",")[1]
-        );
+      wrapper.appendChild(image);
 
-      r.onerror=rej;
+      wrapper.appendChild(label);
 
-      r.readAsDataURL(f);
+      thumbs.appendChild(wrapper);
 
     }
   );
@@ -1818,168 +2304,374 @@ function b64(f){
 }
 
 
-$("#read").onclick=async()=>{
+/* =====================================================
+   STATUS
+===================================================== */
 
-  if(!selected.length){
+function show(message,type){
 
-    msg(
-      $("#status"),
-      t("selectPictureFirst"),
-      "err"
-    );
+  const status =
+    $("#status");
 
-    return;
 
-  }
+  status.className =
+    "status " + type;
 
-  let b=$("#read");
 
-  b.disabled=true;
+  status.textContent =
+    message;
 
-  msg(
-    $("#status"),
-    t("processing"),
-    "loading"
-  );
 
-  try{
+  status.style.display =
+    "block";
 
-    let images=[];
+}
 
-    for(let f of selected){
 
-      if(f.size>8*1024*1024)
-        throw Error("FILE_TOO_LARGE");
+/* =====================================================
+   CLEAR PICTURES
+===================================================== */
 
-      images.push({
+$("#clearPics").addEventListener(
+  "click",
+  function(){
 
-        name:f.name,
+    selected=[];
 
-        mimeType:
-          f.type||"image/jpeg",
+    imageInput.value="";
 
-        data:
-          await b64(f)
+    renderThumbs();
 
-      });
+    $("#processingTotal")
+      .classList
+      .add("hidden");
 
-    }
 
-    let d=
-      await api(
-        "/api/ocr",
-        {
-          method:"POST",
-          body:JSON.stringify({
-            images,
-            names:getNames(),
-            defaultRate:
-              Number($("#rate").value)||0
-          })
-        }
-      );
-
-    if(!Array.isArray(d.records))
-      throw Error("PROCESSING_FAILED");
-
-    records=
-      d.records
-      .map(x=>({
-
-        name:
-          String(x.name||"").trim(),
-
-        weight:
-          Number(x.weight)||0,
-
-        rate:
-          Number(x.rate)||
-          Number($("#rate").value)||
-          0
-
-      }))
-      .filter(x=>x.name);
-
-    renderRecords();
-
-    totalBox();
-
-    msg(
-      $("#status"),
-      t("processingSuccess"),
+    show(
+      t("picturesCleared"),
       "ok"
     );
 
-  }catch(e){
-
-    msg(
-      $("#status"),
-      e.message==="SESSION_EXPIRED"
-        ?t("sessionExpired")
-        :t("processingFailed"),
-      "err"
-    );
-
-  }finally{
-
-    b.disabled=false;
-
   }
+);
 
-};
+
+/* =====================================================
+   BASE64
+===================================================== */
+
+function toBase64(file){
+
+  return new Promise(
+    function(resolve,reject){
+
+      const reader =
+        new FileReader();
 
 
-function calc(a){
+      reader.onload =
+        function(){
 
-  return a.reduce(
-    (z,x)=>({
+          const result =
+            String(reader.result);
 
-      weight:
-        z.weight+
-        (Number(x.weight)||0),
+          resolve(
+            result.split(",")[1] || ""
+          );
 
-      money:
-        z.money+
-        (
-          (Number(x.weight)||0)*
-          (Number(x.rate)||0)
-        )
+        };
 
-    }),
-    {
-      weight:0,
-      money:0
+
+      reader.onerror =
+        function(){
+
+          reject(
+            new Error("FILE_READ_FAILED")
+          );
+
+        };
+
+
+      reader.readAsDataURL(file);
+
     }
   );
 
 }
 
 
-function totalBox(){
+/* =====================================================
+   PROCESS RECORDS
+===================================================== */
 
-  let x=calc(records);
+$("#read").addEventListener(
+  "click",
+  async function(){
 
-  $("#processingWeight")
-    .textContent=
-    x.weight.toFixed(2)+
-    " kg";
+    if(!selected.length){
 
-  $("#processingMoney")
-    .textContent=
-    "Rs. "+
-    money(x.money);
+      show(
+        t("selectPictureFirst"),
+        "err"
+      );
 
-  $("#processingTotal")
-    .classList.remove("hidden");
+      return;
+
+    }
+
+
+    const button =
+      $("#read");
+
+
+    button.disabled=true;
+
+
+    show(
+      t("processing"),
+      "loading"
+    );
+
+
+    try{
+
+      const images=[];
+
+
+      for(
+        const file of selected
+      ){
+
+        if(
+          file.size >
+          8*1024*1024
+        ){
+
+          throw new Error(
+            "FILE_TOO_LARGE"
+          );
+
+        }
+
+
+        images.push({
+
+          name:file.name,
+
+          mimeType:
+            file.type ||
+            "image/jpeg",
+
+          data:
+            await toBase64(file)
+
+        });
+
+      }
+
+
+      const response =
+        await fetch(
+          "/api/ocr",
+          {
+            method:"POST",
+
+            headers:{
+              "Content-Type":
+                "application/json"
+            },
+
+            body:
+              JSON.stringify({
+
+                images,
+
+                names:
+                  getNames(),
+
+                defaultRate:
+                  Number(
+                    $("#rate").value
+                  ) || 0
+
+              })
+
+          }
+        );
+
+
+      let data={};
+
+
+      try{
+
+        data =
+          await response.json();
+
+      }catch{
+
+        data={};
+
+      }
+
+
+      if(!response.ok){
+
+        throw new Error(
+          "PROCESSING_FAILED"
+        );
+
+      }
+
+
+      if(
+        !Array.isArray(
+          data.records
+        )
+      ){
+
+        throw new Error(
+          "PROCESSING_FAILED"
+        );
+
+      }
+
+
+      records =
+        data.records.map(
+          function(item){
+
+            return {
+
+              name:
+                String(
+                  item.name || ""
+                ).trim(),
+
+              weight:
+                Number(
+                  item.weight
+                ) || 0,
+
+              rate:
+                Number(
+                  $("#rate").value
+                ) || 0
+
+            };
+
+          }
+        ).filter(
+          item =>
+            item.name &&
+            item.weight >= 0
+        );
+
+
+      renderRecords();
+
+      updateProcessingTotal();
+
+
+      show(
+        t("processingSuccess"),
+        "ok"
+      );
+
+
+    }catch(error){
+
+      console.error(
+        "Processing failed:",
+        error
+      );
+
+
+      show(
+        t("processingFailed"),
+        "err"
+      );
+
+
+    }finally{
+
+      button.disabled=false;
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   RECORD TOTAL
+===================================================== */
+
+function calculateRecordsTotal(list){
+
+  let weight=0;
+  let payment=0;
+
+
+  list.forEach(
+    function(item){
+
+      const w =
+        Number(item.weight) || 0;
+
+      const r =
+        Number(item.rate) || 0;
+
+
+      weight += w;
+
+      payment +=
+        w*r;
+
+    }
+  );
+
+
+  return {
+    weight,
+    payment
+  };
 
 }
 
 
+function updateProcessingTotal(){
+
+  const total =
+    calculateRecordsTotal(records);
+
+
+  $("#processingWeight").textContent =
+    total.weight.toFixed(2) +
+    " kg";
+
+
+  $("#processingMoney").textContent =
+    "Rs. " +
+    money(total.payment);
+
+
+  $("#processingTotal")
+    .classList
+    .remove("hidden");
+
+}
+
+
+/* =====================================================
+   RECORDS
+===================================================== */
+
 function updateRecordCount(){
 
-  $("#count").textContent=
-    records.length+
-    " "+
+  $("#count").textContent =
+    records.length +
+    " " +
     t("recordsCount");
 
 }
@@ -1987,655 +2679,1302 @@ function updateRecordCount(){
 
 function renderRecords(){
 
-  $("#records").innerHTML="";
+  const container =
+    $("#records");
+
 
   updateRecordCount();
 
+
   if(!records.length){
 
-    $("#records").innerHTML=
-      '<div class="empty">'+
-      esc(t("noRecords"))+
-      "</div>";
+    container.innerHTML =
+      `<div class="empty">${escapeHTML(t("noRecords"))}</div>`;
 
     return;
 
   }
 
-  records.forEach((r,i)=>{
 
-    let box=
-      document.createElement("div");
+  container.innerHTML="";
 
-    let g=
-      document.createElement("div");
 
-    box.className="record";
-    g.className="recordgrid";
+  records.forEach(
+    function(record,index){
 
-    ["name","weight","rate"]
-      .forEach(k=>{
+      const box =
+        document.createElement("div");
 
-        let x=
-          document.createElement("input");
+      box.className =
+        "record";
 
-        x.value=r[k];
 
-        x.type=
-          k==="name"
-          ?"text"
-          :"number";
+      const grid =
+        document.createElement("div");
 
-        x.step=".01";
-        x.min="0";
+      grid.className =
+        "recordgrid";
 
-        x.oninput=()=>{
 
-          r[k]=
-            k==="name"
-            ?x.value
-            :Number(x.value)||0;
+      const name =
+        document.createElement("input");
+
+      name.type="text";
+
+      name.placeholder =
+        currentLanguage === "ur"
+        ? "نام"
+        : "Name";
+
+      name.value =
+        record.name;
+
+
+      const weight =
+        document.createElement("input");
+
+      weight.type="number";
+
+      weight.step="0.01";
+
+      weight.min="0";
+
+      weight.placeholder =
+        currentLanguage === "ur"
+        ? "وزن"
+        : "Weight";
+
+      weight.value =
+        record.weight;
+
+
+      const rate =
+        document.createElement("input");
+
+      rate.type="number";
+
+      rate.step="0.01";
+
+      rate.min="0";
+
+      rate.placeholder =
+        currentLanguage === "ur"
+        ? "ریٹ"
+        : "Rate";
+
+      rate.value =
+        record.rate;
+
+
+      const moneyBox =
+        document.createElement("div");
+
+      moneyBox.className="money";
+
+
+      function update(){
+
+        record.name =
+          name.value;
+
+        record.weight =
+          Number(weight.value)||0;
+
+        record.rate =
+          Number(rate.value)||0;
+
+
+        moneyBox.textContent =
+          "Rs. " +
+          money(
+            record.weight *
+            record.rate
+          );
+
+
+        updateProcessingTotal();
+
+      }
+
+
+      update();
+
+
+      name.addEventListener(
+        "input",
+        update
+      );
+
+      weight.addEventListener(
+        "input",
+        update
+      );
+
+      rate.addEventListener(
+        "input",
+        update
+      );
+
+
+      grid.appendChild(name);
+
+      grid.appendChild(weight);
+
+      grid.appendChild(rate);
+
+      grid.appendChild(moneyBox);
+
+
+      const del =
+        document.createElement("button");
+
+      del.type="button";
+
+      del.className =
+        "btn danger";
+
+      del.style.marginTop="8px";
+
+      del.textContent =
+        currentLanguage === "ur"
+        ? "حذف کریں"
+        : currentLanguage === "roman"
+        ? "Delete"
+        : "Delete";
+
+
+      del.addEventListener(
+        "click",
+        function(){
+
+          records.splice(index,1);
 
           renderRecords();
 
-          totalBox();
+          updateProcessingTotal();
 
-        };
+        }
+      );
 
-        g.append(x);
 
-      });
+      box.appendChild(grid);
 
-    let m=
-      document.createElement("div");
+      box.appendChild(del);
 
-    m.className="money";
+      container.appendChild(box);
 
-    m.textContent=
-      "Rs. "+
-      money(r.weight*r.rate);
-
-    g.append(m);
-
-    let del=
-      document.createElement("button");
-
-    del.className=
-      "btn danger";
-
-    del.textContent="Delete";
-
-    del.onclick=()=>{
-
-      records.splice(i,1);
-
-      renderRecords();
-
-      totalBox();
-
-    };
-
-    box.append(
-      g,
-      del
-    );
-
-    $("#records")
-      .append(box);
-
-  });
+    }
+  );
 
 }
 
 
-$("#add").onclick=()=>{
+/* =====================================================
+   ADD ROW
+===================================================== */
 
-  records.push({
+$("#add").addEventListener(
+  "click",
+  function(){
 
-    name:"",
-    weight:0,
-    rate:
-      Number($("#rate").value)||0
+    records.push({
 
-  });
+      name:"",
 
-  renderRecords();
+      weight:0,
 
-  totalBox();
+      rate:
+        Number(
+          $("#rate").value
+        ) || 0
 
-};
+    });
 
 
-$("#save").onclick=()=>{
+    renderRecords();
 
-  let map={};
+    updateProcessingTotal();
 
-  records.forEach(x=>{
+  }
+);
 
-    let k=
-      x.name
-        .trim()
-        .toLowerCase();
 
-    if(!k)return;
+/* =====================================================
+   SAVE RECORDS
+===================================================== */
 
-    if(!map[k]){
+$("#save").addEventListener(
+  "click",
+  function(){
 
-      map[k]={
+    const defaultRate =
+      Number(
+        $("#rate").value
+      ) || 0;
 
-        name:x.name.trim(),
 
-        entries:0,
+    records =
+      records
+      .filter(
+        item =>
+          String(
+            item.name || ""
+          ).trim() !== "" &&
+          Number(item.weight) >= 0
+      )
+      .map(
+        item => ({
 
-        weight:0,
+          name:
+            String(
+              item.name
+            ).trim(),
 
-        money:0
+          weight:
+            Number(item.weight)||0,
 
-      };
+          rate:
+            Number(
+              item.rate
+            ) || defaultRate
 
-    }
-
-    map[k].entries++;
-
-    map[k].weight+=
-      Number(x.weight)||0;
-
-    map[k].money+=
-      (
-        Number(x.weight)||0
-      )*
-      (
-        Number(x.rate)||0
+        })
       );
 
-  });
 
-  saved=
-    Object.values(map);
+    const map={};
 
-  localStorage.setItem(
-    key("cotton_results"),
-    JSON.stringify(saved)
-  );
 
-  renderSummary();
+    records.forEach(
+      function(item){
 
-  msg(
-    $("#status"),
-    t("resultsSaved"),
-    "ok"
-  );
+        const key =
+          item.name
+          .trim()
+          .toLocaleLowerCase();
 
-};
 
+        if(!map[key]){
+
+          map[key]={
+
+            name:item.name,
+
+            entries:0,
+
+            weight:0,
+
+            money:0
+
+          };
+
+        }
+
+
+        map[key].entries++;
+
+        map[key].weight +=
+          item.weight;
+
+        map[key].money +=
+          item.weight *
+          item.rate;
+
+      }
+    );
+
+
+    saved =
+      Object.values(map);
+
+
+    safeStorageSet(
+      userKey("cotton_results"),
+      JSON.stringify(saved)
+    );
+
+
+    renderSummary();
+
+    updateProcessingTotal();
+
+
+    show(
+      t("resultsSaved"),
+      "ok"
+    );
+
+  }
+);
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
 
 function renderSummary(){
 
+  const summary =
+    $("#summary");
+
+
   if(!saved.length){
 
-    $("#summary").innerHTML=
-      '<div class="empty">'+
-      esc(t("saveForResult"))+
-      "</div>";
+    summary.innerHTML =
+      `<div class="empty">${escapeHTML(t("saveForResult"))}</div>`;
 
     $("#grandTotal")
-      .classList.add("hidden");
+      .classList
+      .add("hidden");
 
     return;
 
   }
 
-  $("#summary").innerHTML="";
 
-  let w=0;
-  let m=0;
+  summary.innerHTML="";
 
-  saved.forEach(x=>{
 
-    w+=Number(x.weight)||0;
-    m+=Number(x.money)||0;
+  let totalWeight=0;
+  let totalMoney=0;
 
-    let b=
-      document.createElement("div");
 
-    b.className="record";
+  saved.forEach(
+    function(item){
 
-    b.innerHTML=
-      "<b style='font-size:20px'>"+
-      esc(x.name)+
-      "</b>"+
-      "<div class='muted'>"+
-      x.entries+
-      " "+
-      t("recordsCount")+
-      "</div>"+
-      "<div class='row'>"+
-      "<div><b>"+
-      t("grandWeight")+
-      "</b><br>"+
-      Number(x.weight).toFixed(2)+
-      " kg</div>"+
-      "<div><b>"+
-      t("grandPayment")+
-      "</b><br>Rs. "+
-      money(x.money)+
-      "</div>"+
-      "</div>";
+      totalWeight +=
+        Number(item.weight)||0;
 
-    $("#summary")
-      .append(b);
+      totalMoney +=
+        Number(item.money)||0;
 
-  });
 
-  $("#grandWeight")
-    .textContent=
-    w.toFixed(2)+
+      const box =
+        document.createElement("div");
+
+      box.className =
+        "record";
+
+
+      box.innerHTML = `
+
+        <div style="font-size:20px;font-weight:900">
+          ${escapeHTML(item.name)}
+        </div>
+
+        <div class="muted">
+          ${item.entries} ${escapeHTML(t("recordsCount"))}
+        </div>
+
+        <div class="row" style="margin-top:8px">
+
+          <div>
+            <b>
+              ${
+                currentLanguage === "ur"
+                ? "کل وزن"
+                : currentLanguage === "roman"
+                ? "Total Weight"
+                : "Total Weight"
+              }
+            </b>
+            <br>
+            ${Number(item.weight).toFixed(2)} kg
+          </div>
+
+          <div>
+            <b>
+              ${
+                currentLanguage === "ur"
+                ? "کل ادائیگی"
+                : currentLanguage === "roman"
+                ? "Total Payment"
+                : "Total Payment"
+              }
+            </b>
+            <br>
+            Rs. ${money(item.money)}
+          </div>
+
+        </div>
+
+      `;
+
+
+      summary.appendChild(box);
+
+    }
+  );
+
+
+  $("#grandWeight").textContent =
+    totalWeight.toFixed(2) +
     " kg";
 
-  $("#grandMoney")
-    .textContent=
-    "Rs. "+
-    money(m);
+
+  $("#grandMoney").textContent =
+    "Rs. " +
+    money(totalMoney);
+
 
   $("#grandTotal")
-    .classList.remove("hidden");
+    .classList
+    .remove("hidden");
 
 }
 
 
-$("#clearAll").onclick=()=>{
+function escapeHTML(value){
 
-  if(confirm(t("clearConfirm"))){
+  return String(value).replace(
+    /[&<>"']/g,
+    function(ch){
+
+      return {
+
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+
+      }[ch];
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   CLEAR RESULTS
+===================================================== */
+
+$("#clearAll").addEventListener(
+  "click",
+  function(){
+
+    if(
+      !confirm(
+        t("clearConfirm")
+      )
+    ){
+
+      return;
+
+    }
+
 
     saved=[];
 
-    localStorage.removeItem(
-      key("cotton_results")
+
+    safeStorageRemove(
+      userKey("cotton_results")
     );
+
 
     renderSummary();
 
-    msg(
-      $("#status"),
+
+    show(
       t("resultsCleared"),
       "ok"
     );
 
   }
+);
 
-};
+
+/* =====================================================
+   CSV EXPORT
+===================================================== */
+
+$("#csv").addEventListener(
+  "click",
+  function(){
+
+    if(!saved.length){
+
+      show(
+        t("noSavedResults"),
+        "err"
+      );
+
+      return;
+
+    }
 
 
-$("#csv").onclick=()=>{
+    let csv =
+      "Person Name,Entries,Total Weight KG,Total Payment PKR\n";
 
-  if(!saved.length){
 
-    return msg(
-      $("#status"),
-      t("noSavedResults"),
-      "err"
-    );
+    csv +=
+      saved
+      .map(
+        item => {
 
-  }
+          const name =
+            String(item.name)
+            .replaceAll('"','""');
 
-  let csv=
-    "Person Name,Entries,Total Weight KG,Total Payment PKR\n"+
-    saved.map(x=>
-      `"${String(x.name)
-        .replaceAll('"','""')}",${x.entries},${x.weight},${x.money}`
-    ).join("\n");
 
-  let u=
-    URL.createObjectURL(
+          return (
+            '"' +
+            name +
+            '",' +
+            item.entries +
+            "," +
+            Number(item.weight).toFixed(2) +
+            "," +
+            Number(item.money).toFixed(2)
+          );
+
+        }
+      )
+      .join("\n");
+
+
+    const blob =
       new Blob(
         ["\ufeff"+csv],
-        {type:"text/csv"}
-      )
+        {
+          type:
+            "text/csv;charset=utf-8"
+        }
+      );
+
+
+    const url =
+      URL.createObjectURL(blob);
+
+
+    const link =
+      document.createElement("a");
+
+
+    link.href=url;
+
+    link.download =
+      "cotton-record.csv";
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+
+    setTimeout(
+      () =>
+        URL.revokeObjectURL(url),
+      1000
     );
-
-  let a=
-    document.createElement("a");
-
-  a.href=u;
-
-  a.download=
-    "cotton-record.csv";
-
-  a.click();
-
-  setTimeout(
-    ()=>URL.revokeObjectURL(u),
-    1000
-  );
-
-};
-
-
-$("#print").onclick=
-  ()=>print();
-
-
-/* =========================
-   PNG EXPORT
-========================= */
-
-$("#png").onclick=async()=>{
-
-  if(!saved.length){
-
-    msg(
-      $("#status"),
-      t("noPNG"),
-      "err"
-    );
-
-    return;
 
   }
+);
 
-  try{
 
-    const canvas=
-      document.createElement("canvas");
+/* =====================================================
+   PNG EXPORT
+===================================================== */
 
-    const ctx=
-      canvas.getContext("2d");
+$("#png").addEventListener(
+  "click",
+  function(){
 
-    const width=900;
+    if(!saved.length){
 
-    const rowHeight=90;
-
-    const height=
-      190+
-      saved.length*rowHeight+
-      150;
-
-    canvas.width=width;
-    canvas.height=height;
-
-    ctx.fillStyle="#ffffff";
-    ctx.fillRect(
-      0,
-      0,
-      width,
-      height
-    );
-
-    ctx.fillStyle="#087f5b";
-    ctx.font=
-      "bold 34px Arial";
-
-    ctx.fillText(
-      "Cotton Record",
-      40,
-      55
-    );
-
-    ctx.fillStyle="#18332b";
-    ctx.font=
-      "bold 22px Arial";
-
-    ctx.fillText(
-      "Final Summary",
-      40,
-      95
-    );
-
-    let y=145;
-
-    saved.forEach((x,i)=>{
-
-      ctx.fillStyle="#eef7f4";
-
-      ctx.fillRect(
-        30,
-        y-30,
-        width-60,
-        70
+      show(
+        t("noPNG"),
+        "err"
       );
+
+      return;
+
+    }
+
+
+    createPNG();
+
+  }
+);
+
+
+function createPNG(){
+
+  const canvas =
+    document.createElement("canvas");
+
+
+  const width=1080;
+
+  const rowHeight=92;
+
+  const height =
+    210 +
+    saved.length*rowHeight +
+    170;
+
+
+  canvas.width=width;
+
+  canvas.height=height;
+
+
+  const ctx =
+    canvas.getContext("2d");
+
+
+  ctx.fillStyle="#ffffff";
+
+  ctx.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  ctx.fillStyle="#087f5b";
+
+  ctx.fillRect(
+    0,
+    0,
+    width,
+    150
+  );
+
+
+  ctx.fillStyle="#ffffff";
+
+  ctx.font=
+    "bold 42px Arial";
+
+  ctx.fillText(
+    currentLanguage === "ur"
+      ? "کاٹن ریکارڈ"
+      : "Cotton Record",
+    50,
+    65
+  );
+
+
+  ctx.font=
+    "24px Arial";
+
+  ctx.fillText(
+    currentLanguage === "ur"
+      ? "حتمی ریکارڈ خلاصہ"
+      : "Final Record Summary",
+    50,
+    105
+  );
+
+
+  let y=195;
+
+
+  ctx.fillStyle="#18332b";
+
+  ctx.font=
+    "bold 24px Arial";
+
+
+  ctx.fillText(
+    currentLanguage === "ur"
+      ? "نام"
+      : "Name",
+    50,
+    y
+  );
+
+
+  ctx.fillText(
+    currentLanguage === "ur"
+      ? "انٹریاں"
+      : "Entries",
+    560,
+    y
+  );
+
+
+  ctx.fillText(
+    currentLanguage === "ur"
+      ? "وزن"
+      : "Weight",
+    700,
+    y
+  );
+
+
+  ctx.fillText(
+    currentLanguage === "ur"
+      ? "ادائیگی"
+      : "Payment",
+    850,
+    y
+  );
+
+
+  y += 35;
+
+
+  let totalWeight=0;
+
+  let totalMoney=0;
+
+
+  saved.forEach(
+    function(item){
+
+      totalWeight +=
+        Number(item.weight)||0;
+
+      totalMoney +=
+        Number(item.money)||0;
+
+
+      ctx.strokeStyle="#dceae5";
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        40,
+        y
+      );
+
+      ctx.lineTo(
+        width-40,
+        y
+      );
+
+      ctx.stroke();
+
+
+      y += 55;
+
 
       ctx.fillStyle="#18332b";
 
       ctx.font=
-        "bold 20px Arial";
+        "22px Arial";
+
 
       ctx.fillText(
-        String(x.name),
+        String(item.name).slice(0,25),
         50,
         y
       );
 
-      ctx.font=
-        "16px Arial";
 
       ctx.fillText(
-        "Weight: "+
-        Number(x.weight).toFixed(2)+
-        " kg",
-        350,
+        String(item.entries),
+        575,
         y
       );
 
+
       ctx.fillText(
-        "Payment: Rs. "+
-        money(x.money),
-        600,
+        Number(item.weight).toFixed(2)+" kg",
+        700,
         y
       );
 
-      y+=rowHeight;
 
-    });
-
-    let totals=
-      calc(
-        saved.map(x=>({
-          weight:x.weight,
-          rate:
-            Number(x.weight)
-              ?Number(x.money)/
-               Number(x.weight)
-              :0
-        }))
+      ctx.fillText(
+        "Rs. "+money(item.money),
+        850,
+        y
       );
 
-    ctx.fillStyle="#087052";
 
-    ctx.font=
-      "bold 22px Arial";
+      y += 37;
 
-    ctx.fillText(
-      "Grand Total Weight: "+
-      Number(
-        saved.reduce(
-          (a,x)=>a+(Number(x.weight)||0),
-          0
-        )
-      ).toFixed(2)+
-      " kg",
-      40,
-      y+20
-    );
+    }
+  );
 
-    ctx.fillText(
-      "Grand Total Payment: Rs. "+
-      money(
-        saved.reduce(
-          (a,x)=>a+(Number(x.money)||0),
-          0
-        )
-      ),
-      40,
-      y+60
-    );
 
-    canvas.toBlob(blob=>{
+  ctx.fillStyle="#e8f7f1";
 
-      if(!blob)
-        throw Error("PNG_FAILED");
+  ctx.fillRect(
+    40,
+    y,
+    width-80,
+    105
+  );
 
-      let u=
+
+  y += 42;
+
+
+  ctx.fillStyle="#087052";
+
+  ctx.font=
+    "bold 25px Arial";
+
+
+  ctx.fillText(
+    (
+      currentLanguage === "ur"
+      ? "کل مجموعی وزن: "
+      : "Grand Total Weight: "
+    ) +
+    totalWeight.toFixed(2)+" kg",
+    65,
+    y
+  );
+
+
+  ctx.fillText(
+    (
+      currentLanguage === "ur"
+      ? "کل مجموعی ادائیگی: Rs. "
+      : "Grand Total Payment: Rs. "
+    ) +
+    money(totalMoney),
+    65,
+    y+40
+  );
+
+
+  canvas.toBlob(
+    function(blob){
+
+      if(!blob){
+
+        show(
+          t("pngFailed"),
+          "err"
+        );
+
+        return;
+
+      }
+
+
+      const url =
         URL.createObjectURL(blob);
 
-      let a=
+
+      const link =
         document.createElement("a");
 
-      a.href=u;
 
-      a.download=
+      link.href=url;
+
+      link.download =
         "cotton-record-summary.png";
 
-      a.click();
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      link.remove();
+
 
       setTimeout(
-        ()=>URL.revokeObjectURL(u),
-        1000
+        () =>
+          URL.revokeObjectURL(url),
+        1500
       );
 
-      msg(
-        $("#status"),
+
+      show(
         t("pngSuccess"),
         "ok"
       );
 
-    },"image/png");
-
-  }catch(e){
-
-    msg(
-      $("#status"),
-      t("pngFailed"),
-      "err"
-    );
-
-  }
-
-};
-
-
-function updatePlan(){
-
-  let p=
-    plan==="premium";
-
-  $("#planBadge").textContent=
-    p?"PREMIUM":"FREE";
-
-  $("#planBadge").className=
-    "plan-badge"+
-    (p?" premium-badge":"");
-
-  $("#planDescription").textContent=
-    p
-    ?t("premiumPlan")
-    :t("freePlan");
-
-  let keys=
-    p
-    ?[
-      "premiumFeature1",
-      "premiumFeature2",
-      "premiumFeature3",
-      "premiumFeature4"
-    ]
-    :[
-      "freeFeature1",
-      "freeFeature2",
-      "freeFeature3"
-    ];
-
-  $("#planFeatures").innerHTML=
-    keys
-      .map(k=>
-        "<li>"+
-        esc(t(k))+
-        "</li>"
-      )
-      .join("");
-
-  $("#premiumButton")
-    .classList
-    .toggle("hidden",p);
+    },
+    "image/png"
+  );
 
 }
 
 
-$("#premiumButton").onclick=()=>{
+/* =====================================================
+   PRINT
+===================================================== */
 
-  $("#premiumModal")
-    .classList
-    .remove("hidden");
+$("#print").addEventListener(
+  "click",
+  function(){
 
-  $("#paymentMessage")
-    .style.display="none";
-
-};
-
-
-$("#closePremium").onclick=()=>{
-
-  $("#premiumModal")
-    .classList
-    .add("hidden");
-
-};
-
-
-$("#startPayment").onclick=async()=>{
-
-  let b=
-    $("#startPayment");
-
-  b.disabled=true;
-
-  msg(
-    $("#paymentMessage"),
-    t("paymentStarting"),
-    "loading"
-  );
-
-  try{
-
-    let d=
-      await api(
-        "/api/payment/create",
-        {
-          method:"POST",
-          body:JSON.stringify({
-            plan:"premium_monthly"
-          })
-        }
-      );
-
-    if(d.checkoutUrl)
-      location.href=d.checkoutUrl;
-
-    else if(d.url)
-      location.href=d.url;
-
-    else
-      throw Error("NO_CHECKOUT");
-
-  }catch(e){
-
-    msg(
-      $("#paymentMessage"),
-      t("paymentUnavailable"),
-      "err"
-    );
-
-    b.disabled=false;
+    window.print();
 
   }
+);
 
-};
 
+/* =====================================================
+   START
+===================================================== */
 
 applyLanguage();
 
-checkSession();
+
+if(
+  safeStorageGet(
+    "cotton_logged_in"
+  ) === "true" &&
+  getCurrentUser()
+){
+
+  openApp();
+
+}else{
+
+  authScreen.classList.remove("hidden");
+
+  app.classList.add("hidden");
+
+}
+
+   /* =====================================================
+   PWA SERVICE WORKER
+===================================================== */
+
+if ("serviceWorker" in navigator) {
+
+  window.addEventListener("load", function () {
+
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then(function (registration) {
+
+        console.log(
+          "Cotton Recorder Service Worker registered:",
+          registration.scope
+        );
+
+      })
+      .catch(function (error) {
+
+        console.error(
+          "Service Worker registration failed:",
+          error
+        );
+
+      });
+
+  });
+
+}
+   /* =====================================================
+   PWA INSTALL SYSTEM
+===================================================== */
+
+let deferredInstallPrompt = null;
+
+const installPopup =
+  document.querySelector("#installPopup");
+
+const installApp =
+  document.querySelector("#installApp");
+
+const closeInstall =
+  document.querySelector("#closeInstall");
+
+const installSuccess =
+  document.querySelector("#installSuccess");
+
+
+/* =========================
+   CHECK INSTALLED STATE
+========================= */
+
+function isAppInstalled(){
+
+  return (
+    window.matchMedia(
+      "(display-mode: standalone)"
+    ).matches ||
+
+    window.navigator.standalone === true
+  );
+
+}
+
+
+/* =========================
+   SHOW INSTALL POPUP
+========================= */
+
+function showInstallPopup(){
+
+  if(isAppInstalled()){
+    return;
+  }
+
+  installPopup.classList.add("show");
+
+}
+
+
+/* =========================
+   HIDE INSTALL POPUP
+========================= */
+
+function hideInstallPopup(){
+
+  installPopup.classList.remove("show");
+
+}
+
+
+/* =========================
+   INSTALL PROMPT
+========================= */
+
+window.addEventListener(
+  "beforeinstallprompt",
+  function(event){
+
+    event.preventDefault();
+
+    deferredInstallPrompt = event;
+
+    showInstallPopup();
+
+  }
+);
+
+
+/* =========================
+   INSTALL BUTTON
+========================= */
+
+installApp.addEventListener(
+  "click",
+  async function(){
+
+    if(!deferredInstallPrompt){
+
+      /*
+        Browser ne install prompt available
+        nahi kiya.
+      */
+
+      return;
+
+    }
+
+    const promptEvent =
+      deferredInstallPrompt;
+
+    deferredInstallPrompt = null;
+
+    hideInstallPopup();
+
+    try{
+
+      await promptEvent.prompt();
+
+      const result =
+        await promptEvent.userChoice;
+
+      if(
+        result &&
+        result.outcome === "accepted"
+      ){
+
+        showInstallSuccess();
+
+      }
+
+    }catch(error){
+
+      console.error(
+        "PWA installation failed:",
+        error
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+closeInstall.addEventListener(
+  "click",
+  function(){
+
+    hideInstallPopup();
+
+    /*
+      User ne popup close kiya.
+      Dobara page reload par browser
+      install prompt decide karega.
+    */
+
+  }
+);
+
+
+/* =========================
+   APP INSTALLED EVENT
+========================= */
+
+window.addEventListener(
+  "appinstalled",
+  function(){
+
+    deferredInstallPrompt = null;
+
+    hideInstallPopup();
+
+    showInstallSuccess();
+
+  }
+);
+
+
+/* =========================
+   SUCCESS MESSAGE
+========================= */
+
+function showInstallSuccess(){
+
+  installSuccess.classList.add("show");
+
+  setTimeout(
+    function(){
+
+      installSuccess.classList.remove(
+        "show"
+      );
+
+    },
+    4500
+  );
+
+}
+
+
+/* =========================
+   INITIAL CHECK
+========================= */
+
+if(isAppInstalled()){
+
+  hideInstallPopup();
+
+}
+
+
+/* =========================
+   SERVICE WORKER
+========================= */
+
+if(
+  "serviceWorker" in navigator
+){
+
+  window.addEventListener(
+    "load",
+    function(){
+
+      navigator.serviceWorker
+        .register("/service-worker.js")
+        .then(
+          function(){
+
+            console.log(
+              "Service Worker registered successfully."
+            );
+
+          }
+        )
+        .catch(
+          function(error){
+
+            console.error(
+              "Service Worker registration failed:",
+              error
+            );
+
+          }
+        );
+
+    }
+  );
+
+   }
 
 </script>
+   <!-- =====================================================
+     PWA INSTALL POPUP
+===================================================== -->
+
+<div
+  id="installPopup"
+  class="install-popup"
+  aria-live="polite"
+>
+
+  <img
+    src="/icons/icon-192.png"
+    class="install-icon"
+    alt="Cotton Record"
+  >
+
+  <div class="install-content">
+
+    <div class="install-title">
+      Install Cotton Record
+    </div>
+
+    <div class="install-text">
+      Install the app for quick access from your phone.
+    </div>
+
+  </div>
+
+  <div class="install-actions">
+
+    <button
+      id="installApp"
+      class="install-btn"
+      type="button"
+    >
+      Install
+    </button>
+
+    <button
+      id="closeInstall"
+      class="install-close"
+      type="button"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- INSTALL SUCCESS MESSAGE -->
+
+<div
+  id="installSuccess"
+  class="install-success"
+  role="status"
+>
+
+  <span class="install-success-icon">✓</span>
+
+  <span>
+    Cotton Record installed successfully.
+  </span>
+
+</div>
 
 </body>
 </html>
